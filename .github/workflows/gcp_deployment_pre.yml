@@ -93,7 +93,7 @@ jobs:
 
       - name: GCP deploy Cloud Run App
         id: gcp-deploy-cloud-run
-        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --network=default --subnet=default --network-tags=[${{ env.SERVICE }}]'
+        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --network default --subnet default --network-tags [${{ env.SERVICE }}]'
 
       - name: GCP App Url
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
