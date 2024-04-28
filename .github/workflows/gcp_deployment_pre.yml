@@ -1,0 +1,98 @@
+name: Deploy to GCP
+
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  PROJECT_ID: "omega-granite-421322"
+  SERVICE: "luncher-core-v4"
+  REGION: "us-central1"
+
+jobs:
+  build:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --file=Dockerfile-gcp_pre .'
+
+      - name: Save Docker image
+        run: 'docker save --output /tmp/${{ env.SERVICE }}_image.tar ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest'
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: '${{ env.SERVICE }}_image'
+          path: '/tmp/${{ env.SERVICE }}_image.tar'
+  push:
+    needs: [ build ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Docker image
+        uses: actions/download-artifact@v3
+        with:
+          name: '${{ env.SERVICE }}_image'
+          path: '/tmp'
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.SERVICE }}_image.tar
+          docker image ls -a  
+
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        id: gcp-cli-setup
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Set up Docker authentication
+        id: docker-auth
+        run: 'gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev'
+
+      - name: Docker push to GCP
+        id: docker-push
+        run: 'docker push ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest'
+
+  deploy:
+    needs: [ push ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        id: gcp-cli-setup
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: GCP select project
+        id: gcp-select-project
+        run: 'gcloud config set project ${{ env.PROJECT_ID }}'
+
+      - name: GCP deploy Cloud Run App
+        id: gcp-deploy-cloud-run
+        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --port=80'
+
+      - name: GCP App Url
+        run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
