@@ -38,12 +38,29 @@ public class SwaggerConfiguration {
 
     @Bean
     public GroupedOpenApi authApi() {
-        return GroupedOpenApi.builder().group("common").displayName("Common API").packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
+        return GroupedOpenApi.builder().group("common").displayName("Common API")
+                                       .packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
     }
 
     @Bean
-    public GroupedOpenApi adminApi() {
-        return GroupedOpenApi.builder().group("admin").displayName("Admin API").packagesToScan("pl.luncher.v3.luncher_core.admin.controllers").build();
+    public GroupedOpenApi adminPlacesApi() {
+        return GroupedOpenApi.builder().group("admin-places").displayName("Admin (Places) API")
+                                       .pathsToMatch("/admin/places/**", "/admin/places")
+                                       .packagesToScan("pl.luncher.v3.luncher_core.admin.controllers").build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminUsersApi() {
+        return GroupedOpenApi.builder().group("admin-users").displayName("Admin (Users) API")
+                                       .pathsToMatch("/admin/users/**", "/admin/users")
+                                       .packagesToScan("pl.luncher.v3.luncher_core.admin.controllers").build();
+    }
+
+    @Bean
+    public GroupedOpenApi placesExplorationApi() {
+        return GroupedOpenApi.builder().group("places-exploration").displayName("Places exploration (end-users) API")
+                                       .pathsToMatch("/places/exploration/**", "/places/exploration")
+                                       .packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
     }
 
 }
