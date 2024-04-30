@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.model.dto.JwtToken;
 
 import java.util.*;
 
@@ -45,13 +46,15 @@ public class JwtService {
         }
     }
 
-    public String generateJwtTokenForUser(User user) {
-        return Jwts.builder().setClaims(new HashMap<>() {{
+    public JwtToken generateJwtTokenForUser(User user) {
+        Date expiration = new Date(System.currentTimeMillis() + accessTokenLifetimeMinutes * 60000L);
+        String token = Jwts.builder().setClaims(new HashMap<>() {{
                     put("role", user.getRole());
                 }}).setSubject(user.getUuid().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenLifetimeMinutes * 60000L))
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, signingKey).compact();
+        return new JwtToken(token, expiration);
     }
 
 

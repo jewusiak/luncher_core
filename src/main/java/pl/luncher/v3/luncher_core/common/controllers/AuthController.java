@@ -37,7 +37,7 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully logged in", content = {
                     @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SuccessfulLoginResponse.class))
+                             schema = @Schema(implementation = SuccessfulLoginResponse.class))
             }),
             @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
     })
@@ -49,7 +49,7 @@ public class AuthController {
 
             var accessToken = jwtService.generateJwtTokenForUser((User) a.getPrincipal());
 
-            response.addCookie(new Cookie("Authorization", accessToken) {{
+            response.addCookie(new Cookie("Authorization", accessToken.getToken()) {{
                 //setSecure(true);
                 //todo: set up cookie flags
 //                setSecure(true);
@@ -60,8 +60,8 @@ public class AuthController {
                 setSecure(true);
                 setAttribute("SameSite", "None");
             }});
-            return new ResponseEntity<>(SuccessfulLoginResponse.builder().accessToken(accessToken).build(),
-                                        HttpStatus.OK);
+            return new ResponseEntity<>(SuccessfulLoginResponse.builder().accessToken(accessToken.getToken()).tokenLifetime(accessToken.getExpiryDate().getTime() / 1000L).build(),
+                    HttpStatus.OK);
         } catch (Exception e) {
             log.info("Caught exception {} at login.", e.toString());
         }
@@ -69,7 +69,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Logout from the system",
-            description = "Tries to remove JWT token from cookies. Client should remove JWT token from local storage on their own.")
+               description = "Tries to remove JWT token from cookies. Client should remove JWT token from local storage on their own.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully logged out", content = @Content),
     })

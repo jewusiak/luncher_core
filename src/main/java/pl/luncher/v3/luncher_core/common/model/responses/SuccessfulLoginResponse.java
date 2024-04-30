@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class SuccessfulLoginResponse {
     private String accessToken;
+    private Long tokenLifetime;
 }
