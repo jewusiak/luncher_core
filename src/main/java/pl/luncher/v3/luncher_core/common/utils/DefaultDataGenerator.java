@@ -38,23 +38,23 @@ public class DefaultDataGenerator {
 
         //USERS
         List<User> users = List.of(User.builder().firstName("Grzegorz").surname("Root").email("root@g.pl")
-                                                 .role(AppRole.SYS_ROOT).passwordHash(passwordEncoder.encode("1234"))
-                                                 .build(),
-                                   User.builder().firstName("Grzegorz").surname("Admin").email("admin@g.pl")
-                                                 .role(AppRole.SYS_ADMIN).passwordHash(passwordEncoder.encode("1234"))
-                                                 .build(),
-                                   User.builder().firstName("Grzegorz").surname("Mod").email("mod@g.pl")
-                                                 .role(AppRole.SYS_MOD).passwordHash(passwordEncoder.encode("1234"))
-                                                 .build(),
-                                   User.builder().firstName("Grzegorz").surname("Manager").email("manager@g.pl")
-                                                 .role(AppRole.REST_MANAGER)
-                                                 .passwordHash(passwordEncoder.encode("1234")).build(),
-                                   User.builder().firstName("Grzegorz").surname("Rest-User").email("employee@g.pl")
-                                                 .role(AppRole.REST_USER).passwordHash(passwordEncoder.encode("1234"))
-                                                 .build(),
-                                   User.builder().firstName("Grzegorz").surname("End-User").email("user@g.pl")
-                                                 .role(AppRole.USER).passwordHash(passwordEncoder.encode("1234"))
-                                                 .build());
+                        .role(AppRole.SYS_ROOT).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+                        .build(),
+                User.builder().firstName("Grzegorz").surname("Admin").email("admin@g.pl")
+                        .role(AppRole.SYS_ADMIN).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+                        .build(),
+                User.builder().firstName("Grzegorz").surname("Mod").email("mod@g.pl")
+                        .role(AppRole.SYS_MOD).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+                        .build(),
+                User.builder().firstName("Grzegorz").surname("Manager").email("manager@g.pl")
+                        .role(AppRole.REST_MANAGER).enabled(true)
+                        .passwordHash(passwordEncoder.encode("1234")).build(),
+                User.builder().firstName("Grzegorz").surname("Rest-User").email("employee@g.pl")
+                        .role(AppRole.REST_USER).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+                        .build(),
+                User.builder().firstName("Grzegorz").surname("End-User").email("user@g.pl")
+                        .role(AppRole.USER).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+                        .build());
 
         for (User user : users) {
             if (userRepository.existsByEmail(user.getEmail())) {
@@ -77,39 +77,39 @@ public class DefaultDataGenerator {
 
         //restaurants
         Place r1 = Place.builder().name("The Cool Cat").longName("The Cool Cat - TR").owner(owner)
-                                  .allowedUsers(Set.of(employee))
-                                  .address(Address.builder().firstLine("Marszałkowska 100").city("Warsaw")
-                                                            .zipCode("01-007").district("Śródmieście")
-                                                            .country("PL")
-                                                            .build())
-                                  .description("Cool Cat to kultowa restauracja asian fusion na mapie Śródmieścia")
-                                  .googleMapsReference("gm reference").placeType(restType).build();
+                .allowedUsers(Set.of(employee))
+                .address(Address.builder().firstLine("Marszałkowska 100").city("Warsaw")
+                        .zipCode("01-007").district("Śródmieście")
+                        .country("PL")
+                        .build())
+                .description("Cool Cat to kultowa restauracja asian fusion na mapie Śródmieścia")
+                .googleMapsReference("gm reference").placeType(restType).build();
 
         var owList = List.of(new OpeningWindow(null,
-                                               DayOfWeek.MONDAY,
-                                               LocalTime.of(10, 00),
-                                               LocalTime.of(20, 30),
-                                               null),
-                             new OpeningWindow(null,
-                                               DayOfWeek.TUESDAY,
-                                               LocalTime.of(10, 00),
-                                               LocalTime.of(20, 30),
-                                               null),
-                             new OpeningWindow(null,
-                                               DayOfWeek.WEDNESDAY,
-                                               LocalTime.of(10, 00),
-                                               LocalTime.of(20, 30),
-                                               null),
-                             new OpeningWindow(null,
-                                               DayOfWeek.THURSDAY,
-                                               LocalTime.of(10, 00),
-                                               LocalTime.of(20, 30),
-                                               null),
-                             new OpeningWindow(null,
-                                               DayOfWeek.FRIDAY,
-                                               LocalTime.of(10, 00),
-                                               LocalTime.of(22, 30),
-                                               null));
+                        DayOfWeek.MONDAY,
+                        LocalTime.of(10, 00),
+                        LocalTime.of(20, 30),
+                        null),
+                new OpeningWindow(null,
+                        DayOfWeek.TUESDAY,
+                        LocalTime.of(10, 00),
+                        LocalTime.of(20, 30),
+                        null),
+                new OpeningWindow(null,
+                        DayOfWeek.WEDNESDAY,
+                        LocalTime.of(10, 00),
+                        LocalTime.of(20, 30),
+                        null),
+                new OpeningWindow(null,
+                        DayOfWeek.THURSDAY,
+                        LocalTime.of(10, 00),
+                        LocalTime.of(20, 30),
+                        null),
+                new OpeningWindow(null,
+                        DayOfWeek.FRIDAY,
+                        LocalTime.of(10, 00),
+                        LocalTime.of(22, 30),
+                        null));
 
         var oe = List.of(new PlaceOpeningException(null, LocalDate.of(2024, 03, 12), List.of(), null));
         owList.forEach(r1::addStandardOpeningTime);
