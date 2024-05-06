@@ -68,7 +68,7 @@ public class UserAdministrationController {
     public ResponseEntity<?> adminCreateUser(@RequestBody @Valid AdminCreateUserRequest request, User user) {
         var userEntity = adminUserMapper.map(request);
 
-        userService.checkIfUserCanChangeOtherUser(userEntity, user);
+        userService.checkIfUserCanCreateOtherUser(userEntity, user);
 
         return ResponseEntity.ok(adminUserMapper.mapToFull(userService.createUser(userEntity)));
     }
@@ -81,12 +81,12 @@ public class UserAdministrationController {
     public ResponseEntity<?> adminUpdateUser(@RequestBody @Valid AdminUpdateUserRequest request, @PathVariable String userId, User user) {
         var userEntity = userService.mapToUpdateUserByAdmin(request, userId);
 
-        userService.checkIfUserCanChangeOtherUser(userEntity, user);
+        userService.checkIfUserCanUpdateOtherUser(userEntity, user);
 
         return ResponseEntity.ok(adminUserMapper.mapToFull(userService.updateUser(userEntity, UUID.fromString(userId))));
     }
 
-    @Operation(summary = " Full text user search", description = "Empty query will return all users")
+    @Operation(summary = "Full text user search", description = "Empty query will return all users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved users", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedAdminUserResponse.class))),
     })

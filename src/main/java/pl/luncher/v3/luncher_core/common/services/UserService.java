@@ -46,13 +46,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void checkIfUserCanChangeOtherUser(User user, User changedBy) {
-        if (changedBy.getRole().compareRoleTo(user.getRole()) <= 0 && changedBy.getRole() != AppRole.SYS_ROOT)
+    public void checkIfUserCanCreateOtherUser(User user, User changedBy) {
+        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
+    }
+
+    private void ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(User performes, User performedOn) {
+        if (performes.getRole().compareRoleTo(performedOn.getRole()) <= 0 && performes.getRole() != AppRole.SYS_ROOT)
             throw new InsufficientRoleException("Created/updated user cannot have equal or higher role than the creator.");
     }
 
-    public boolean userExistsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    public void checkIfUserCanUpdateOtherUser(User user, User changedBy) {
+        var oldUserDbEntity = getUserByUuid(user.getUuid());
+
+        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
+        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, oldUserDbEntity);
     }
 
     public Page<User> getAllUsersPaged(PageRequest request) {
