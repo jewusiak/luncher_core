@@ -11,7 +11,7 @@ public class AdminCreateUserRequest {
     @Email
     @NotBlank
     String email;
-    
+
     @NotBlank
     String firstName;
 
@@ -23,4 +23,6 @@ public class AdminCreateUserRequest {
 
     @NotNull
     AppRole role;
+
+    Boolean enabled = true;
 }

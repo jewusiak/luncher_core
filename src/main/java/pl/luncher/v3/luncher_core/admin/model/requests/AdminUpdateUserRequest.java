@@ -8,12 +8,9 @@ import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 public class AdminUpdateUserRequest {
     @Email
     String email;
-
     String firstName;
-
     String surname;
-
     String password;
-
     AppRole role;
+    Boolean isEnabled;
 }

@@ -12,4 +12,5 @@ public class AdminBasicUserDataResponse {
     String firstName;
     String surname;
     AppRole role;
+    Boolean enabled;
 }

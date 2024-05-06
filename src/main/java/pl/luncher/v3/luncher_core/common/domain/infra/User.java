@@ -51,6 +51,8 @@ public class User implements UserDetails {
     //    @GenericField(name = "role")
     private AppRole role;
 
+    private boolean enabled = true;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         var roles = getRole();
@@ -86,7 +88,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        //todo: implement locking the account
-        return true;
+        return this.enabled;
     }
 }

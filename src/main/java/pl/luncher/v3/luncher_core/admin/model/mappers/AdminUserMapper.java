@@ -16,10 +16,8 @@ public abstract class AdminUserMapper {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Mapping(source = ".", target = ".")
     public abstract AdminBasicUserDataResponse mapToBasic(User user);
 
-    @Mapping(source = ".", target = ".")
     public abstract AdminFullUserDataResponse mapToFull(User user);
 
     @Mapping(source = "email", target = "email")
@@ -27,6 +25,7 @@ public abstract class AdminUserMapper {
     @Mapping(source = "surname", target = "surname")
     @Mapping(source = "role", target = "role")
     @Mapping(source = "password", target = "passwordHash", qualifiedByName = "hashPassword")
+    @Mapping(source = "enabled", target = "enabled", defaultValue = "true")
     public abstract User map(AdminCreateUserRequest request);
 
     @BeanMapping(ignoreByDefault = true)
