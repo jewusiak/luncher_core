@@ -12,5 +12,5 @@ public class AdminUpdateUserRequest {
     String surname;
     String password;
     AppRole role;
-    Boolean isEnabled;
+    Boolean enabled;
 }
