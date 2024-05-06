@@ -8,12 +8,13 @@ import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import pl.luncher.v3.luncher_core.common.domain.Place;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 public class LuncherCoreApplication {
 
     public static void main(String[] args) {
@@ -29,7 +30,7 @@ public class LuncherCoreApplication {
         SearchSession searchSession = Search.session(entityManager);
 
         MassIndexer indexer = searchSession.massIndexer(User.class, Place.class)
-                                           .threadsToLoadObjects(4);
+                .threadsToLoadObjects(4);
 
         indexer.startAndWait();
     }
