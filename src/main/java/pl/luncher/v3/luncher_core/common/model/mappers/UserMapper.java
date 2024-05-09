@@ -7,5 +7,5 @@ import pl.luncher.v3.luncher_core.common.model.responses.UserProfileResponse;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserProfileResponse map(User user);
+  UserProfileResponse map(User user);
 }

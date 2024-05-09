@@ -20,16 +20,17 @@ import pl.luncher.v3.luncher_core.common.model.responses.UserProfileResponse;
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 public class ProfileController {
-    
-    private final UserMapper userMapper;
-    @Operation(summary = "Who am I?")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns your profile", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Not authorized!", content = @Content),
-            @ApiResponse(responseCode = "406", description = "User can't be extracted from context!", content = @Content)
-    })
-    @GetMapping
-    public ResponseEntity<?> getProfile(User user) {
-        return ResponseEntity.ok(userMapper.map(user));
-    }
+
+  private final UserMapper userMapper;
+
+  @Operation(summary = "Who am I?")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Returns your profile", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserProfileResponse.class))),
+      @ApiResponse(responseCode = "401", description = "Not authorized!", content = @Content),
+      @ApiResponse(responseCode = "406", description = "User can't be extracted from context!", content = @Content)
+  })
+  @GetMapping
+  public ResponseEntity<?> getProfile(User user) {
+    return ResponseEntity.ok(userMapper.map(user));
+  }
 }

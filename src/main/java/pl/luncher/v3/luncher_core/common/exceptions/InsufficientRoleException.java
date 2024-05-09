@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 public class InsufficientRoleException extends ResponseStatusException {
-    public InsufficientRoleException(String message) {
-        super(HttpStatus.FORBIDDEN, message);
-    }
+
+  public InsufficientRoleException(String message) {
+    super(HttpStatus.FORBIDDEN, message);
+  }
 }

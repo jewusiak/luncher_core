@@ -17,22 +17,22 @@ import pl.luncher.v3.luncher_core.common.domain.infra.User;
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 public class LuncherCoreApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(LuncherCoreApplication.class, args);
-    }
+  @PersistenceContext
+  private EntityManager entityManager;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+  public static void main(String[] args) {
+    SpringApplication.run(LuncherCoreApplication.class, args);
+  }
 
-    @Transactional
-    @EventListener(ApplicationReadyEvent.class)
-    public void onAppLoad() throws InterruptedException {
-        SearchSession searchSession = Search.session(entityManager);
+  @Transactional
+  @EventListener(ApplicationReadyEvent.class)
+  public void onAppLoad() throws InterruptedException {
+    SearchSession searchSession = Search.session(entityManager);
 
-        MassIndexer indexer = searchSession.massIndexer(User.class, Place.class)
-                .threadsToLoadObjects(4);
+    MassIndexer indexer = searchSession.massIndexer(User.class, Place.class)
+        .threadsToLoadObjects(4);
 
-        indexer.startAndWait();
-    }
+    indexer.startAndWait();
+  }
 
 }

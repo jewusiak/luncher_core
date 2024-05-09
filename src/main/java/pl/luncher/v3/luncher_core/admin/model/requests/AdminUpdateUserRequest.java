@@ -6,11 +6,12 @@ import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 
 @Value
 public class AdminUpdateUserRequest {
-    @Email
-    String email;
-    String firstName;
-    String surname;
-    String password;
-    AppRole role;
-    Boolean enabled;
+
+  @Email
+  String email;
+  String firstName;
+  String surname;
+  String password;
+  AppRole role;
+  Boolean enabled;
 }

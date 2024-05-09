@@ -1,5 +1,7 @@
 package pl.luncher.v3.luncher_core.configuration;
 
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,81 +31,81 @@ import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtAuthFilter;
 import pl.luncher.v3.luncher_core.common.services.UserService;
 
-import java.util.Arrays;
-import java.util.List;
-
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final UserService userService;
-    @Value("${pl.luncher.swagger.accessible}") private String swaggerAccessible;
+  private final JwtAuthFilter jwtAuthFilter;
+  private final UserService userService;
+  private final PasswordEncoder passwordEncoder;
+  @Value("${pl.luncher.swagger.accessible}")
+  private String swaggerAccessible;
 
-    private final PasswordEncoder passwordEncoder;
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable);
+    http.authorizeHttpRequests(matcher -> {
+      matcher.requestMatchers("/auth/**", "/error").permitAll();
+      allowSwaggerConditionally(matcher);
+      matcher.anyRequest().authenticated();
+    });
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(matcher -> {
-            matcher.requestMatchers("/auth/**", "/error").permitAll();
-            allowSwaggerConditionally(matcher);
-            matcher.anyRequest().authenticated();
-        });
+    http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    http.exceptionHandling(config -> {
+      config.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+    });
 
-        http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling(config -> {
-            config.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-        });
-
-        http.cors(config -> {
-            CorsConfiguration configuration = new CorsConfiguration();
+    http.cors(config -> {
+      CorsConfiguration configuration = new CorsConfiguration();
 //            configuration.setAllowedOrigins(Arrays.asList("*"));
-            configuration.setAllowedOriginPatterns(List.of("*"));
-            configuration.setAllowedMethods(List.of("*"));
-            configuration.setAllowedHeaders(List.of("*"));
-            configuration.setAllowCredentials(true);
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            config.configurationSource(source);
-        });
-        return http.build();
-    }
+      configuration.setAllowedOriginPatterns(List.of("*"));
+      configuration.setAllowedMethods(List.of("*"));
+      configuration.setAllowedHeaders(List.of("*"));
+      configuration.setAllowCredentials(true);
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", configuration);
+      config.configurationSource(source);
+    });
+    return http.build();
+  }
 
-    private void allowSwaggerConditionally(AuthorizeHttpRequestsConfigurer<?>.AuthorizationManagerRequestMatcherRegistry matcher) {
-        if (swaggerAccessible.equals("true")) {
-            matcher.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-        }
+  private void allowSwaggerConditionally(
+      AuthorizeHttpRequestsConfigurer<?>.AuthorizationManagerRequestMatcherRegistry matcher) {
+    if (swaggerAccessible.equals("true")) {
+      matcher.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
     }
+  }
 
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        var roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = String.join(" > ", Arrays.stream(AppRole.values()).map(AppRole::authorityName).toList());
-        roleHierarchy.setHierarchy(hierarchy);
-        return roleHierarchy;
-    }
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    var roleHierarchy = new RoleHierarchyImpl();
+    String hierarchy = String.join(" > ",
+        Arrays.stream(AppRole.values()).map(AppRole::authorityName).toList());
+    roleHierarchy.setHierarchy(hierarchy);
+    return roleHierarchy;
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+      throws Exception {
+    return configuration.getAuthenticationManager();
+  }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService::getUserDetailsByEmail);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
-    }
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userService::getUserDetailsByEmail);
+    authProvider.setPasswordEncoder(passwordEncoder);
+    return authProvider;
+  }
 
-    @Bean
-    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
-        var handler = new DefaultMethodSecurityExpressionHandler();
-        handler.setRoleHierarchy(roleHierarchy());
-        return handler;
-    }
+  @Bean
+  public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+    var handler = new DefaultMethodSecurityExpressionHandler();
+    handler.setRoleHierarchy(roleHierarchy());
+    return handler;
+  }
 }

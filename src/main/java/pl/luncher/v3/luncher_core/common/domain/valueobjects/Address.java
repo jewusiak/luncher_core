@@ -16,16 +16,17 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordFie
 @NoArgsConstructor
 @Indexed
 public class Address {
-    @FullTextField
-    private String firstLine;
-    @FullTextField
-    private String secondLine;
-    @FullTextField
-    private String zipCode;
-    @FullTextField
-    private String city;
-    @FullTextField
-    private String district;
-    @KeywordField
-    private String country; //ISO
+
+  @FullTextField
+  private String firstLine;
+  @FullTextField
+  private String secondLine;
+  @FullTextField
+  private String zipCode;
+  @FullTextField
+  private String city;
+  @FullTextField
+  private String district;
+  @KeywordField
+  private String country; //ISO
 }

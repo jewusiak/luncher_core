@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "place_types", schema = "luncher_core")
 public class PlaceType {
-    @Id
-    private String identifier;
 
-    private String iconName;
+  @Id
+  private String identifier;
 
-    private String name;
+  private String iconName;
+
+  private String name;
 }

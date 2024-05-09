@@ -8,21 +8,22 @@ import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 
 @Value
 public class AdminCreateUserRequest {
-    @Email
-    @NotBlank
-    String email;
 
-    @NotBlank
-    String firstName;
+  @Email
+  @NotBlank
+  String email;
 
-    @NotBlank
-    String surname;
+  @NotBlank
+  String firstName;
 
-    @NotBlank //TODO: password security validation
-    String password;
+  @NotBlank
+  String surname;
 
-    @NotNull
-    AppRole role;
+  @NotBlank //TODO: password security validation
+  String password;
 
-    Boolean enabled = true;
+  @NotNull
+  AppRole role;
+
+  Boolean enabled = true;
 }

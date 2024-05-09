@@ -4,9 +4,10 @@ import lombok.Value;
 
 @Value
 public class PlaceTypeDto {
-    String identifier;
 
-    String iconName;
+  String identifier;
 
-    String name;
+  String iconName;
+
+  String name;
 }

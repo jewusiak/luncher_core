@@ -1,11 +1,11 @@
 package pl.luncher.v3.luncher_core.common.model.dto;
 
-import lombok.Value;
-
 import java.util.Date;
+import lombok.Value;
 
 @Value
 public class JwtToken {
-    String token;
-    Date expiryDate;
+
+  String token;
+  Date expiryDate;
 }

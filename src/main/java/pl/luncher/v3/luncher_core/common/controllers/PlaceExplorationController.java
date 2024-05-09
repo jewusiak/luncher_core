@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/places/exploration")
 @RequiredArgsConstructor
 public class PlaceExplorationController {
-    
+
 }

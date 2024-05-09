@@ -2,6 +2,8 @@ package pl.luncher.v3.luncher_core.common.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
@@ -18,74 +20,77 @@ import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.exceptions.InsufficientRoleException;
 import pl.luncher.v3.luncher_core.common.repositories.UserRepository;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final EntityManager entityManager;
-    private final AdminUserMapper adminUserMapper;
+  private final UserRepository userRepository;
+  private final EntityManager entityManager;
+  private final AdminUserMapper adminUserMapper;
 
-    public UserDetails getUserDetailsByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElse(null);
+  public UserDetails getUserDetailsByEmail(String email) {
+    return userRepository.findUserByEmail(email).orElse(null);
+  }
+
+  public Optional<User> findUserByEmail(String email) {
+    return userRepository.findUserByEmail(email);
+  }
+
+  public User createUser(User user) {
+    return userRepository.save(user);
+  }
+
+  public User updateUser(User user, UUID uuid) {
+    user.setUuid(uuid);
+    return userRepository.save(user);
+  }
+
+  public void checkIfUserCanCreateOtherUser(User user, User changedBy) {
+    ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
+  }
+
+  private void ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(User performes,
+      User performedOn) {
+    if (performes.getRole().compareRoleTo(performedOn.getRole()) <= 0
+        && performes.getRole() != AppRole.SYS_ROOT) {
+      throw new InsufficientRoleException(
+          "Created/updated user cannot have equal or higher role than the creator.");
+    }
+  }
+
+  public void checkIfUserCanUpdateOtherUser(User user, User changedBy) {
+    var oldUserDbEntity = getUserByUuid(user.getUuid());
+
+    ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
+    ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, oldUserDbEntity);
+  }
+
+  public Page<User> getAllUsersPaged(PageRequest request) {
+    return userRepository.findUsersByOrderBySequence(request);
+  }
+
+  public User getUserByUuid(UUID userUuid) {
+    return userRepository.findUserByUuid(userUuid).orElse(null);
+  }
+
+  public Page<User> findByStringQueryPaged(String query, PageRequest pageRequest) {
+    if (query == null || query.isBlank()) {
+      return getAllUsersPaged(pageRequest);
     }
 
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
-    }
+    SearchSession session = Search.session(entityManager);
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
+    SearchResult<User> result = session.search(User.class).where(f ->
+            f.match().fields("firstname", "surname", "email").matching(query).fuzzy(2))
+        .fetch(pageRequest.getPageSize() * pageRequest.getPageNumber(), pageRequest.getPageSize());
 
-    public User updateUser(User user, UUID uuid) {
-        user.setUuid(uuid);
-        return userRepository.save(user);
-    }
+    return new PageImpl<>(result.hits(), pageRequest, result.total().hitCount());
+  }
 
-    public void checkIfUserCanCreateOtherUser(User user, User changedBy) {
-        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
-    }
-
-    private void ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(User performes, User performedOn) {
-        if (performes.getRole().compareRoleTo(performedOn.getRole()) <= 0 && performes.getRole() != AppRole.SYS_ROOT)
-            throw new InsufficientRoleException("Created/updated user cannot have equal or higher role than the creator.");
-    }
-
-    public void checkIfUserCanUpdateOtherUser(User user, User changedBy) {
-        var oldUserDbEntity = getUserByUuid(user.getUuid());
-
-        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, user);
-        ensureUsersRoleIsEnoughToPerformActionsOnOtherUser(changedBy, oldUserDbEntity);
-    }
-
-    public Page<User> getAllUsersPaged(PageRequest request) {
-        return userRepository.findUsersByOrderBySequence(request);
-    }
-
-    public User getUserByUuid(UUID userUuid) {
-        return userRepository.findUserByUuid(userUuid).orElse(null);
-    }
-
-    public Page<User> findByStringQueryPaged(String query, PageRequest pageRequest) {
-        if (query == null || query.isBlank())
-            return getAllUsersPaged(pageRequest);
-
-        SearchSession session = Search.session(entityManager);
-
-        SearchResult<User> result = session.search(User.class).where(f ->
-                        f.match().fields("firstname", "surname", "email").matching(query).fuzzy(2))
-                .fetch(pageRequest.getPageSize() * pageRequest.getPageNumber(), pageRequest.getPageSize());
-
-        return new PageImpl<>(result.hits(), pageRequest, result.total().hitCount());
-    }
-
-    public User mapToUpdateUserByAdmin(AdminUpdateUserRequest request, String userId) {
-        var oldUser = userRepository.findUserByUuid(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
-        adminUserMapper.mapToUpdateUser(oldUser, request, UUID.fromString(userId));
-        return oldUser;
-    }
+  public User mapToUpdateUserByAdmin(AdminUpdateUserRequest request, String userId) {
+    var oldUser = userRepository.findUserByUuid(UUID.fromString(userId))
+        .orElseThrow(EntityNotFoundException::new);
+    adminUserMapper.mapToUpdateUser(oldUser, request, UUID.fromString(userId));
+    return oldUser;
+  }
 }

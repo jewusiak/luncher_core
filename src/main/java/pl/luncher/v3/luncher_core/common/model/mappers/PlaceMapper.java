@@ -7,6 +7,6 @@ import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
 @Mapper(componentModel = "spring")
 public interface PlaceMapper {
 
-    Place map(CreatePlaceRequest request);
-    
+  Place map(CreatePlaceRequest request);
+
 }
