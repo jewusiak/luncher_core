@@ -1,32 +1,42 @@
-package pl.luncher.v3.luncher_core.common.domain.valueobjects;
+package pl.luncher.v3.luncher_core.common.place.valueobject;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.search.annotations.Indexed;
+import lombok.Setter;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
-@Data
+
+@Embeddable
 @Builder
 @AllArgsConstructor
-@Embeddable
 @NoArgsConstructor
-@Indexed
+@Getter
+@Setter
 public class Address {
 
-  @FullTextField
   private String firstLine;
-  @FullTextField
   private String secondLine;
-  @FullTextField
   private String zipCode;
-  @FullTextField
   private String city;
-  @FullTextField
   private String district;
+
+  @FullTextField
+  private String description;
+
   @KeywordField
   private String country; //ISO
+
+  @Transient
+  @FullTextField
+  private String addressString() {
+    return """
+        %s
+        %s
+        %s, %s %s""".formatted(firstLine, secondLine, zipCode, city, district);
+  }
 }

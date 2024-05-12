@@ -1,23 +1,30 @@
-package pl.luncher.v3.luncher_core.common.domain;
+package pl.luncher.v3.luncher_core.common.persistence.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Entity
 @Table(name = "opening_windows", schema = "luncher_core")
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class OpeningWindow {
+@Builder(access = AccessLevel.MODULE)
+@Getter
+@Setter
+public class OpeningWindowDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,9 +35,6 @@ public class OpeningWindow {
   private LocalTime endTime;
   private String description; //optional
 
-//    @ManyToOne
-//    Place place;
-//
-//    @ManyToOne
-//    PlaceOpeningException placeOpeningException;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  private PlaceDb place;
 }

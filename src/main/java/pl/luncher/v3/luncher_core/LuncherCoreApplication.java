@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import pl.luncher.v3.luncher_core.common.domain.Place;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 public class LuncherCoreApplication {
@@ -29,7 +29,7 @@ public class LuncherCoreApplication {
   public void onAppLoad() throws InterruptedException {
     SearchSession searchSession = Search.session(entityManager);
 
-    MassIndexer indexer = searchSession.massIndexer(User.class, Place.class)
+    MassIndexer indexer = searchSession.massIndexer(User.class, PlaceDb.class)
         .threadsToLoadObjects(4);
 
     indexer.startAndWait();

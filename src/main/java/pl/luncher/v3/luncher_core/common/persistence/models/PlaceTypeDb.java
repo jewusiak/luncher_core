@@ -1,18 +1,23 @@
-package pl.luncher.v3.luncher_core.common.domain;
+package pl.luncher.v3.luncher_core.common.persistence.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "place_types", schema = "luncher_core")
-public class PlaceType {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(access = AccessLevel.PACKAGE)
+@Getter
+@Setter
+public class PlaceTypeDb {
 
   @Id
   private String identifier;

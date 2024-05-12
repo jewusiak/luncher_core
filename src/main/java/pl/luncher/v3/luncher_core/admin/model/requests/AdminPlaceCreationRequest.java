@@ -1,10 +1,13 @@
 package pl.luncher.v3.luncher_core.admin.model.requests;
 
+import java.io.Serializable;
+import lombok.Builder;
 import lombok.Value;
 import pl.luncher.v3.luncher_core.common.place.valueobject.Address;
 
 @Value
-public class AdminUpdatePlaceRequest {
+@Builder
+public class AdminPlaceCreationRequest implements Serializable {
 
   String name;
   String longName;
@@ -17,4 +20,5 @@ public class AdminUpdatePlaceRequest {
   Address address;
   String googleMapsReference;
   String placeTypeIdentifier;
+
 }
