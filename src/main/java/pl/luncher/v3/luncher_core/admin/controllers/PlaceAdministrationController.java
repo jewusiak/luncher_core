@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -150,7 +151,7 @@ public class PlaceAdministrationController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved places", content = @Content(mediaType = "application/json", schema = @Schema(implementation = IterableAdminBasicPlaceResponse.class))),})
   @GetMapping("/search")
-  public ResponseEntity<?> adminSearchPlaces(
+  public ResponseEntity<List<AdminBasicPlaceResponse>> adminSearchPlaces(
       @RequestParam(required = false) String query,
       @RequestParam(defaultValue = "20", required = false) int size,
       @RequestParam(defaultValue = "0", required = false) int page) {
