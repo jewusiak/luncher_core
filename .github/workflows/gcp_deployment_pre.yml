@@ -97,3 +97,13 @@ jobs:
 
       - name: GCP App Url
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
+  
+  cleanup:
+    needs: [ push ]
+    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            *_image.tar
