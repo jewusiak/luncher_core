@@ -107,3 +107,4 @@ jobs:
         with:
           name: |
             *_image.tar
+            *_image
