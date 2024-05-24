@@ -29,7 +29,7 @@ jobs:
         run: 'docker save --output /tmp/${{ env.SERVICE }}_image.tar ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest'
 
       - name: Upload Docker image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: '${{ env.SERVICE }}_image'
           path: '/tmp/${{ env.SERVICE }}_image.tar'
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Docker image
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: '${{ env.SERVICE }}_image'
           path: '/tmp'
@@ -97,3 +97,14 @@ jobs:
 
       - name: GCP App Url
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
+  
+  cleanup:
+    needs: [ push ]
+    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            *_image.tar
+            *_image
