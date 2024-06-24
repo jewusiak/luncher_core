@@ -13,6 +13,7 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @SecurityScheme(
@@ -64,6 +65,15 @@ public class SwaggerConfiguration {
         .displayName("Places exploration (end-users) API")
         .pathsToMatch("/places/exploration/**", "/places/exploration")
         .packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
+  }
+
+  @Bean
+  @Profile({"local_dev", "local_test"})
+  public GroupedOpenApi test() {
+    return GroupedOpenApi.builder().group("test")
+        .displayName("test")
+        .pathsToMatch("/**")
+        .packagesToScan("pl.luncher.v3.luncher_core").build();
   }
 
 }

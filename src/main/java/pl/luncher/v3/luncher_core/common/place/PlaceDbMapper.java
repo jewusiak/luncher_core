@@ -17,13 +17,14 @@ import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR, unmappedSourcePolicy = ReportingPolicy.ERROR, componentModel = ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.WARN, unmappedSourcePolicy = ReportingPolicy.WARN, componentModel = ComponentModel.SPRING)
 interface PlaceDbMapper {
 
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "standardOpeningTimes", ignore = true)
   @Mapping(target = "name", source = "request.name")
+  @Mapping(target = "images", ignore = true)
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
       ignoreUnmappedSourceProperties = {"placeTypeIdentifier"})
   void updateWith(@MappingTarget PlaceDb placeDb, AdminUpdatePlaceRequest request,

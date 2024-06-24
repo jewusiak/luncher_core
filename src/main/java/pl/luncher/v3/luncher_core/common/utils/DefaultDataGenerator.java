@@ -10,6 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminPlaceCreationRequest;
+import pl.luncher.v3.luncher_core.common.assets.Asset;
+import pl.luncher.v3.luncher_core.common.assets.AssetFactory;
 import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
@@ -28,6 +30,7 @@ public class DefaultDataGenerator {
   private final PasswordEncoder passwordEncoder;
   private final PlaceTypeFactory placeTypeFactory;
   private final PlaceFactory placeFactory;
+  private final AssetFactory assetFactory;
 
 
   @EventListener(ApplicationReadyEvent.class)
@@ -98,5 +101,9 @@ public class DefaultDataGenerator {
     owList.forEach(place::addOpeningWindow);
     place.save();
 
+    Asset asset = assetFactory.createImageAsset("exampleName", "exDescr", "jpg");
+    System.out.println(asset.getUploadUrl());
+    System.out.println("---------------------");
+    System.out.println(asset.getAccessUri());
   }
 }

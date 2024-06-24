@@ -69,6 +69,9 @@ public class PlaceDb {
   @ManyToOne
   private PlaceTypeDb placeType;
 
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages")
+  private List<ImageAssetDb> images;
+
 
   public void addStandardOpeningTime(OpeningWindowDb openingWindowDb) {
     if (standardOpeningTimes == null) {
