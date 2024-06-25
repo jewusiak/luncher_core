@@ -1,63 +1,52 @@
 package pl.luncher.v3.luncher_core.common.controllers;
 
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.HttpMethod;
-import com.google.cloud.storage.Storage;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import io.swagger.v3.oas.annotations.Operation;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.common.properties.GcpObjectStorageProperties;
+import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.model.requests.CreateAssetRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.CreateAssetRequest.AssetParentType;
+import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
+import pl.luncher.v3.luncher_core.common.permissions.PermissionCheckerFactory;
+import pl.luncher.v3.luncher_core.common.permissions.WithUserPermissionContext;
 
-@RestController("/asset")
+@RestController("/assets")
 @RequiredArgsConstructor
 public class AssetController {
 
-  //  private final Storage storage;
-  private final GcpObjectStorageProperties gcpObjectStorageProperties;
-  private final Storage storage;
+  private final PermissionCheckerFactory permissionCheckerFactory;
 
   @PostMapping
-  public ResponseEntity<?> create(@RequestParam String description) {
-//    blobPersistenceObject.setUuid(UUID.randomUUID());
-//
-//    var storage = StorageOptions.newBuilder()
-//        .setProjectId(gcpObjectStorageProperties.getProjectId()).setCredentials().build()
-//        .getService();
+  @Operation(summary = "Create asset")
+  public ResponseEntity<?> create(@RequestBody CreateAssetRequest request, User user) {
 
-    // Generate Signed URL
-    Map<String, String> extensionHeaders = new HashMap<>();
-    extensionHeaders.put("Content-Type", "image/png");
+    WithUserPermissionContext withUserPermissionContext = permissionCheckerFactory.withUser(
+        user.getUuid());
 
-    Blob blobInfo = storage.get("", gcpObjectStorageProperties.getBucketName());
-    URL url =
-        storage.signUrl(
-            blobInfo,
-            15,
-            TimeUnit.MINUTES,
-            Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
-            Storage.SignUrlOption.withExtHeaders(extensionHeaders),
-            Storage.SignUrlOption.withV4Signature());
+    PermissionChecker permissionChecker;
+    if (request.getParentType() == AssetParentType.PLACE) {
+      permissionChecker = withUserPermissionContext.withPlace(
+          UUID.fromString(request.getParentRef())).edit();
+    } else {
+      throw new UnsupportedOperationException("Unsupported asset parent type");
+    }
+    permissionChecker.checkPermission();
 
-//    imageAssetDb.setBlobId(blob.getGeneratedId());
-
-//    save();
-    return ResponseEntity.ok(new Resp(blobInfo.getBlobId().getName(),
-        url.toString()));
+    // this should verify if user has permissions to create and link the asset to a place
+    throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  @Data
-  @AllArgsConstructor
-  public class Resp {
-
-    private String uuid;
-    private String url;
+  @DeleteMapping("/{uuid}")
+  @Operation(summary = "Unlink and delete asset")
+  public ResponseEntity<?> delete(@PathVariable UUID uuid) {
+    // this should verify if user has permissions to delete the asset
+    throw new UnsupportedOperationException("Not yet implemented");
   }
+
 }
