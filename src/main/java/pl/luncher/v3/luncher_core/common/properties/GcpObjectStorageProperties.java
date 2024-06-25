@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class GcpObjectStorageProperties {
 
-  private String assetsUrlPrefix;
+  private String gcpHost;
   private String bucketName;
   private String projectId;
   private String imagePathPrefix;

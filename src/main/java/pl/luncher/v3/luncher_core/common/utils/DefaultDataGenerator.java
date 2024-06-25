@@ -104,6 +104,6 @@ public class DefaultDataGenerator {
     Asset asset = assetFactory.createImageAsset("exampleName", "exDescr", "jpg");
     System.out.println(asset.getUploadUrl());
     System.out.println("---------------------");
-    System.out.println(asset.getAccessUri());
+    System.out.println(asset.getAccessUrl());
   }
 }

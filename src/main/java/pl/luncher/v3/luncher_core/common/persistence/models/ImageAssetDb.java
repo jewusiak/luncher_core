@@ -12,8 +12,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "image_assets", schema = "luncher_core")
-@DiscriminatorValue("IMAGE")
+@DiscriminatorValue("iamge_asset")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @SuperBuilder

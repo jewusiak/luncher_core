@@ -1,5 +1,7 @@
 package pl.luncher.v3.luncher_core.common.assets;
 
+import pl.luncher.v3.luncher_core.common.place.Place;
+
 public interface Asset {
 
   String getUploadUrl();
@@ -8,5 +10,7 @@ public interface Asset {
 
   void delete();
 
-  String getAccessUri();
+  String getAccessUrl();
+
+  void linkToPlace(Place place);
 }

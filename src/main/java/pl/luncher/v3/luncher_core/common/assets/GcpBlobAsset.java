@@ -27,14 +27,24 @@ abstract class GcpBlobAsset implements Asset {
    *
    * @param pathPrefix prefix of remote path eg. images/2021/01/ <- note the trailing slash
    */
-  public GcpBlobAsset(GcpAssetRepository gcpAssetRepository, Storage storage, String bucketName,
-      String pathPrefix, MimeContentFileType filetype) {
+  GcpBlobAsset(GcpAssetRepository gcpAssetRepository, Storage storage, String bucketName,
+      String pathPrefix, MimeContentFileType filetype, String gcpHost) {
     this.gcpAssetRepository = gcpAssetRepository;
     this.storage = storage;
     UUID fileUuid = UUID.randomUUID();
+    String filePath = pathPrefix + fileUuid + "." + filetype.getOutputExtension();
     gcpAssetDb = GcpAssetDb.builder().dateCreated(OffsetDateTime.now()).bucketName(bucketName)
-        .uuid(fileUuid).path(pathPrefix + fileUuid + "." + filetype.getOutputExtension()).build();
+        .uuid(fileUuid).path(filePath).publicUrl(buildPublicUrl(gcpHost, bucketName, filePath)).build();
     initializeRemoteFile(filetype);
+  }
+
+  /**
+   * Creates new blob asset from data source
+   */
+  GcpBlobAsset(GcpAssetRepository gcpAssetRepository, Storage storage, GcpAssetDb gcpAssetDb) {
+    this.gcpAssetRepository = gcpAssetRepository;
+    this.storage = storage;
+    this.gcpAssetDb = gcpAssetDb;
   }
 
   @Override
@@ -59,8 +69,8 @@ abstract class GcpBlobAsset implements Asset {
   }
 
   @Override
-  public String getAccessUri() {
-    return getBlob().getSelfLink();
+  public String getAccessUrl() {
+    return gcpAssetDb.getPublicUrl();
   }
 
   protected void connectToBlob(
@@ -68,22 +78,25 @@ abstract class GcpBlobAsset implements Asset {
     concreteAssetToBlobAssetConnector.connectToBlob(gcpAssetDb, GcpAssetDb.class);
   }
 
-  protected Blob getBlob() {
+  private Blob getBlob() {
     if (blob != null) {
       return blob;
     }
     if (gcpAssetDb == null || gcpAssetDb.getPath() == null || gcpAssetDb.getBucketName() == null) {
       throw new IllegalStateException("blobInfoDto(.path/.bucketName) can't be null!");
     }
-    blob = storage.get(gcpAssetDb.getBucketName(), gcpAssetDb.getPath(),
-        BlobGetOption.generationMatch());
+    blob = storage.get(gcpAssetDb.getBucketName(), gcpAssetDb.getPath());
     return blob;
   }
 
-  void initializeRemoteFile(MimeContentFileType fileType) {
+  private void initializeRemoteFile(MimeContentFileType fileType) {
     BlobInfo blobInfo = BlobInfo.newBuilder(gcpAssetDb.getBucketName(), gcpAssetDb.getPath())
         .setContentType(fileType.getMimeType()).build();
 
     blob = storage.create(blobInfo, BlobTargetOption.doesNotExist());
+  }
+
+  private String buildPublicUrl(String host, String bucketName, String objPath) {
+    return "https://%s/%s/%s".formatted(host, bucketName, objPath);
   }
 }
