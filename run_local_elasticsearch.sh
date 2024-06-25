@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # -v "`pwd`/elasticsearch_data:/usr/share/elasticsearch/data" 
 
