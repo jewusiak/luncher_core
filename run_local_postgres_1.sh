@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 docker build -t luncher_local_postgres -f Dockerfile-local-postgres .
 
