@@ -72,7 +72,7 @@ public class PlaceDb {
   private PlaceTypeDb placeType;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages")
-  private List<ImageAssetDb> images;
+  private List<CommonAssetDb> images;
 
 
   public void addStandardOpeningTime(OpeningWindowDb openingWindowDb) {

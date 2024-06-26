@@ -4,6 +4,7 @@ import java.util.UUID;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
 import pl.luncher.v3.luncher_core.admin.model.responses.AdminBasicPlaceResponse;
 import pl.luncher.v3.luncher_core.admin.model.responses.AdminFullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
 import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
 
 public interface Place {
@@ -20,4 +21,7 @@ public interface Place {
 
   void removeOpeningWindow(UUID openingWindowId);
 
+  UUID getPlaceId();
+
+  AssetToPlaceConnector getAssetToPlaceConnectorWithRef();
 }

@@ -101,7 +101,7 @@ public class DefaultDataGenerator {
     owList.forEach(place::addOpeningWindow);
     place.save();
 
-    Asset asset = assetFactory.createImageAsset("exampleName", "exDescr", "jpg");
+    Asset asset = assetFactory.createCommonAsset("exampleName", "exDescr", "jpg");
     System.out.println(asset.getUploadUrl());
     System.out.println("---------------------");
     System.out.println(asset.getAccessUrl());

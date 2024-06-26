@@ -1,9 +1,12 @@
 package pl.luncher.v3.luncher_core.common.permissions;
 
-public class MissingPermissionException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class MissingPermissionException extends ResponseStatusException {
 
   public MissingPermissionException(String message) {
-    super(message);
+    super(HttpStatus.FORBIDDEN, message);
   }
 
 }

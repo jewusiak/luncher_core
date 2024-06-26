@@ -8,11 +8,6 @@ public class CreateAssetRequest {
   String name;
   String description;
   String fileExtension;
-  AssetParentType parentType;
-  String parentRef;
+  String placeId;
 
-
-  public enum AssetParentType {
-    PLACE
-  }
 }

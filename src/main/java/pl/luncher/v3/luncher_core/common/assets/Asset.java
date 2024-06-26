@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.common.assets;
 
+import java.util.UUID;
 import pl.luncher.v3.luncher_core.common.place.Place;
 
 public interface Asset {
@@ -12,5 +13,7 @@ public interface Asset {
 
   String getAccessUrl();
 
-  void linkToPlace(Place place);
+  UUID getAssetId();
+
+  void setPlaceRef(Place place);
 }

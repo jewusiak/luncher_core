@@ -14,6 +14,5 @@ public class GcpObjectStorageProperties {
   private String gcpHost;
   private String bucketName;
   private String projectId;
-  private String imagePathPrefix;
 
 }

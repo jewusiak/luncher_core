@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
 import pl.luncher.v3.luncher_core.admin.model.responses.AdminBasicPlaceResponse;
 import pl.luncher.v3.luncher_core.admin.model.responses.AdminFullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
 
@@ -55,4 +56,16 @@ class PlaceImpl implements Place {
     placeDb.getStandardOpeningTimes()
         .removeIf(openingWindowEntity -> openingWindowEntity.getUuid().equals(openingWindowId));
   }
+
+  @Override
+  public UUID getPlaceId() {
+    return placeDb.getId();
+  }
+
+  @Override
+  public AssetToPlaceConnector getAssetToPlaceConnectorWithRef() {
+    return () -> placeDb;
+  }
+
+
 }

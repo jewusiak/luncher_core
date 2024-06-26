@@ -1,6 +1,6 @@
 package pl.luncher.v3.luncher_core.common.permissions;
 
-interface WithAssetPermissionContext {
+public interface WithAssetPermissionContext {
 
   PermissionChecker edit();
 
