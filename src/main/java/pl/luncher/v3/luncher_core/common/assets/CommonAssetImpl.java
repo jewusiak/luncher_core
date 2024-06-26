@@ -38,6 +38,12 @@ class CommonAssetImpl extends GcpBlobAsset {
   }
 
   @Override
+  public void delete() {
+    assetRepository.delete(commonAssetDb);
+    super.delete();
+  }
+
+  @Override
   public void save() {
     super.save();
     commonAssetDb = assetRepository.saveAndFlush(commonAssetDb);
