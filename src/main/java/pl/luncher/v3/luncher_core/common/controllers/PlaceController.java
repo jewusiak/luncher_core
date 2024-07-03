@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.common.domain.infra.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
-import pl.luncher.v3.luncher_core.common.permissions.PermissionCheckerFactory;
 import pl.luncher.v3.luncher_core.common.place.Place;
 import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
 
@@ -24,7 +25,6 @@ import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
 public class PlaceController {
 
   private final PlaceFactory placeFactory;
-  private final PermissionCheckerFactory permissionCheckerFactory;
 
   @GetMapping("/{uuid}")
   public ResponseEntity<?> getById(@PathVariable UUID uuid) {
@@ -38,6 +38,7 @@ public class PlaceController {
 //
 //  }
 //
+  @PreAuthorize(hasRole.REST_USER)
   @PostMapping
   public ResponseEntity<?> createPlace(@RequestBody CreatePlaceRequest request, User user) {
     Place place = placeFactory.of(request, user);
@@ -46,12 +47,13 @@ public class PlaceController {
     return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
+  @PreAuthorize(hasRole.REST_USER)
   @DeleteMapping("/{placeUuid}")
   public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid, User user) {
 
-    permissionCheckerFactory.withUser(user.getUuid()).withPlace(placeUuid).delete().checkPermission();
+    Place place = placeFactory.pullFromRepo(placeUuid);
+    place.permissions().byUser(user).delete().throwIfnotPermitted();
 
-    placeFactory.pullFromRepo(placeUuid).delete();
 
     return ResponseEntity.noContent().build();
   }

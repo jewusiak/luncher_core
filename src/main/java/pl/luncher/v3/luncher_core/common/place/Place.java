@@ -25,5 +25,5 @@ public interface Place {
 
   AssetToPlaceConnector getAssetToPlaceConnectorWithRef();
 
-  void delete();
+  PlacePermissionsChecker permissions();
 }

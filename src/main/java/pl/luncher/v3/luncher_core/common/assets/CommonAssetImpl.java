@@ -2,12 +2,15 @@ package pl.luncher.v3.luncher_core.common.assets;
 
 import com.google.cloud.storage.Storage;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.Getter;
 import pl.luncher.v3.luncher_core.common.persistence.models.CommonAssetDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.AssetRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.GcpAssetRepository;
 import pl.luncher.v3.luncher_core.common.place.Place;
 
 
+@Getter(AccessLevel.PACKAGE)
 class CommonAssetImpl extends GcpBlobAsset {
 
   private CommonAssetDb commonAssetDb;
@@ -57,5 +60,10 @@ class CommonAssetImpl extends GcpBlobAsset {
   @Override
   public void setPlaceRef(Place place) {
     commonAssetDb.setRefToPlaceImages(place.getAssetToPlaceConnectorWithRef().getPlaceDb());
+  }
+
+  @Override
+  public AssetPermissionsChecker permissions() {
+    return new AssetPermissionsCheckerImpl(this);
   }
 }

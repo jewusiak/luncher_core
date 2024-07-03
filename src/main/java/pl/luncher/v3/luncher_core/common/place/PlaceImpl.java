@@ -1,7 +1,9 @@
 package pl.luncher.v3.luncher_core.common.place;
 
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
@@ -10,6 +12,7 @@ import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 
 @AllArgsConstructor
+@Getter(AccessLevel.PACKAGE)
 class PlaceImpl implements Place {
 
   private PlaceDb placeDb;
@@ -68,9 +71,8 @@ class PlaceImpl implements Place {
   }
 
   @Override
-  public void delete() {
-    placeEntityPersistenceService.deleteById(placeDb.getId());
+  public PlacePermissionsChecker permissions() {
+    return new PlacePermissionsCheckerImpl(this);
   }
-
 
 }
