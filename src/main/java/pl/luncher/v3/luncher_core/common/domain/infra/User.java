@@ -27,7 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Builder
 @Entity
-@Table(name = "users", schema = "luncher_core")
+@Table(name = "users_table", schema = "luncher_core")
 @Hidden
 @NoArgsConstructor
 @AllArgsConstructor

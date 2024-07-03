@@ -23,6 +23,7 @@ import lombok.Setter;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.place.valueobject.Address;
 
 
@@ -70,6 +71,9 @@ public class PlaceDb {
 
   @ManyToOne
   private PlaceTypeDb placeType;
+
+  @ManyToOne
+  private User owner;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages")
   private List<CommonAssetDb> images;

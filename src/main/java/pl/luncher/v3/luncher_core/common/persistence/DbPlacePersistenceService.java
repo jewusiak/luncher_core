@@ -40,4 +40,9 @@ public class DbPlacePersistenceService implements PlacePersistenceService {
         .flatMap(e -> placeTypeRepository.findById(placeTypeIdentifier));
   }
 
+  @Override
+  public void deleteById(UUID id) {
+    placeRepository.deleteById(id);
+  }
+
 }

@@ -14,9 +14,10 @@ import pl.luncher.v3.luncher_core.common.assets.Asset;
 import pl.luncher.v3.luncher_core.common.assets.AssetFactory;
 import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
 import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
 import pl.luncher.v3.luncher_core.common.place.valueobject.Address;
-import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 import pl.luncher.v3.luncher_core.common.placetype.PlaceType;
 import pl.luncher.v3.luncher_core.common.placetype.PlaceTypeFactory;
 import pl.luncher.v3.luncher_core.common.repositories.UserRepository;
@@ -73,7 +74,7 @@ public class DefaultDataGenerator {
     List.of(restType, barType, clubType).forEach(PlaceType::save);
 
     //restaurants
-    AdminPlaceCreationRequest r1 = AdminPlaceCreationRequest.builder().name("The Cool Cat")
+    CreatePlaceRequest r1 = CreatePlaceRequest.builder().name("The Cool Cat")
         .longName("The Cool Cat - TR")
 //        .allowedUsers(Set.of(employee))
         .address(Address.builder().firstLine("Marszałkowska 100").city("Warsaw").zipCode("01-007")
@@ -81,10 +82,10 @@ public class DefaultDataGenerator {
 
         .description("Cool Cat to kultowa restauracja asian fusion na mapie Śródmieścia")
         .googleMapsReference("gm reference")
-        //todo: implement resolving: .placeTypeIdentifier(restType.castToDto().getIdentifier())
+        .placeTypeIdentifier(restType.castToDto().getIdentifier())
         .build();
 
-    var place = placeFactory.of(r1);
+    var place = placeFactory.of(r1, owner);
 
     var owList = List.of(
         new OpeningWindowDto(null, DayOfWeek.MONDAY, LocalTime.of(10, 00), LocalTime.of(20, 30),

@@ -2,10 +2,10 @@ package pl.luncher.v3.luncher_core.common.place;
 
 import java.util.UUID;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminBasicPlaceResponse;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminFullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
 import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
-import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 
 public interface Place {
 
@@ -13,9 +13,9 @@ public interface Place {
 
   void updateWith(AdminUpdatePlaceRequest request);
 
-  AdminBasicPlaceResponse castToAdminBasicPlaceResponse();
+  BasicPlaceResponse castToBasicPlaceResponse();
 
-  AdminFullPlaceResponse castToAdminFullPlaceResponse();
+  FullPlaceResponse castToFullPlaceResponse();
 
   void addOpeningWindow(OpeningWindowDto openingWindowDto);
 
@@ -24,4 +24,6 @@ public interface Place {
   UUID getPlaceId();
 
   AssetToPlaceConnector getAssetToPlaceConnectorWithRef();
+
+  void delete();
 }

@@ -2,11 +2,12 @@ package pl.luncher.v3.luncher_core.common.placetype;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import pl.luncher.v3.luncher_core.common.model.dto.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class PlaceTypeImpl implements
+class PlaceTypeImpl implements
     PlaceType {
 
   private PlaceTypeDb placeTypeDb;
@@ -15,5 +16,11 @@ public class PlaceTypeImpl implements
   @Override
   public void save() {
     placeTypeDb = placeTypeRepository.save(placeTypeDb);
+  }
+
+  @Override
+  public PlaceTypeDto castToDto() {
+    return PlaceTypeDto.builder().name(placeTypeDb.getName()).iconName(placeTypeDb.getIconName())
+        .identifier(placeTypeDb.getIdentifier()).build();
   }
 }

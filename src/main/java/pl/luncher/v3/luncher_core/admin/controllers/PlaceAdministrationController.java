@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminPlaceCreationRequest;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminBasicPlaceResponse;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminFullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
 import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.place.Place;
 import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 
 @Tag(name = "places-administration", description = "Places administration")
 @RestController
@@ -46,37 +46,37 @@ public class PlaceAdministrationController {
   public ResponseEntity<?> getAllPlacesPaged(@RequestParam(defaultValue = "20") int size,
       @RequestParam(defaultValue = "0") int page) {
     return ResponseEntity.ok(
-        placeFactory.pullFromRepo(size, page).stream().map(Place::castToAdminBasicPlaceResponse)
+        placeFactory.pullFromRepo(size, page).stream().map(Place::castToBasicPlaceResponse)
             .toList());
   }
 
   @Operation(summary = "Get place by UUID")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully retrieved place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminFullPlaceResponse.class))),
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullPlaceResponse.class))),
       @ApiResponse(responseCode = "404", description = "Place not found", content = @Content)})
   @GetMapping("/{uuid}")
-  public ResponseEntity<AdminFullPlaceResponse> getPlaceByUuid(@PathVariable UUID uuid) {
+  public ResponseEntity<FullPlaceResponse> getPlaceByUuid(@PathVariable UUID uuid) {
     Place place = placeFactory.pullFromRepo(uuid);
 
-    return ResponseEntity.ok(place.castToAdminFullPlaceResponse());
+    return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
   @Operation(summary = "Create place by admin")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully created place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminFullPlaceResponse.class))),})
+      @ApiResponse(responseCode = "200", description = "Successfully created place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullPlaceResponse.class))),})
   @PostMapping("")
-  public ResponseEntity<AdminFullPlaceResponse> adminCreatePlace(
+  public ResponseEntity<FullPlaceResponse> adminCreatePlace(
       @RequestBody @Valid AdminPlaceCreationRequest request) {
     var place = placeFactory.of(request);
 
     place.save();
 
-    return ResponseEntity.ok(place.castToAdminFullPlaceResponse());
+    return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
   @Operation(summary = "Update place by admin", description = "Updates place basic details")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully updated place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminFullPlaceResponse.class))),})
+      @ApiResponse(responseCode = "200", description = "Successfully updated place", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullPlaceResponse.class))),})
   @PutMapping("{placeId}")
   public ResponseEntity<?> adminUpdatePlace(@RequestBody @Valid AdminUpdatePlaceRequest request,
       @PathVariable UUID placeId, User user) {
@@ -87,7 +87,7 @@ public class PlaceAdministrationController {
     place.updateWith(request);
     place.save();
 
-    return ResponseEntity.ok(place.castToAdminFullPlaceResponse());
+    return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
 // todo: implement  
@@ -117,9 +117,9 @@ public class PlaceAdministrationController {
 
   @Operation(summary = "Add opening window to place", description = "Opening window is a time frame when place is open")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully added opening window", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminFullPlaceResponse.class))),})
+      @ApiResponse(responseCode = "200", description = "Successfully added opening window", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullPlaceResponse.class))),})
   @PutMapping("{placeUuid}/opening-windows")
-  public ResponseEntity<AdminFullPlaceResponse> addOpeningWindow(@PathVariable UUID placeUuid,
+  public ResponseEntity<FullPlaceResponse> addOpeningWindow(@PathVariable UUID placeUuid,
       @RequestBody
       OpeningWindowDto openingWindow) {
     var place = placeFactory.pullFromRepo(placeUuid);
@@ -128,14 +128,14 @@ public class PlaceAdministrationController {
 
     place.save();
 
-    return ResponseEntity.ok(place.castToAdminFullPlaceResponse());
+    return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
   @Operation(summary = "Remove opening window from place", description = "Opening window is a time frame when place is open")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully removed opening window", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminFullPlaceResponse.class))),})
+      @ApiResponse(responseCode = "200", description = "Successfully removed opening window", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullPlaceResponse.class))),})
   @DeleteMapping("{placeUuid}/opening-windows/{openingWindowId}")
-  public ResponseEntity<AdminFullPlaceResponse> removeOpeningWindow(@PathVariable UUID placeUuid,
+  public ResponseEntity<FullPlaceResponse> removeOpeningWindow(@PathVariable UUID placeUuid,
       @PathVariable UUID openingWindowId) {
     var place = placeFactory.pullFromRepo(placeUuid);
 
@@ -143,7 +143,7 @@ public class PlaceAdministrationController {
 
     place.save();
 
-    return ResponseEntity.ok(place.castToAdminFullPlaceResponse());
+    return ResponseEntity.ok(place.castToFullPlaceResponse());
   }
 
   @Operation(summary = "Full text place search", description = "Empty query will return all places")
@@ -157,11 +157,11 @@ public class PlaceAdministrationController {
 
     var places = placeFactory.pullFromRepo(query, size, page);
 
-    return ResponseEntity.ok(places.stream().map(Place::castToAdminBasicPlaceResponse).toList());
+    return ResponseEntity.ok(places.stream().map(Place::castToBasicPlaceResponse).toList());
   }
 
   // swagger schema class
-  interface IterableAdminBasicPlaceResponse extends Iterable<AdminBasicPlaceResponse> {
+  interface IterableAdminBasicPlaceResponse extends Iterable<BasicPlaceResponse> {
 
   }
 }

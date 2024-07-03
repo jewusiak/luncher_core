@@ -3,11 +3,11 @@ package pl.luncher.v3.luncher_core.common.place;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminBasicPlaceResponse;
-import pl.luncher.v3.luncher_core.admin.model.responses.AdminFullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
 import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
-import pl.luncher.v3.luncher_core.common.place.valueobject.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 
 @AllArgsConstructor
 class PlaceImpl implements Place {
@@ -31,12 +31,12 @@ class PlaceImpl implements Place {
   }
 
   @Override
-  public AdminBasicPlaceResponse castToAdminBasicPlaceResponse() {
+  public BasicPlaceResponse castToBasicPlaceResponse() {
     return placeDbMapper.mapToBasic(placeDb);
   }
 
   @Override
-  public AdminFullPlaceResponse castToAdminFullPlaceResponse() {
+  public FullPlaceResponse castToFullPlaceResponse() {
     return placeDbMapper.mapToFull(placeDb);
   }
 
@@ -65,6 +65,11 @@ class PlaceImpl implements Place {
   @Override
   public AssetToPlaceConnector getAssetToPlaceConnectorWithRef() {
     return () -> placeDb;
+  }
+
+  @Override
+  public void delete() {
+    placeEntityPersistenceService.deleteById(placeDb.getId());
   }
 
 

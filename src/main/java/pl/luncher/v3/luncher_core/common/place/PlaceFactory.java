@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.common.place;
 
+import com.google.api.gax.rpc.UnimplementedException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminPlaceCreationRequest;
+import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
 
@@ -41,7 +44,18 @@ public class PlaceFactory {
     PlaceTypeDb placeTypeDb = placeEntityPersistenceService.getOptionalPlaceType(
         request.getPlaceTypeIdentifier()).orElse(null);
 
-    return of(placeDbMapper.fromCreation(request, placeTypeDb));
+    // todo: remove
+    throw new UnsupportedOperationException();
+//    return of(placeDbMapper.fromCreation(request, placeTypeDb));
+  }
+
+  public Place of(CreatePlaceRequest request, User user) {
+    PlaceTypeDb placeTypeDb = placeEntityPersistenceService.getOptionalPlaceType(
+        request.getPlaceTypeIdentifier()).orElseThrow();
+
+    PlaceDb placeDb = placeDbMapper.fromCreation(request, placeTypeDb, user);
+
+    return of(placeDb);
   }
 
   private Place of(PlaceDb placeDb) {

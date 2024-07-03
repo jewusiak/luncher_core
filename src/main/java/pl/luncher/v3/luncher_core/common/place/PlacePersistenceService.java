@@ -15,4 +15,6 @@ public interface PlacePersistenceService {
   Collection<PlaceDb> getFromRepo(int size, int page);
 
   Optional<PlaceTypeDb> getOptionalPlaceType(String placeTypeIdentifier);
+
+  void deleteById(UUID id);
 }
