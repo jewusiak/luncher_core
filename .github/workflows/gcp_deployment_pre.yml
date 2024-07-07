@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Copy App GCP credentials
-        run: 'cat ${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }} > secrets/gcp_server_key.json'
+        run: 'mkdir secrets && cat ${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }} > secrets/gcp_server_key.json'
 
       - name: Set up java
         uses: actions/setup-java@v4
