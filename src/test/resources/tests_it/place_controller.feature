@@ -10,6 +10,11 @@ Feature: CRUD - Place
       | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e5 | admin@luncher.corp    | 1234     | ADMIN     | Json2   | SYS_ADMIN    |
       | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e7 | mod@luncher.corp      | 1234     | MOD       | Json2   | SYS_MOD      |
 
+    And place types exist:
+      | identifier | iconName   | name       |
+      | RESTAURANT | restaurant | Restaurant |
+      | BAR        | bar        | Bar        |
+
 
   Scenario: User creates place
     Given User logs in using credentials:

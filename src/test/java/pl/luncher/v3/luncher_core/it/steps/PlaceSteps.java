@@ -6,6 +6,7 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getRASpecification
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -16,9 +17,14 @@ import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
+import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 
 @RequiredArgsConstructor
 public class PlaceSteps {
+
+  private final ObjectMapper objectMapper;
+  private final PlaceTypeRepository placeTypeRepository;
 
   @When("User creates a place as below:")
   public void userCreatesAPlaceAsBelow(List<Map<String, String>> data) {
@@ -48,5 +54,11 @@ public class PlaceSteps {
 
     getRASpecificationWithAuthAndAcceptHeaders().when().delete("/place/%s".formatted(id)).then().statusCode(code);
 
+  }
+
+  @And("place types exist:")
+  public void placeTypesExist(List<Map<String, String>> data) {
+    var l = data.stream().map(item -> castMap(item, PlaceTypeDb.class)).toList();
+    placeTypeRepository.saveAll(l);
   }
 }

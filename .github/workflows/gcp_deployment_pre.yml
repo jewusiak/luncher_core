@@ -11,7 +11,7 @@ env:
   REGION: "us-central1"
 
 jobs:
-  build:
+  test:
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -20,6 +20,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Copy App GCP credentials
+        run: 'cat ${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }} > secrets/gcp_server_key.json'
+
+      - name: Set up java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build & test
+        run: 'mvn clean verify -Pgcp_test'
+
+
+  build:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy App GCP credentials
+        run: 'cat ${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }} > /gcp_server_key.json'
 
       - name: Build docker Image
         id: docker-build
@@ -34,7 +60,7 @@ jobs:
           name: '${{ env.SERVICE }}_image'
           path: '/tmp/${{ env.SERVICE }}_image.tar'
   push:
-    needs: [ build ]
+    needs: [ build, test ]
     permissions:
       contents: 'read'
       id-token: 'write'

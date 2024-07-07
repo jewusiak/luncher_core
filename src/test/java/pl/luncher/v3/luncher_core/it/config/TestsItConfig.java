@@ -6,13 +6,12 @@ import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
@@ -35,33 +34,29 @@ public class TestsItConfig {
 
   @LocalServerPort
   private int port;
-  @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private PlaceRepository placeRepository;
-  @Autowired
-  private PlaceTypeRepository placeTypeRepository;
+
+  private final Environment environment;
+
+  private final UserRepository userRepository;
+  private final PlaceRepository placeRepository;
+  private final PlaceTypeRepository placeTypeRepository;
 
   @BeforeAll
   public static void beforeAll() throws InterruptedException {
-//    log.info("BA >> Set up Elasticsearch");
-//    elasticsearchContainer = new ElasticsearchContainer("elasticsearch:8.12.2");
-//    elasticsearchContainer.withEnv("discovery.type", "single-node");
-//    elasticsearchContainer.withEnv("xpack.security.enabled", "false");
-//    elasticsearchContainer.withExposedPorts(9200, 9300);
-//    elasticsearchContainer.setPortBindings(List.of("9200:9200", "9300:9300"));
-//    elasticsearchContainer.start();
-//    log.info("BA >> Elasticsearch is up and running");
     log.info("BEFORE ALL >>");
 
+    if (!isHostRunningWindows()) {
+      setUpElasticsearchContainer();
+    }
   }
 
   @AfterAll
   public static void afterAll() {
-//    log.info("AA >> Tear down Elasticsearch");
-//    elasticsearchContainer.stop();
-//    log.info("AA >> Elasticsearch is down");
+
     log.info("AFTER ALL >>");
+    if (!isHostRunningWindows()) {
+      tearDownElasticsearchContainer();
+    }
     ParentSteps.resetAll();
   }
 
@@ -76,5 +71,29 @@ public class TestsItConfig {
     log.info("AFTER EACH >>");
     placeRepository.deleteAll();
     userRepository.deleteAll();
+    placeTypeRepository.deleteAll();
+  }
+
+  private static boolean isHostRunningWindows() {
+    String property = System.getProperty("os.name");
+    log.info("Running on {} machine.", property);
+    return property != null && property.startsWith("Windows");
+  }
+
+  private static void setUpElasticsearchContainer() {
+    log.info("BA >> Set up Elasticsearch");
+    elasticsearchContainer = new ElasticsearchContainer("elasticsearch:8.12.2");
+    elasticsearchContainer.withEnv("discovery.type", "single-node");
+    elasticsearchContainer.withEnv("xpack.security.enabled", "false");
+    elasticsearchContainer.withExposedPorts(9200, 9300);
+    elasticsearchContainer.setPortBindings(List.of("9200:9200", "9300:9300"));
+    elasticsearchContainer.start();
+    log.info("BA >> Elasticsearch is up and running");
+  }
+
+  private static void tearDownElasticsearchContainer() {
+    log.info("AA >> Tear down Elasticsearch");
+    elasticsearchContainer.stop();
+    log.info("AA >> Elasticsearch is down");
   }
 }
