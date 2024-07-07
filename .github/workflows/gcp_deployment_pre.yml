@@ -44,9 +44,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Copy App GCP credentials
-        run: 'cat ${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }} > /gcp_server_key.json'
-
       - name: Build docker Image
         id: docker-build
         run: 'docker build -t ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --file=Dockerfile-gcp_pre .'
