@@ -78,3 +78,5 @@ Feature: CRUD - Place
       | mod@luncher.corp      | 204        |
       | admin@luncher.corp    | 204        |
 
+  Scenario: Failing test
+    Given test fails
