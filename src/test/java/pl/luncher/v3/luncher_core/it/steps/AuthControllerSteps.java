@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.it.steps;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -33,5 +34,10 @@ public class AuthControllerSteps {
     ParentSteps.getRASpecificationWithAuthAndAcceptHeaders()
         .get("/profile")
         .then().body("email", equalTo(email)).statusCode(200);
+  }
+
+  @And("test fails")
+  public void testFails() {
+    fail();
   }
 }
