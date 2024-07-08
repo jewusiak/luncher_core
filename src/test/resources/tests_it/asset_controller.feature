@@ -39,5 +39,3 @@ Feature: Assets controller
 
     And Last created place has 0 assets:
       |  |
-
-    And test fails
