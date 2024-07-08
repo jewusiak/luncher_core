@@ -122,7 +122,8 @@ jobs:
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
   
   cleanup:
-    needs: [ push ]
+    needs: [ test, build, push ]
+    if: ${{ (needs.test.result == 'failure' && needs.build.result == 'success') || needs.push.result == 'success'}}
     
     runs-on: ubuntu-latest
     steps:
@@ -131,14 +132,14 @@ jobs:
           name: |
             *_image.tar
             *_image
-  
-  cleanup_if_test_fails:
-    needs: [ test, build ]
-    if: ${{ needs.test.result == 'failure' && needs.build.result == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: geekyeggo/delete-artifact@v5
-        with:
-          name: |
-            *_image.tar
-            *_image
+
+#  cleanup_if_test_fails:
+#    needs: [ test, build ]
+#    if: ${{ needs.test.result == 'failure' && needs.build.result == 'success' }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: geekyeggo/delete-artifact@v5
+#        with:
+#          name: |
+#            *_image.tar
+#            *_image
