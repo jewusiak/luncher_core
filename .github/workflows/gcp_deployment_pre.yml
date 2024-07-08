@@ -122,7 +122,7 @@ jobs:
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
   
   cleanup:
-    needs: [ test, build, push ]
+    needs: [ push ]
     if: ${{ always() }}
     
     runs-on: ubuntu-latest
