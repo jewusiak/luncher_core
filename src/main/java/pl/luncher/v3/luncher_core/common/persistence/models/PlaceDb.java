@@ -76,8 +76,9 @@ public class PlaceDb {
   @ManyToOne
   private User owner;
 
-  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages", fetch = FetchType.EAGER)
-  private List<CommonAssetDb> images;
+  @OneToMany(cascade = {
+      CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages", fetch = FetchType.EAGER)
+  private List<AssetDb> images;
 
 
   public void addStandardOpeningTime(OpeningWindowDb openingWindowDb) {

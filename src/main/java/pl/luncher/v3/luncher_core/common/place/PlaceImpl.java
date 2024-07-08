@@ -5,11 +5,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
-import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
-import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
+import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 
 @AllArgsConstructor
 @Getter(AccessLevel.PACKAGE)
@@ -68,6 +67,11 @@ class PlaceImpl implements Place {
   @Override
   public PlacePermissionsChecker permissions() {
     return new PlacePermissionsCheckerImpl(this);
+  }
+
+  @Override
+  public PlaceDb getDbEntity() {
+    return placeDb;
   }
 
 }

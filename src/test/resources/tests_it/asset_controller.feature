@@ -35,7 +35,7 @@ Feature: Assets controller
 
     When User deletes last asset from last created place
 
-    Then response code is 200
+    Then response code is 204
 
     And Last created place has 0 assets:
       |  |

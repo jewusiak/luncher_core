@@ -1,14 +1,12 @@
 package pl.luncher.v3.luncher_core.common.persistence.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "assets", schema = "luncher_core")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
@@ -33,17 +30,13 @@ public class AssetDb {
 
   private String name;
   private String description;
+  private String bucketPath;
+  private String bucketName;
+  private OffsetDateTime dateCreated;
+  private String publicUrl;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private GcpAssetDb gcpAsset;
+  @ManyToOne
+  private PlaceDb refToPlaceImages;
 
-  public void setBlobAsset(Object blobAsset, Class clazz) {
-    if (clazz == GcpAssetDb.class) {
-      setGcpAsset((GcpAssetDb) blobAsset);
-    } else {
-      throw new IllegalArgumentException(
-          "AssetDb doesnt support %s class".formatted(clazz.getSimpleName()));
-    }
-  }
 
 }

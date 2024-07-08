@@ -2,10 +2,9 @@ package pl.luncher.v3.luncher_core.common.place;
 
 import java.util.UUID;
 import pl.luncher.v3.luncher_core.admin.model.requests.AdminUpdatePlaceRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
-import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
-import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 
 public interface Place {
@@ -25,4 +24,6 @@ public interface Place {
   UUID getPlaceId();
 
   PlacePermissionsChecker permissions();
+
+  PlaceDb getDbEntity();
 }
