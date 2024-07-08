@@ -1,13 +1,18 @@
 package pl.luncher.v3.luncher_core.common.model.requests;
 
-import lombok.Value;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import org.hibernate.validator.constraints.UUID;
 
-@Value
+@Data
 public class CreateAssetRequest {
 
-  String name;
-  String description;
-  String fileExtension;
-  String placeId;
+  private String name;
+  private String description;
+  @NotBlank
+  private String fileExtension;
+  @NotBlank
+  @UUID
+  private String placeId;
 
 }

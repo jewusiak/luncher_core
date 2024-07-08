@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,10 @@ public class ParentSteps {
 
   public static <T> T getFromCache(String key, Class<T> tClass) {
     return tClass.cast(cache.get(key));
+  }
+
+  public static String getLastCreatedPlaceUuid() {
+    return getFromCache("newPlaceUuid", String.class);
   }
 
   public static <T> void putToCache(String key, T obj) {

@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("iamge_asset")
+@DiscriminatorValue("image_asset")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @SuperBuilder

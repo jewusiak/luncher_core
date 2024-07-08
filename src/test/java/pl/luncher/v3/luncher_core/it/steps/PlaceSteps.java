@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.it.steps;
 
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.castMap;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getFromCache;
+import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getLastCreatedPlaceUuid;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getRASpecificationWithAuthAndAcceptHeaders;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
@@ -36,7 +37,7 @@ public class PlaceSteps {
 
   @Then("Retrieved place with last created UUID is as below:")
   public void retrievedPlaceWithLastCreatedUUIDIsAsBelow(List<Map<String, String>> data) {
-    String id = getFromCache("newPlaceUuid", String.class);
+    String id = getLastCreatedPlaceUuid();
 
     Response response = getRASpecificationWithAuthAndAcceptHeaders().when().get("/place/%s".formatted(id)).thenReturn();
     saveHttpResp(response);
@@ -50,7 +51,7 @@ public class PlaceSteps {
 
   @And("Place deletion with last created UUID results in {int} code")
   public void placeDeletionWithLastCreatedUUIDResultsInCode(int code) {
-    String id = getFromCache("newPlaceUuid", String.class);
+    String id = getLastCreatedPlaceUuid();
 
     getRASpecificationWithAuthAndAcceptHeaders().when().delete("/place/%s".formatted(id)).then().statusCode(code);
 

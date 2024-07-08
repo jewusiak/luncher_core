@@ -65,7 +65,7 @@ abstract class GcpBlobAsset implements Asset {
   @Override
   public void delete() {
     storage.delete(getBlob().getBlobId());
-    gcpAssetRepository.deleteById(gcpAssetDb.getUuid());
+//    gcpAssetRepository.deleteById(gcpAssetDb.getUuid());
   }
 
   @Override

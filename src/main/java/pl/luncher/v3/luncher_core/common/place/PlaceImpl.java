@@ -66,11 +66,6 @@ class PlaceImpl implements Place {
   }
 
   @Override
-  public AssetToPlaceConnector getAssetToPlaceConnectorWithRef() {
-    return () -> placeDb;
-  }
-
-  @Override
   public PlacePermissionsChecker permissions() {
     return new PlacePermissionsCheckerImpl(this);
   }

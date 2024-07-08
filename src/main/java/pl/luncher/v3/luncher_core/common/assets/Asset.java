@@ -15,7 +15,7 @@ public interface Asset {
 
   UUID getAssetId();
 
-  void setPlaceRef(Place place);
+  void setPlace(Place place);
 
   AssetPermissionsChecker permissions();
 }

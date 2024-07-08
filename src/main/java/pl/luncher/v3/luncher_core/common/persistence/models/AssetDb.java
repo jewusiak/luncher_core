@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.common.persistence.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +34,7 @@ public class AssetDb {
   private String name;
   private String description;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   private GcpAssetDb gcpAsset;
 
   public void setBlobAsset(Object blobAsset, Class clazz) {

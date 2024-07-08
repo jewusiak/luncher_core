@@ -4,6 +4,7 @@ package pl.luncher.v3.luncher_core.common.persistence.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -75,7 +76,7 @@ public class PlaceDb {
   @ManyToOne
   private User owner;
 
-  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages")
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "refToPlaceImages", fetch = FetchType.EAGER)
   private List<CommonAssetDb> images;
 
 

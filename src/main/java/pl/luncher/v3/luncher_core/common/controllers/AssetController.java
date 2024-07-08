@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.common.assets.Asset;
 import pl.luncher.v3.luncher_core.common.assets.AssetFactory;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.common.domain.infra.User;
 import pl.luncher.v3.luncher_core.common.model.requests.CreateAssetRequest;
@@ -42,7 +42,7 @@ public class AssetController {
       @ApiResponse(responseCode = "403", description = "User has no permission to edit place"),
       @ApiResponse(responseCode = "404", description = "Place not found")
   })
-  public ResponseEntity<?> create(@RequestBody CreateAssetRequest request, User user) {
+  public ResponseEntity<?> create(@Valid @RequestBody CreateAssetRequest request, User user) {
     var place = placeFactory.pullFromRepo(UUID.fromString(request.getPlaceId()));
 
     place.permissions().byUser(user).edit().throwIfnotPermitted();
@@ -50,7 +50,7 @@ public class AssetController {
     var asset = assetFactory.createCommonAsset(request.getName(), request.getDescription(),
         request.getFileExtension());
 
-    asset.setPlaceRef(place);
+    asset.setPlace(place);
     asset.save();
 
     return ResponseEntity.ok(
@@ -72,7 +72,6 @@ public class AssetController {
     asset.permissions().byUser(user).delete().throwIfnotPermitted();
 
     asset.delete();
-
 
     return ResponseEntity.noContent().build();
   }

@@ -6,6 +6,7 @@ import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
 import pl.luncher.v3.luncher_core.common.assets.AssetToPlaceConnector;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 
 public interface Place {
 
@@ -22,8 +23,6 @@ public interface Place {
   void removeOpeningWindow(UUID openingWindowId);
 
   UUID getPlaceId();
-
-  AssetToPlaceConnector getAssetToPlaceConnectorWithRef();
 
   PlacePermissionsChecker permissions();
 }

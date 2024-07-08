@@ -9,6 +9,7 @@ import pl.luncher.v3.luncher_core.common.persistence.models.AssetDb;
 import pl.luncher.v3.luncher_core.common.persistence.models.CommonAssetDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.AssetRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.GcpAssetRepository;
+import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.common.properties.GcpObjectStorageProperties;
 
 @Component
@@ -19,6 +20,7 @@ public class AssetFactory {
   private final Storage storage;
   private final AssetRepository assetRepository;
   private final GcpObjectStorageProperties gcpObjectStorageProperties;
+  private final PlaceRepository placeRepository;
 
   public Asset pullFromRepo(UUID uuid) {
     AssetDb assetDb = assetRepository.findById(uuid).orElseThrow(() -> new EntityNotFoundException(
@@ -32,12 +34,12 @@ public class AssetFactory {
   }
 
   private Asset commonAssetOf(CommonAssetDb commonAssetDb) {
-    return new CommonAssetImpl(gcpAssetRepository, storage, assetRepository, commonAssetDb);
+    return new CommonAssetImpl(gcpAssetRepository, storage, assetRepository, placeRepository, commonAssetDb);
   }
 
 
   public Asset createCommonAsset(String inputName, String description, String fileExtension) {
-    Asset asset = new CommonAssetImpl(gcpAssetRepository, storage, assetRepository,
+    Asset asset = new CommonAssetImpl(gcpAssetRepository, storage, assetRepository, placeRepository,
         gcpObjectStorageProperties.getBucketName(), "",
         MimeContentFileType.fromExtension(fileExtension), inputName, description,
         gcpObjectStorageProperties.getGcpHost());
