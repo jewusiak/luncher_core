@@ -123,7 +123,7 @@ jobs:
   
   cleanup:
     needs: [ test, build, push ]
-    if: ${{ (needs.test.result == 'failure' && needs.build.result == 'success') || needs.push.result == 'success'}}
+    if: ${{ always() }}
     
     runs-on: ubuntu-latest
     steps:
