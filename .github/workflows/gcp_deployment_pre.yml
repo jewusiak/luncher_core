@@ -118,7 +118,7 @@ jobs:
 
       - name: GCP deploy Cloud Run App
         id: gcp-deploy-cloud-run
-        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACTS_SUBDIR }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --set-secrets=/secrets/gcp_server_key.json=GCP_CREDENTIALS_luncher_core_app_pre:latest --network-tags=cloud-run-luncher-core-pre'
+        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACTS_SUBDIR }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --set-secrets=/secrets/gcp_server_key.json=GCP_CREDENTIALS_luncher_core_app_pre:latest --network-tags=cloud-run-luncher-core-pre --network=default --subnet=default'
 
       - name: GCP App Url
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
