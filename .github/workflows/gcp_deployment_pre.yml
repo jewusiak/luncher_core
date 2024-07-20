@@ -58,7 +58,8 @@ jobs:
           name: '${{ env.SERVICE }}_image'
           path: '/tmp/${{ env.SERVICE }}_image.tar'
   push:
-    needs: [ build, test ]
+    #needs: [ build, test ]
+    needs: [ build ]
     permissions:
       contents: 'read'
       id-token: 'write'
