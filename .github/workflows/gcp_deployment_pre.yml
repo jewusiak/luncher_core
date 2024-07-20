@@ -47,10 +47,10 @@ jobs:
 
       - name: Build docker Image
         id: docker-build
-        run: 'docker build -t ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --file=Dockerfile-gcp_pre .'
+        run: 'docker build -t ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACTS_SUBDIR }}/${{ env.SERVICE }}:latest --file=Dockerfile-gcp_pre .'
 
       - name: Save Docker image
-        run: 'docker save --output /tmp/${{ env.SERVICE }}_image.tar ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest'
+        run: 'docker save --output /tmp/${{ env.SERVICE }}_image.tar ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACTS_SUBDIR }}/${{ env.SERVICE }}:latest'
 
       - name: Upload Docker image
         uses: actions/upload-artifact@v4
