@@ -6,7 +6,7 @@ on:
     branches: [ "master" ]
 
 env:
-  PROJECT_ID: "omega-granite-421322"
+  PROJECT_ID: "luncher-corp"
   SERVICE: "luncher-core-v4"
   REGION: "us-central1"
 
