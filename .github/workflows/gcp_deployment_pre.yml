@@ -9,6 +9,7 @@ env:
   PROJECT_ID: "luncher-corp"
   SERVICE: "luncher-core-v4"
   REGION: "us-central1"
+  ARTIFACTS_SUBDIR: "artifacts-luncher-corp"
 
 jobs:
   test:
@@ -116,7 +117,7 @@ jobs:
 
       - name: GCP deploy Cloud Run App
         id: gcp-deploy-cloud-run
-        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --set-secrets=/secrets/gcp_server_key.json=GCP_CREDENTIALS_luncher_core_app_pre:latest'
+        run: 'gcloud run deploy ${{ env.SERVICE }} --image ${{env.REGION}}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACTS_SUBDIR }}/${{ env.SERVICE }}:latest --region ${{env.REGION}} --allow-unauthenticated --set-secrets=/secrets/gcp_server_key.json=GCP_CREDENTIALS_luncher_core_app_pre:latest'
 
       - name: GCP App Url
         run: echo ${{ steps.gcp-deploy-cloud-run.outputs.url }}
