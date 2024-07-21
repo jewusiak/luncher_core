@@ -21,15 +21,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
+import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtAuthFilter;
-import pl.luncher.v3.luncher_core.common.services.UserService;
+import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -38,7 +39,6 @@ import pl.luncher.v3.luncher_core.common.services.UserService;
 public class SecurityConfiguration {
 
   private final JwtAuthFilter jwtAuthFilter;
-  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   @Value("${pl.luncher.swagger.accessible}")
   private String swaggerAccessible;
@@ -89,17 +89,16 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-      throws Exception {
-    return configuration.getAuthenticationManager();
+  public AuthenticationProvider authenticationProvider(UserFactory userFactory) {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(email -> (UserDetails) userFactory.pullFromRepo(email));
+    authProvider.setPasswordEncoder(passwordEncoder);
+    return authProvider;
   }
 
   @Bean
-  public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userService::getUserDetailsByEmail);
-    authProvider.setPasswordEncoder(passwordEncoder);
-    return authProvider;
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    return configuration.getAuthenticationManager();
   }
 
   @Bean

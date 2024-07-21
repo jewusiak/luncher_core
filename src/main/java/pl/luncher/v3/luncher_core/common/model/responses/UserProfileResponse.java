@@ -2,7 +2,7 @@ package pl.luncher.v3.luncher_core.common.model.responses;
 
 import java.util.UUID;
 import lombok.Data;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
+import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 
 
 @Data

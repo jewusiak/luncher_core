@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
-import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.model.dto.JwtToken;
+import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 
 @Component
 @Slf4j

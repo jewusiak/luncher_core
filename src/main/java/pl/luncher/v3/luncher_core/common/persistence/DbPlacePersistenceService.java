@@ -6,11 +6,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import pl.luncher.v3.luncher_core.common.domain.place.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.common.place.PlacePersistenceService;
 
 @Service
 @RequiredArgsConstructor

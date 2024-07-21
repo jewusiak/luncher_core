@@ -1,26 +1,15 @@
 package pl.luncher.v3.luncher_core.common.utils;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.admin.model.requests.AdminPlaceCreationRequest;
-import pl.luncher.v3.luncher_core.common.assets.Asset;
-import pl.luncher.v3.luncher_core.common.assets.AssetFactory;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole;
-import pl.luncher.v3.luncher_core.common.domain.infra.User;
-import pl.luncher.v3.luncher_core.common.model.requests.CreatePlaceRequest;
-import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.place.valueobject.Address;
-import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
-import pl.luncher.v3.luncher_core.common.placetype.PlaceType;
-import pl.luncher.v3.luncher_core.common.placetype.PlaceTypeFactory;
-import pl.luncher.v3.luncher_core.common.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.common.domain.assets.AssetFactory;
+import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.domain.placetype.PlaceTypeFactory;
+import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,7 +39,7 @@ public class DefaultDataGenerator {
 //            .role(AppRole.REST_MANAGER).enabled(true).passwordHash(passwordEncoder.encode("1234"))
 //            .build(),
 //        User.builder().firstName("Grzegorz").surname("Rest-User").email("employee@g.pl")
-//            .role(AppRole.REST_USER).passwordHash(passwordEncoder.encode("1234")).enabled(true)
+//            .role(AppRole.REST_MANAGER).passwordHash(passwordEncoder.encode("1234")).enabled(true)
 //            .build(), User.builder().firstName("Grzegorz").surname("End-User").email("user@g.pl")
 //            .role(AppRole.USER).passwordHash(passwordEncoder.encode("1234")).enabled(true).build());
 //

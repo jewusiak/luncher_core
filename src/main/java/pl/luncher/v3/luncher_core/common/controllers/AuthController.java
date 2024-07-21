@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtService;
 import pl.luncher.v3.luncher_core.common.model.requests.LoginRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse;

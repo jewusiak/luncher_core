@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.common.assets.Asset;
-import pl.luncher.v3.luncher_core.common.assets.AssetFactory;
-import pl.luncher.v3.luncher_core.common.domain.infra.AppRole.hasRole;
-import pl.luncher.v3.luncher_core.common.domain.infra.User;
+import pl.luncher.v3.luncher_core.common.domain.assets.Asset;
+import pl.luncher.v3.luncher_core.common.domain.assets.AssetFactory;
+import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.model.requests.CreateAssetRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.CreateLinkAssetResponse;
-import pl.luncher.v3.luncher_core.common.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole.hasRole;
 
 @Tag(name = "profile", description = "User profiles")
 @RestController
 @RequestMapping("/asset")
 @RequiredArgsConstructor
-@PreAuthorize(hasRole.REST_USER)
+@PreAuthorize(hasRole.REST_MANAGER)
 public class AssetController {
 
   private final AssetFactory assetFactory;
@@ -42,10 +42,10 @@ public class AssetController {
       @ApiResponse(responseCode = "403", description = "User has no permission to edit place"),
       @ApiResponse(responseCode = "404", description = "Place not found")
   })
-  public ResponseEntity<?> create(@Valid @RequestBody CreateAssetRequest request, User user) {
+  public ResponseEntity<?> create(@Valid @RequestBody CreateAssetRequest request, User requestingUser) {
     var place = placeFactory.pullFromRepo(UUID.fromString(request.getPlaceId()));
 
-    place.permissions().byUser(user).edit().throwIfnotPermitted();
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
     var asset = assetFactory.createCommonAsset(request.getName(), request.getDescription(),
         request.getFileExtension());
@@ -65,11 +65,11 @@ public class AssetController {
       @ApiResponse(responseCode = "403", description = "User has no permission to delete asset"),
       @ApiResponse(responseCode = "404", description = "Asset not found")
   })
-  public ResponseEntity<?> delete(@PathVariable UUID uuid, User user) {
+  public ResponseEntity<?> delete(@PathVariable UUID uuid, User requestingUser) {
 
     Asset asset = assetFactory.pullFromRepo(uuid);
 
-    asset.permissions().byUser(user).delete().throwIfnotPermitted();
+    asset.permissions().byUser(requestingUser).delete().throwIfNotPermitted();
 
     asset.delete();
 

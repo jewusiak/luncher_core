@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.common.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

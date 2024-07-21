@@ -16,26 +16,26 @@ Feature: Assets controller
     And User is logged in as rmanager@luncher.corp
 
 
-    And User creates a place as below:
+    And User creates a place as below ID -1:
       | name | description | placeTypeIdentifier |
       | name | descr       | RESTAURANT          |
 
     And response code is 200
 
   Scenario: User creates and deletes a gcp image asset
-    When User requests creation of a new asset for the latest created place:
+    When User requests creation of a new asset for Place ID -1 at ID -1:
       | name          | description      | fileExtension |
       | Example image | Restaurants hall | jpeg          |
 
     Then response code is 200
 
-    And Last created place has 1 asset:
+    And Place ID -1 has 1 asset:
       | name          | description      |
       | Example image | Restaurants hall |
 
-    When User deletes last asset from last created place
+    When User deletes Asset ID -1
 
     Then response code is 204
 
-    And Last created place has 0 assets:
+    And Place ID -1 has 0 assets:
       |  |
