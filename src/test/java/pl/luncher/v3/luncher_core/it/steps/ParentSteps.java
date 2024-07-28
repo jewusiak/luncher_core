@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springdoc.api.ErrorMessage;
+import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse;
 
 @Slf4j
@@ -81,8 +83,15 @@ public class ParentSteps {
     return currentJwtToken == null ? null : "Bearer %s".formatted(currentJwtToken);
   }
 
+  public static Object castMapWithErrorHandling(Map<String, String> map, Class<?> tClass, int respStatusCode) {
+    if (respStatusCode >= 200 && respStatusCode < 300) {
+      return castMap(map, tClass);
+    }
+    return castMap(map, ErrorResponse.class);
+  }  
+  
   public static <T> T castMap(Map<String, String> map, Class<T> tClass) {
-    if (map == null) {
+    if (map == null || map.containsKey(null)) {
       return null;
     }
 
@@ -143,7 +152,7 @@ public class ParentSteps {
   @RequiredArgsConstructor
   @Getter
   public enum EntityIdType {
-    PLACE(0), ASSET(1);
+    PLACE(0), ASSET(1), USER(2);
 
     private final int index;
   }

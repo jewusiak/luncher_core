@@ -3,27 +3,24 @@ package pl.luncher.v3.luncher_core.common.model.requests;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Value;
+import lombok.Data;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 
-@Value
+@Data
 public class UserCreateRequest {
 
-  @Email
-  @NotBlank
-  String email;
+    @Email
+    @NotBlank
+    private String email;
 
-  @NotBlank
-  String firstName;
+    @NotBlank private String firstName;
 
-  @NotBlank
-  String surname;
+    @NotBlank private String surname;
 
-  @NotBlank //TODO: password security validation
-  String password;
+    @NotBlank //TODO: password security validation
+    private String password;
 
-  @NotNull
-  AppRole role;
+    @NotNull private AppRole role;
 
-  Boolean enabled = true;
+    private Boolean enabled = true;
 }

@@ -8,7 +8,7 @@ public enum AppRole {
   SYS_ROOT, SYS_ADMIN, SYS_MOD, REST_MANAGER, USER;
 
   public static AppRole getHighestRole() {
-    return AppRole.values()[AppRole.values().length - 1];
+    return AppRole.values()[0];
   }
 
   /**

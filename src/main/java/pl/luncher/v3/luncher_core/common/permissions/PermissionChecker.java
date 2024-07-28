@@ -10,7 +10,7 @@ public interface PermissionChecker {
 
   default void throwIfNotPermitted() {
     if (!hasPermission()) {
-      throw new MissingPermissionException("Missing permissions!");
+      throw new MissingPermissionException();
     }
   }
 }

@@ -6,7 +6,6 @@ import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +17,11 @@ import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepositor
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
+
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
@@ -31,6 +35,7 @@ import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 public class TestsItConfig {
 
   private static ElasticsearchContainer elasticsearchContainer;
+  private static boolean elasticsearchstarted;
 
   @LocalServerPort
   private int port;
@@ -45,8 +50,20 @@ public class TestsItConfig {
   public static void beforeAll() throws InterruptedException {
     log.info("BEFORE ALL >>");
 
-    if (!isHostRunningWindows()) {
+    if (!isHostRunningWindows() && elasticsearchNotRunning()) {
       setUpElasticsearchContainer();
+    }
+  }
+
+  private static boolean elasticsearchNotRunning() {
+    try (Socket ignored = new Socket("localhost", 9200)) {
+      log.warn("External Elasticsearch is running.");
+      return false;
+    } catch (ConnectException e) {
+      log.info("External Elasticsearch is not running.");
+      return true;
+    } catch (IOException e) {
+      throw new IllegalStateException("Error while trying to check open port", e);
     }
   }
 
@@ -54,7 +71,7 @@ public class TestsItConfig {
   public static void afterAll() {
 
     log.info("AFTER ALL >>");
-    if (!isHostRunningWindows()) {
+    if (elasticsearchstarted) {
       tearDownElasticsearchContainer();
     }
     ParentSteps.resetAll();
@@ -88,12 +105,14 @@ public class TestsItConfig {
     elasticsearchContainer.withExposedPorts(9200, 9300);
     elasticsearchContainer.setPortBindings(List.of("9200:9200", "9300:9300"));
     elasticsearchContainer.start();
+    elasticsearchstarted = true;
     log.info("BA >> Elasticsearch is up and running");
   }
 
   private static void tearDownElasticsearchContainer() {
     log.info("AA >> Tear down Elasticsearch");
     elasticsearchContainer.stop();
+    elasticsearchstarted = false;
     log.info("AA >> Elasticsearch is down");
   }
 }

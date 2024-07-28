@@ -25,8 +25,9 @@ class UserPermissionsCheckerImpl implements UserPermissionsChecker {
    * user role has to be higher than SYS_MOD and higher than the edited user unless its the highest.
    */
   private boolean isHigherThanModAndEditedUserOrHighestRole() {
-    return requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) >= 0 && requestingUser.getRole().compareRoleTo(
-        editedUser.getRole()) > 0 || requestingUser.getRole().equals(AppRole.getHighestRole());
+    return (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) >= 0
+        && requestingUser.getRole().compareRoleTo(editedUser.getRole()) > 0)
+        || requestingUser.getRole().equals(AppRole.getHighestRole());
   }
 
   @Override

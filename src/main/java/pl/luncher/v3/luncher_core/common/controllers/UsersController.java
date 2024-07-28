@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +15,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
@@ -84,9 +87,9 @@ public class UsersController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully updated user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FullUserDataResponse.class))),
   })
-  @PatchMapping("{userId}")
-  public ResponseEntity<?> updateUser(@RequestBody @Valid UserUpdateRequest request, @PathVariable String userId,
-      User requestingUser) {
+  @PutMapping("{userId}")
+  public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request,
+      @PathVariable UUID userId, User requestingUser) {
     var user = userFactory.pullFromRepo(userId);
 
     user.permissions().byUser(requestingUser).update().throwIfNotPermitted();
@@ -95,6 +98,22 @@ public class UsersController {
     user.save();
 
     return ResponseEntity.ok(user.castToFullDataResponse());
+  }
+  
+  @Operation(summary = "Delete user")
+  @ApiResponses({
+      @ApiResponse(responseCode = "204", description = "Deleted successfully", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+  })
+  @DeleteMapping("{uuid}")
+  public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid, User requestingUser) {
+    var user = userFactory.pullFromRepo(uuid);
+    
+    user.permissions().byUser(requestingUser).delete().throwIfNotPermitted();
+    
+    user.delete();
+    
+    return ResponseEntity.noContent().build();
   }
 
   @Operation(summary = "Full text user search", description = "Empty query will return all users")

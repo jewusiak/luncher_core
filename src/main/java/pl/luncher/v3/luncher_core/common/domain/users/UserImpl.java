@@ -1,19 +1,22 @@
 package pl.luncher.v3.luncher_core.common.domain.users;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.luncher.v3.luncher_core.common.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicUserDataResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.FullUserDataResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.UserProfileResponse;
+import pl.luncher.v3.luncher_core.common.persistence.JpaExceptionsHandler;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 class UserImpl implements User, UserDetails {
@@ -30,7 +33,7 @@ class UserImpl implements User, UserDetails {
 
   @Override
   public void save() {
-    userDb = userRepository.save(userDb);
+    userDb = JpaExceptionsHandler.proxySave(userRepository::save, userDb, _i -> new DuplicateEntityException("User with the same email address already exists in the system."));
   }
 
   @Override
