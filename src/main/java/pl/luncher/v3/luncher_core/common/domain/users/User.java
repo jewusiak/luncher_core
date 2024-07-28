@@ -29,4 +29,8 @@ public interface User {
   UserDb getDbEntity();
 
   UserProfileResponse castToProfileResponse();
+  
+  ForgottenPasswordIntent requestForgottenPassword();
+  
+  void changePassword(String newPassword);
 }
