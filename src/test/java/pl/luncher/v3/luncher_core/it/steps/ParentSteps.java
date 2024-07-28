@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springdoc.api.ErrorMessage;
 import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse;
 
@@ -83,6 +82,13 @@ public class ParentSteps {
     return currentJwtToken == null ? null : "Bearer %s".formatted(currentJwtToken);
   }
 
+  public static Object getResponseBody(Response resp, Class<?> tClass) {
+    if (resp.getStatusCode() < 300 && resp.getStatusCode() >= 200) {
+      return resp.as(tClass);
+    }
+    return resp.as(ErrorResponse.class);
+  }
+  
   public static Object castMapWithErrorHandling(Map<String, String> map, Class<?> tClass, int respStatusCode) {
     if (respStatusCode >= 200 && respStatusCode < 300) {
       return castMap(map, tClass);
@@ -104,11 +110,15 @@ public class ParentSteps {
     return objectMapper.convertValue(xMap, tClass);
   }
 
-  public static RequestSpecification givenAuthenticated() {
-    return RestAssured.given()
-        .header("Authorization", getAuthorizationHeaderContent())
+  public static RequestSpecification givenHttpRequest() {
+    RequestSpecification specification = RestAssured.given()
         .header("Content-Type", "application/json")
         .header("Accept", "application/json");
+    String authorizationHeaderContent = getAuthorizationHeaderContent();
+    if (authorizationHeaderContent != null) {
+      specification.header("Authorization", authorizationHeaderContent);
+    }
+    return specification;
   }
 
   public static <T> T xNull(String value, Class<T> tClass) {

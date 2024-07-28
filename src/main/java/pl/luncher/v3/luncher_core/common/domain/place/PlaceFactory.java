@@ -43,9 +43,6 @@ public class PlaceFactory {
   }
 
   public Place of(PlaceCreateRequest request, User user) {
-    PlaceTypeDb placeTypeDb = placeEntityPersistenceService.getOptionalPlaceType(
-        request.getPlaceTypeIdentifier()).orElseThrow();
-
     PlaceDb placeDb = placeDbMapper.fromCreation(request, user, placeTypeRepository);
 
     return of(placeDb);

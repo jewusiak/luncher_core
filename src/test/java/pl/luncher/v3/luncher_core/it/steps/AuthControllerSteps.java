@@ -30,7 +30,7 @@ public class AuthControllerSteps {
 
   @Then("User is logged in as {}")
   public void userIsLoggedInAsTestLuncherCorp(String email) {
-    ParentSteps.givenAuthenticated()
+    ParentSteps.givenHttpRequest()
         .get("/profile")
         .then().body("email", equalTo(email)).statusCode(200);
   }

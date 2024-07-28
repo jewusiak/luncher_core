@@ -2,7 +2,7 @@ package pl.luncher.v3.luncher_core.it.steps;
 
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.castMap;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getIdFromCache;
-import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenAuthenticated;
+import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenHttpRequest;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putIdToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
@@ -32,7 +32,7 @@ public class AssetSteps {
     CreateAssetRequest crr = castMap(data.get(0), CreateAssetRequest.class);
     crr.setPlaceId(newPlaceUuid);
 
-    Response response = givenAuthenticated().body(crr).when().post("/asset").thenReturn();
+    Response response = givenHttpRequest().body(crr).when().post("/asset").thenReturn();
     saveHttpResp(response);
     putIdToCache(response.jsonPath().get("assetId"), assetIdx, EntityIdType.ASSET);
   }
@@ -57,7 +57,7 @@ public class AssetSteps {
   public void userDeletesLastAssetFromLastCreatedPlace(String assetIdx) {
     var assetId = getIdFromCache(assetIdx, EntityIdType.ASSET);
 
-    saveHttpResp(givenAuthenticated().when().delete("/asset/%s".formatted(assetId))
+    saveHttpResp(givenHttpRequest().when().delete("/asset/%s".formatted(assetId))
                   .thenReturn());
 
   }

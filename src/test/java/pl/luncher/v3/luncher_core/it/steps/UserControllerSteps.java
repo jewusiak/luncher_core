@@ -3,7 +3,7 @@ package pl.luncher.v3.luncher_core.it.steps;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.castMap;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getIdFromCache;
-import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenAuthenticated;
+import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenHttpRequest;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
 import io.cucumber.java.en.Then;
@@ -28,7 +28,7 @@ public class UserControllerSteps {
   public void userIsCreatedAsBelowWithID(int arg0, List<Map<String, String>> data) {
     var request = ParentSteps.castMap(data.get(0), UserCreateRequest.class);
 
-    var resp = ParentSteps.givenAuthenticated().body(request).when().post("users").thenReturn();
+    var resp = ParentSteps.givenHttpRequest().body(request).when().post("users").thenReturn();
 
     ParentSteps.saveHttpResp(resp);
     try {
@@ -41,23 +41,16 @@ public class UserControllerSteps {
   public void userWithIDIsAsBelow(String idx, List<Map<String, String>> data) {
     String id = getIdFromCache(idx, EntityIdType.USER);
 
-    var resp = givenAuthenticated().when().get("users/%s".formatted(id)).thenReturn();
+    var resp = givenHttpRequest().when().get("users/%s".formatted(id)).thenReturn();
 
     saveHttpResp(resp);
 
     var expected = ParentSteps.castMapWithErrorHandling(data.get(0), FullUserDataResponse.class, resp.getStatusCode());
-    var actual = getResponseBody(resp, FullUserDataResponse.class);
+    var actual = ParentSteps.getResponseBody(resp, FullUserDataResponse.class);
 
     Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder()
         .ignoringExpectedNullFields()
         .isEqualTo(expected);
-  }
-
-  private static Object getResponseBody(Response resp, Class<?> tClass) {
-    if (resp.getStatusCode() < 300 && resp.getStatusCode() >= 200) {
-      return resp.as(tClass);
-    }
-    return resp.as(ErrorResponse.class);
   }
 
   @When("User with ID {} is edited as below:")
@@ -65,7 +58,7 @@ public class UserControllerSteps {
     String id = getIdFromCache(idx, EntityIdType.USER);
     var req = castMap(data.get(0), UserUpdateRequest.class);
 
-    var resp = givenAuthenticated().body(req).when().put("/users/%s".formatted(id)).thenReturn();
+    var resp = givenHttpRequest().body(req).when().put("/users/%s".formatted(id)).thenReturn();
 
     saveHttpResp(resp);
   }
@@ -74,7 +67,7 @@ public class UserControllerSteps {
   public void userWithIDIsDeleted(String idx) {
     String id = getIdFromCache(idx, EntityIdType.USER);
 
-    var resp = givenAuthenticated().when().delete("/users/%s".formatted(id)).thenReturn();
+    var resp = givenHttpRequest().when().delete("/users/%s".formatted(id)).thenReturn();
 
     saveHttpResp(resp);
   }

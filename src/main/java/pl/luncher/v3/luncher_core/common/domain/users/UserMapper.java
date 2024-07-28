@@ -10,6 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.UserRegistrationRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicUserDataResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.FullUserDataResponse;
@@ -35,6 +36,14 @@ abstract class UserMapper {
   @Mapping(source = "password", target = "passwordHash", qualifiedByName = "hashPassword")
   @Mapping(source = "enabled", target = "enabled", defaultValue = "true")
   public abstract UserDb map(UserCreateRequest request);
+
+  @Mapping(source = "email", target = "email")
+  @Mapping(source = "firstName", target = "firstName")
+  @Mapping(source = "surname", target = "surname")
+  @Mapping(source = "password", target = "passwordHash", qualifiedByName = "hashPassword")
+  @Mapping(target = "role", expression = "java(AppRole.USER)")
+  @Mapping(target = "enabled", constant = "true")
+  public abstract UserDb map(UserRegistrationRequest request);
 
   @BeanMapping(ignoreByDefault = true)
   @Named("hashPassword")

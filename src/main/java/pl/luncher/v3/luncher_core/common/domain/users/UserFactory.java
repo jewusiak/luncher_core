@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.UserRegistrationRequest;
 import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
@@ -56,5 +57,11 @@ public class UserFactory {
         .fetch(pageRequest.getPageSize() * pageRequest.getPageNumber(), pageRequest.getPageSize());
 
     return new PageImpl<>(result.hits(), pageRequest, result.total().hitCount()).map(this::of);
+  }
+  
+  public User of(UserRegistrationRequest request) {
+    var newUserDb = userMapper.map(request);
+
+    return of(newUserDb);
   }
 }

@@ -2,7 +2,7 @@ package pl.luncher.v3.luncher_core.it.steps;
 
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.castMap;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getIdFromCache;
-import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenAuthenticated;
+import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenHttpRequest;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putIdToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.xNull;
@@ -36,7 +36,7 @@ public class PlaceSteps {
   @When("User creates a place as below ID {}:")
   public void userCreatesAPlaceAsBelow(Integer idx, List<Map<String, String>> data) {
     var req = castMap(data.get(0), PlaceCreateRequest.class);
-    Response response = givenAuthenticated().body(req).when().post("/place").thenReturn();
+    Response response = givenHttpRequest().body(req).when().post("/place").thenReturn();
     saveHttpResp(response);
     putIdToCache(response.jsonPath().get("id"), idx, EntityIdType.PLACE);
   }
@@ -45,7 +45,7 @@ public class PlaceSteps {
   public void retrievedPlaceWithLastCreatedUUIDIsAsBelow(String idx, List<Map<String, String>> data) {
     String id = getIdFromCache(idx, EntityIdType.PLACE);
 
-    Response response = givenAuthenticated().when().get("/place/%s".formatted(id)).thenReturn();
+    Response response = givenHttpRequest().when().get("/place/%s".formatted(id)).thenReturn();
     saveHttpResp(response);
 
     var expected = castMap(data.get(0), FullPlaceResponse.class);
@@ -59,7 +59,7 @@ public class PlaceSteps {
   public void placeDeletionWithLastCreatedUUIDResultsInCode(String idx, int code) {
     String id = getIdFromCache(idx, EntityIdType.PLACE);
 
-    givenAuthenticated().when().delete("/place/%s".formatted(id)).then().statusCode(code);
+    givenHttpRequest().when().delete("/place/%s".formatted(id)).then().statusCode(code);
 
   }
 
@@ -87,7 +87,7 @@ public class PlaceSteps {
 
     var req = castMap(data.get(0), PlaceUpdateRequest.class);
 
-    Response response = givenAuthenticated().body(req).when().put("/place/%s".formatted(placeId)).thenReturn();
+    Response response = givenHttpRequest().body(req).when().put("/place/%s".formatted(placeId)).thenReturn();
     saveHttpResp(response);
 
   }
@@ -99,7 +99,7 @@ public class PlaceSteps {
 
     var req = castMap(data.get(0), PlaceOwnerUpdateRequest.class);
 
-    Response response = givenAuthenticated().body(req).when().put("place/%s/owner".formatted(placeId)).thenReturn();
+    Response response = givenHttpRequest().body(req).when().put("place/%s/owner".formatted(placeId)).thenReturn();
     saveHttpResp(response);
   }
 }
