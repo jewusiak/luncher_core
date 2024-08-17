@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,15 +20,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.common.domain.users.ForgottenPasswordIntentFactory;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtService;
 import pl.luncher.v3.luncher_core.common.model.requests.LoginRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.NewPasswordRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.UserRegistrationRequest;
+import pl.luncher.v3.luncher_core.common.model.responses.CreatePasswordResetIntentResponse;
 import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse;
 
 @Tag(name = "authentication", description = "Authentication")
@@ -39,6 +46,7 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
   private final UserFactory userFactory;
+  private final ForgottenPasswordIntentFactory forgottenPasswordIntentFactory;
 
   @Value("${pl.luncher.security.cookie_domain}")
   private String cookieDomain;
@@ -98,18 +106,52 @@ public class AuthController {
     }});
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
-  
+
   @Operation(summary = "End user registration")
   @ApiResponses({
       @ApiResponse(responseCode = "204", description = "Successful registration", content = @Content()),
-      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))      
+      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
   })
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody @Valid UserRegistrationRequest request) {
     var user = userFactory.of(request);
-    
+
     user.save();
-    
+
     return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Create Password Reset intent")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Password reset intent created", content = @Content(schema = @Schema(implementation = CreatePasswordResetIntentResponse.class))),
+      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+  })
+  @PostMapping("/requestreset/{email}")
+  public ResponseEntity<?> createPasswordResetIntent(@PathVariable @Email String email) {
+    User user = userFactory.pullFromRepo(email);
+    var passwordIntent = forgottenPasswordIntentFactory.of(user);
+
+    passwordIntent.save();
+
+    return ResponseEntity.ok(passwordIntent.castToCreatePasswordResetIntentResponse());
+  }
+
+  @Operation(summary = "Reset password")
+  @ApiResponses({
+      @ApiResponse(responseCode = "204", description = "Password reset", content = @Content()),
+      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+  })
+  @PutMapping("/resetpassword/{uuid}")
+  public ResponseEntity<?> resetPassword(@PathVariable UUID uuid, @RequestBody @Valid NewPasswordRequest request) {
+    var passwordIntent = forgottenPasswordIntentFactory.pullFromRepo(uuid);
+
+    passwordIntent.throwIfNotValid();
+    passwordIntent.getUser().changePassword(request.getNewPassword());
+    passwordIntent.getUser().save();
+    passwordIntent.invalidate();
+    passwordIntent.save();
+
+    return ResponseEntity.noContent().build();
+
   }
 }

@@ -8,11 +8,14 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
@@ -23,7 +26,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @CucumberContextConfiguration
 @ActiveProfiles("local_test")
 //@MockBeans({
@@ -45,6 +48,8 @@ public class TestsItConfig {
   private final UserRepository userRepository;
   private final PlaceRepository placeRepository;
   private final PlaceTypeRepository placeTypeRepository;
+  @Autowired
+  private ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
 
   @BeforeAll
   public static void beforeAll() throws InterruptedException {
@@ -87,6 +92,7 @@ public class TestsItConfig {
   public void after() {
     log.info("AFTER EACH >>");
     placeRepository.deleteAll();
+    forgottenPasswordIntentRepository.deleteAll();
     userRepository.deleteAll();
     placeTypeRepository.deleteAll();
   }

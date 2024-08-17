@@ -4,12 +4,14 @@ import static org.hamcrest.Matchers.equalTo;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import pl.luncher.v3.luncher_core.common.model.requests.LoginRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.NewPasswordRequest;
 
 @RequiredArgsConstructor
 public class AuthControllerSteps {
@@ -33,5 +35,27 @@ public class AuthControllerSteps {
     ParentSteps.givenHttpRequest()
         .get("/profile")
         .then().body("email", equalTo(email)).statusCode(200);
+  }
+
+  @When("User requests password reset for user {}")
+  public void userRequestsPasswordResetForUserUserLuncherCorp(String email) {
+    Response response = ParentSteps.givenHttpRequest().when().post("auth/requestreset/%s".formatted(email))
+        .thenReturn();
+    ParentSteps.saveHttpResp(response);
+    var resetUri = ParentSteps.getCachedHttpResp().getBody().jsonPath().getString("resetUri");
+    ParentSteps.putToCache("resetUri", resetUri);
+  }
+
+  @And("Removed saved authentication token")
+  public void removedSavedAuthenticationToken() {
+    ParentSteps.removeAuthorizationToken();
+  }
+
+  @When("User changes password using last received url to {}")
+  public void userChangesPasswordUsingLastReceivedUrlTo(String pass) {
+    var resetUri = ParentSteps.getFromCache("resetUri", String.class);
+    Response response = ParentSteps.givenHttpRequest().body(new NewPasswordRequest(pass)).when().put(resetUri)
+        .thenReturn();
+    ParentSteps.saveHttpResp(response);
   }
 }

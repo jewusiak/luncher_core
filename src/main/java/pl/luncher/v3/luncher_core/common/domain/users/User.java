@@ -29,4 +29,6 @@ public interface User {
   UserDb getDbEntity();
 
   UserProfileResponse castToProfileResponse();
+  
+  void changePassword(String newPassword);
 }

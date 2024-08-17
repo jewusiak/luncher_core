@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
+import pl.luncher.v3.luncher_core.common.domain.users.ForgottenPasswordIntentInvalidException;
 import pl.luncher.v3.luncher_core.common.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.common.permissions.MissingPermissionException;
 
@@ -26,7 +27,13 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
   protected ErrorResponse handleNotFound(Exception ex) {
     return ErrorResponse.builder().message("Not found!").messageLocale("en_US").build();
   }
-  
+
+  @ExceptionHandler({ForgottenPasswordIntentInvalidException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ErrorResponse handleUnknownBadRequest(Exception ex) {
+    return ErrorResponse.builder().message("Bad request").messageLocale("en_US").build();
+  }
+
   @ExceptionHandler({MissingPermissionException.class, AccessDeniedException.class})
   @ResponseStatus(HttpStatus.FORBIDDEN)
   protected ErrorResponse handleForbidden(Exception ex) {

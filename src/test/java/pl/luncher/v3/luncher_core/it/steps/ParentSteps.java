@@ -82,6 +82,10 @@ public class ParentSteps {
     return currentJwtToken == null ? null : "Bearer %s".formatted(currentJwtToken);
   }
 
+  public static void removeAuthorizationToken() {
+    currentJwtToken = null;
+  }
+
   public static Object getResponseBody(Response resp, Class<?> tClass) {
     if (resp.getStatusCode() < 300 && resp.getStatusCode() >= 200) {
       return resp.as(tClass);

@@ -1,8 +1,13 @@
 package pl.luncher.v3.luncher_core.common.domain.users;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.luncher.v3.luncher_core.common.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicUserDataResponse;
@@ -13,11 +18,6 @@ import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @AllArgsConstructor
 class UserImpl implements User, UserDetails {
 
@@ -25,6 +25,7 @@ class UserImpl implements User, UserDetails {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public UUID getUuid() {
@@ -74,6 +75,11 @@ class UserImpl implements User, UserDetails {
   @Override
   public UserProfileResponse castToProfileResponse() {
     return userMapper.map(userDb);
+  }
+
+  @Override
+  public void changePassword(String newPassword) {
+    userDb.setPasswordHash(passwordEncoder.encode(newPassword));
   }
 
   @Override

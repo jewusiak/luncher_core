@@ -97,5 +97,38 @@ Feature: Users
       | USER           | root@luncher.corp     | 200        |
       | USER           | rmanager@luncher.corp | 403        |
       | USER           | user@luncher.corp     | 403        |
-    
-    
+
+
+  Scenario: Password reset of user
+    Given User logs in using credentials:
+      | email             | password |
+      | user@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as user@luncher.corp
+    And Removed saved authentication token
+
+    When User requests password reset for user user-unknown@luncher.corp
+    Then response code is 404
+
+    When User requests password reset for user user@luncher.corp
+    Then response code is 200
+
+
+    # valid reset request
+    When User changes password using last received url to 2222gggbbb
+    Then response code is 204
+
+    # invalid reset request
+    When User changes password using last received url to 1111111
+    Then response code is 400
+
+    When User logs in using credentials:
+      | email             | password |
+      | user@luncher.corp | 1234     |
+    Then response code is 401
+
+    When User logs in using credentials:
+      | email             | password   |
+      | user@luncher.corp | 2222gggbbb |
+    Then response code is 200
+    And User is logged in as user@luncher.corp
