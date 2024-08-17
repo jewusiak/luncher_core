@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.common.domain.users;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import pl.luncher.v3.luncher_core.common.model.responses.CreatePasswordResetIntentResponse;
 import pl.luncher.v3.luncher_core.common.persistence.models.ForgottenPasswordIntentDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
 
@@ -11,7 +12,7 @@ class ForgottenPasswordIntentImpl implements ForgottenPasswordIntent {
   private ForgottenPasswordIntentDb forgottenPasswordIntentDb;
   private final String baseApiUrl;
   private final ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
-  private final UserFactory userFactory;
+  private final User user;
 
   @Override
   public String getResetUri() {
@@ -31,6 +32,13 @@ class ForgottenPasswordIntentImpl implements ForgottenPasswordIntent {
   }
 
   @Override
+  public void throwIfNotValid() {
+    if (!isValid()) {
+      throw new ForgottenPasswordIntentInvalidException();
+    }
+  }
+
+  @Override
   public void invalidate() {
     this.forgottenPasswordIntentDb.setUsed(true);
   }
@@ -42,6 +50,11 @@ class ForgottenPasswordIntentImpl implements ForgottenPasswordIntent {
 
   @Override
   public User getUser() {
-    return userFactory.of(forgottenPasswordIntentDb.getUser());
+    return user;
+  }
+
+  @Override
+  public CreatePasswordResetIntentResponse castToCreatePasswordResetIntentResponse() {
+    return new CreatePasswordResetIntentResponse(getResetUri(), getValidityDate().toString());
   }
 }

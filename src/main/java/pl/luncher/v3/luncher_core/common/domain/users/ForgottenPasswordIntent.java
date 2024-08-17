@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.common.domain.users;
 
 import java.time.LocalDateTime;
+import pl.luncher.v3.luncher_core.common.model.responses.CreatePasswordResetIntentResponse;
 
 public interface ForgottenPasswordIntent {
 
@@ -9,10 +10,14 @@ public interface ForgottenPasswordIntent {
   LocalDateTime getValidityDate();
   
   boolean isValid();
-  
+
+  void throwIfNotValid();
+
   void invalidate();
   
   void save();
   
   User getUser();
+
+  CreatePasswordResetIntentResponse castToCreatePasswordResetIntentResponse();
 }

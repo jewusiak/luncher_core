@@ -34,13 +34,12 @@ public class ForgottenPasswordIntentFactory {
         .validityDate(LocalDateTime.now().plusSeconds(
             luncherCommonProperties.getPasswordRequestIntentValiditySeconds()))
         .user(user.getDbEntity()).build();
-
     return of(dbEntity);
   }
 
   private ForgottenPasswordIntent of(ForgottenPasswordIntentDb dbEntity) {
     return new ForgottenPasswordIntentImpl(dbEntity, luncherCommonProperties.getBaseApiUrl(),
         forgottenPasswordIntentRepository,
-        userFactory);
+        userFactory.of(dbEntity.getUser()));
   }
 }

@@ -30,7 +30,5 @@ public interface User {
 
   UserProfileResponse castToProfileResponse();
   
-  ForgottenPasswordIntent requestForgottenPassword();
-  
   void changePassword(String newPassword);
 }

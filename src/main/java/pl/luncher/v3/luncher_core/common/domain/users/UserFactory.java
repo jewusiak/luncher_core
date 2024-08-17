@@ -9,6 +9,7 @@ import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.UserRegistrationRequest;
@@ -22,6 +23,7 @@ public class UserFactory {
   private final UserRepository userRepository;
   private final UserMapper userMapper;
   private final EntityManager entityManager;
+  private final PasswordEncoder passwordEncoder;
 
   public User pullFromRepo(UUID uuid) {
     var userDb = userRepository.findUserByUuid(uuid).orElseThrow();
@@ -42,7 +44,7 @@ public class UserFactory {
   }
 
   public User of(UserDb userDb) {
-    return new UserImpl(userDb, userRepository, userMapper);
+    return new UserImpl(userDb, userRepository, userMapper, passwordEncoder);
   }
 
   public Page<User> findByStringQueryPaged(String query, PageRequest pageRequest) {
