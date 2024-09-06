@@ -1,9 +1,12 @@
-package pl.luncher.v3.luncher_core.common.utils;
+package pl.luncher.v3.luncher_core.configuration;
 
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -30,8 +33,12 @@ public class AuthenticatedUserAttributeResolver implements HandlerMethodArgument
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
     try {
-      var userUuid = (UUID) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      return userFactory.pullFromRepo(userUuid);
+      return Optional.ofNullable(SecurityContextHolder.getContext())
+          .map(SecurityContext::getAuthentication)
+          .map(Authentication::getPrincipal)
+          .map(UUID.class::cast)
+          .map(userFactory::pullFromRepo)
+          .orElse(null);
     } catch (Exception e) {
       log.info("Couldn't extract required user because of {}", e.toString());
       throw new UserExtractionFromContextFailed();

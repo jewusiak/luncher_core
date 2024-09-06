@@ -16,6 +16,7 @@
   <description>luncher_core API application for Luncher v3 (Ristretto)</description>
   <properties>
     <java.version>17</java.version>
+    <hibernate.version>6.6.0.Final</hibernate.version>
   </properties>
   <profiles>
     <profile>
@@ -155,30 +156,30 @@
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-bom</artifactId>
-      <version>7.0.0.Final</version>
+      <version>7.2.1.Final</version>
       <type>pom</type>
       <!--            <scope>import</scope>-->
     </dependency>
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-mapper-orm</artifactId>
-      <version>7.0.0.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-elasticsearch</artifactId>
-      <version>5.11.12.Final</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hibernate.common</groupId>
-          <artifactId>hibernate-commons-annotations</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>7.2.1.Final</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-backend-elasticsearch</artifactId>
-      <version>7.0.0.Final</version>
+      <version>7.2.1.Final</version>
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.hibernate.common</groupId>-->
+<!--          <artifactId>hibernate-commons-annotations</artifactId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.search</groupId>
+      <artifactId>hibernate-search-backend-elasticsearch</artifactId>
+      <version>7.2.1.Final</version>
     </dependency>
     <dependency>
       <groupId>io.cucumber</groupId>
@@ -210,6 +211,7 @@
     </dependency>
 
 
+    
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>elasticsearch</artifactId>
@@ -218,12 +220,12 @@
     </dependency>
 
     <dependency>
-      <artifactId>postgresql</artifactId>
       <groupId>org.testcontainers</groupId>
-      <scope>test</scope>
+      <artifactId>postgresql</artifactId>
       <version>1.19.0</version>
+      <scope>test</scope>
     </dependency>
-
+    
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
@@ -250,8 +252,8 @@
       <version>3.9.0</version>
     </dependency>
     <dependency>
-      <artifactId>hibernate-spatial</artifactId>
       <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-spatial</artifactId>
       <version>6.5.1.Final</version>
     </dependency>
   </dependencies>

@@ -1,4 +1,0 @@
-FROM postgres:15 as local-postgres
-ENV POSTGRES_PASSWORD devpass 
-ENV POSTGRES_DB luncher_core_local
-COPY ./psql_init/* /docker-entrypoint-initdb.d/

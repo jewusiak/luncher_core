@@ -5,6 +5,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,13 +106,27 @@ public class ParentSteps {
       return null;
     }
 
-    Map<String, String> xMap = new HashMap<>();
+    Map<String, Object> xMap = new HashMap<>();
 
-    for (var key : map.keySet()) {
-      xMap.put(key, xNull(map.get(key), String.class));
-    }
+    map.forEach((k, v) -> putIntoMap(xMap, k, v));
 
     return objectMapper.convertValue(xMap, tClass);
+  }
+
+  private static void putIntoMap(Map<String, Object> map, String k, String val) {
+    String[] keys = k.split("\\.");
+    if (keys.length > 1) {
+      if (!map.containsKey(keys[0])) {
+        map.put(keys[0], new HashMap<String, Object>());
+      }
+
+      String newKey = String.join(".", Arrays.stream(keys).toList().subList(1, keys.length));
+
+      putIntoMap((Map<String, Object>) map.get(keys[0]), newKey, val);
+    } else {
+      map.put(keys[0], xNull(val, String.class));
+    }
+
   }
 
   public static RequestSpecification givenHttpRequest() {

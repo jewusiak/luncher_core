@@ -1,0 +1,14 @@
+FROM postgres:15 as local_postgres
+#ENV POSTGRES_PASSWORD testpass 
+#ENV POSTGRES_USER testuser 
+#ENV POSTGRES_DB luncher_core
+
+LABEL version=1.0.0
+
+RUN apt-get update
+
+RUN apt-get update \
+      && apt-get install -y curl \
+      && apt-get -y install postgresql-15-postgis-3 
+
+COPY src/test/resources/psql_init/* /docker-entrypoint-initdb.d/

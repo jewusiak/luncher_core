@@ -134,3 +134,47 @@ Feature: CRUD - Place
     And Place ID -1 is as below:
       | owner.email            |
       | rmanager2@luncher.corp |
+
+
+  Scenario: Place search
+    Given User logs in using credentials:
+      | email                 | password |
+      | rmanager@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as rmanager@luncher.corp
+
+    And User creates a place as below ID -1:
+      | name         | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
+      | The Cool Cat | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 1.223             | -20.34             |
+
+    And response code is 200
+    And User logs out (by removing saved auth token)
+
+    And User logs in using credentials:
+      | email             | password |
+      | user@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as user@luncher.corp
+
+    And Refresh Hibernate Search indexes
+
+    When Place Search request is sent as below:
+      | location.latitude | location.longitude | location.radius | size | page |
+      | 1.223             | 1.226554           | 300             | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 1 in path results
+    And HTTP Response is:
+      | results[0].name |
+      | The Cool Cat    |
+
+
+
+
+    When Place Search request is sent as below:
+      | textQuery | size | page |
+      | asian     | 10   | 0    |
+
+    Then response code is 200
+    
+    

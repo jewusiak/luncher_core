@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
-import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
@@ -44,11 +43,9 @@ public class UserDb {
   private String email;
 
   @FullTextField(name = "firstname")
-  @Analyzer
   private String firstName;
 
   @FullTextField(name = "surname")
-  @Analyzer
   private String surname;
 
   private String passwordHash;

@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.utils;
+package pl.luncher.v3.luncher_core.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

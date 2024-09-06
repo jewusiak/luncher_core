@@ -46,7 +46,7 @@ public class AuthControllerSteps {
     ParentSteps.putToCache("resetUri", resetUri);
   }
 
-  @And("Removed saved authentication token")
+  @And("User logs out \\(by removing saved auth token)")
   public void removedSavedAuthenticationToken() {
     ParentSteps.removeAuthorizationToken();
   }
