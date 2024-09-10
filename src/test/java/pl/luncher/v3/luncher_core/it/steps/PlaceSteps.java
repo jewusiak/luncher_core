@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceOwnerUpdateRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
@@ -26,6 +28,7 @@ import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepositor
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
 
+@Slf4j
 @RequiredArgsConstructor
 public class PlaceSteps {
 
@@ -100,6 +103,15 @@ public class PlaceSteps {
     var req = castMap(data.get(0), PlaceOwnerUpdateRequest.class);
 
     Response response = givenHttpRequest().body(req).when().put("place/%s/owner".formatted(placeId)).thenReturn();
+    saveHttpResp(response);
+  }
+
+  @When("Place Search request is sent as below:")
+  public void placeSearchRequestIsSentAsBelow(List<Map<String, String>> data) {
+    var request = ParentSteps.castMap(data.get(0), PlaceSearchRequest.class);
+
+    Response response = givenHttpRequest().body(request).when().post("/place/search").thenReturn();
+
     saveHttpResp(response);
   }
 }

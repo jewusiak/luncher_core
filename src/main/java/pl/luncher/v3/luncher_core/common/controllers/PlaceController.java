@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.common.domain.place.Place;
 import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.domain.placesearch.PlaceSearchFactory;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceOwnerUpdateRequest;
+import pl.luncher.v3.luncher_core.common.model.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.common.model.responses.BasicPlaceResponse;
+import pl.luncher.v3.luncher_core.common.model.responses.PlaceSearchResponse;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole.hasRole;
 
 @Tag(name = "place", description = "Places CRUD")
@@ -34,6 +37,7 @@ public class PlaceController {
 
   private final PlaceFactory placeFactory;
   private final UserFactory userFactory;
+  private final PlaceSearchFactory placeSearchFactory;
 
   @GetMapping("/{uuid}")
   public ResponseEntity<?> getById(@PathVariable UUID uuid) {
@@ -96,5 +100,15 @@ public class PlaceController {
         .toList();
 
     return ResponseEntity.ok(placesList);
+  }
+
+  @PostMapping("/search")
+  public ResponseEntity<PlaceSearchResponse> searchQuery(
+      @RequestBody @Valid PlaceSearchRequest request, User user) {
+    var searchRequest = placeSearchFactory.of(request);
+
+    var list = searchRequest.fetch(request.getPage(), request.getSize());
+
+    return ResponseEntity.ok(new PlaceSearchResponse(list));
   }
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.common.domain.place.valueobject.Address;
+import pl.luncher.v3.luncher_core.common.model.dto.Location;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 import pl.luncher.v3.luncher_core.common.model.dto.PlaceTypeDto;
 
@@ -22,11 +23,11 @@ public class FullPlaceResponse {
   private String description;
   private Address address;
   private String googleMapsReference;
-  private String googleMapsPlaceId;
   private String facebookPageId;
   private String instagramHandle;
   private String webpageUrl;
   private String phoneNumber;
   private List<OpeningWindowDto> standardOpeningTimes;
+  private Location location;
   private PlaceTypeDto placeType;
 }

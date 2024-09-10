@@ -34,6 +34,12 @@
       </properties>
     </profile>
     <profile>
+      <id>s_pre</id>
+      <properties>
+        <spring.profiles.active>s_pre</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
       <id>gcp_test</id>
       <properties>
         <spring.profiles.active>gcp_test</spring.profiles.active>
@@ -155,30 +161,19 @@
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-bom</artifactId>
-      <version>7.0.0.Final</version>
+      <version>7.2.1.Final</version>
       <type>pom</type>
-      <!--            <scope>import</scope>-->
+      <scope>import</scope>
     </dependency>
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-mapper-orm</artifactId>
-      <version>7.0.0.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-elasticsearch</artifactId>
-      <version>5.11.12.Final</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hibernate.common</groupId>
-          <artifactId>hibernate-commons-annotations</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>7.2.1.Final</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate.search</groupId>
       <artifactId>hibernate-search-backend-elasticsearch</artifactId>
-      <version>7.0.0.Final</version>
+      <version>7.2.1.Final</version>
     </dependency>
     <dependency>
       <groupId>io.cucumber</groupId>
@@ -240,6 +235,16 @@
       <groupId>org.zalando</groupId>
       <artifactId>logbook-spring-boot-starter</artifactId>
       <version>3.9.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>hibernate-spatial</artifactId>
+      <groupId>org.hibernate.orm</groupId>
+      <version>6.6.0.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>3.6.0.Final</version>
     </dependency>
   </dependencies>
 

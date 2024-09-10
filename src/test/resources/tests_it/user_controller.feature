@@ -105,7 +105,7 @@ Feature: Users
       | user@luncher.corp | 1234     |
     And response code is 200
     And User is logged in as user@luncher.corp
-    And Removed saved authentication token
+    And User logs out (by removing saved auth token)
 
     When User requests password reset for user user-unknown@luncher.corp
     Then response code is 404

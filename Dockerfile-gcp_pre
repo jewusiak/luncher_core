@@ -10,3 +10,4 @@ COPY --from=build /app/target/*.jar app.jar
 #RUN mkdir "db"
 
 ENTRYPOINT ["java","-jar","/app.jar"]
+

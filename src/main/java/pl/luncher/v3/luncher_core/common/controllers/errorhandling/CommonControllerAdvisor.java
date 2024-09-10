@@ -1,7 +1,6 @@
 package pl.luncher.v3.luncher_core.common.controllers.errorhandling;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,13 +39,13 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
     return ErrorResponse.builder().message("Forbidden").cause(ex.getMessage()).messageLocale("en_US").build();
   }
 
-  //Other exceptions
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler(Exception.class)
-  protected ErrorResponse handleOtherExceptions(Exception exception) {
-    return ErrorResponse.builder()
-        .message(Optional.ofNullable(exception).map(Exception::getMessage).orElse(null)).cause(
-            Optional.ofNullable(exception).map(Throwable::getCause).map(Throwable::getMessage)
-                .orElse(null)).build();
-  }
+//  Other exceptions
+//  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//  @ExceptionHandler(Exception.class)
+//  protected ErrorResponse handleOtherExceptions(Exception exception) {
+//    return ErrorResponse.builder()
+//        .message(Optional.ofNullable(exception).map(Exception::getMessage).orElse(null)).cause(
+//            Optional.ofNullable(exception).map(Throwable::getCause).map(Throwable::getMessage)
+//                .orElse(null)).build();
+//  }
 }
