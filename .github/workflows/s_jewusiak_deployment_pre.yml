@@ -150,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH keys
-        uses: webfactory/webfactory/ssh-agent@v0.9.0@v0.9.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
 
