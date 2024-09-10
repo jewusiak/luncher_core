@@ -195,19 +195,21 @@ jobs:
       - name: Wait for postgres to start
         run: |
           ssh github_uploads@s.jewusiak.pl "
-          sleep 10
-          while [ \"`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`\" == \"starting\" ]
+          echo \"sleep begin\"
+          sleep 5
+          echo \"sleep end\"
+          while [ \"`docker inspect -f {{.State.Health.Status}} $1`\" == \"starting\" ]
           do
             sleep 0.1;
-            echo \"`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`\"
+            echo \"`docker inspect -f {{.State.Health.Status}} $1`\"
           done;
-          if [ \"`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`\" != \"healthy\" ]
+          if [ \"`docker inspect -f {{.State.Health.Status}} $1`\" != \"healthy\" ]
           then
-            echo \"postgres failed to start\"
-            echo \"`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`\"
+            echo \"$1 failed to start\"
+            echo \"`docker inspect -f {{.State.Health.Status}} $1`\"
             exit 1
           fi
-          echo \"postgres started successfully\"
+          echo \"$1 started successfully\"
           "
 
   deploy_elasticsearch:
