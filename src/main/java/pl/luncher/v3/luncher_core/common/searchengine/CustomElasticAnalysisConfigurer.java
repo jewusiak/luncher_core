@@ -1,9 +1,11 @@
 package pl.luncher.v3.luncher_core.common.searchengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurationContext;
 import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysisConfigurer;
@@ -30,9 +32,13 @@ public class CustomElasticAnalysisConfigurer implements ElasticsearchAnalysisCon
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    List<String> stopwords = objectMapper.readValue(Files.readString(Path.of("src/main/resources/stopwords_pl.json")),
-        List.class);
-
+    List<String> stopwords = List.of();
+    try (InputStream inp = getClass().getResourceAsStream("/stopwords_pl.json");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inp))) {
+      stopwords = objectMapper.readValue(
+          String.valueOf(reader.lines().collect(Collectors.joining(System.lineSeparator()))),
+          List.class);
+    }
     context.tokenFilter("pl_stopwords").type("stop").param("stopwords", stopwords.toArray(String[]::new));
 
     context.analyzer("morfologik_polish").custom()
