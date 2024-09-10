@@ -231,7 +231,7 @@ jobs:
           fi
 
   deploy_main_app:
-    needs: [ deploy_helper_services ]
+    needs: [ deploy_elasticsearch, deploy_postgres ]
     permissions:
       contents: 'read'
       id-token: 'write'
