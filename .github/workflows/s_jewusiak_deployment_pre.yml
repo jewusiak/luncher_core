@@ -220,19 +220,11 @@ jobs:
 
       - name: Wait for elasticsearch to start
         run: |
-          sleep 10
-          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`" == "starting" ]
-          do
-            sleep 0.1;
-            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`"
-          done;
-          if [ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`" != "healthy" ]
-          then
-            echo "Elasticsearch failed to start"
-            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`"
-            exit 1
-          fi
-          echo "Elasticsearch started successfully"
+          ssh github_uploads@s.jewusiak.pl "
+          echo \"sleep begin\"
+          sleep 5
+          bash monitor.sh ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}
+          "
 
   deploy_main_app:
     needs: [ deploy_elasticsearch, deploy_postgres ]
@@ -254,19 +246,11 @@ jobs:
 
       - name: Wait for application to start
         run: |
-          sleep 10
-          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`" == "starting" ]
-          do
-            sleep 0.1;
-            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`"
-          done;
-          if [ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`" != "healthy" ]
-          then
-            echo "Docker application failed to start"
-            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`"
-            exit 1
-          fi
-          echo "Docker application started successfully"
+          ssh github_uploads@s.jewusiak.pl "
+          echo \"sleep begin\"
+          sleep 5
+          bash monitor.sh ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}
+          "
 
 #  cleanup:
 #    needs: [ push ]
