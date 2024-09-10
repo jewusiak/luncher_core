@@ -11,5 +11,3 @@ COPY --from=build /app/target/*.jar app.jar
 
 ENTRYPOINT ["java","-jar","/app.jar"]
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=50 \
-  CMD curl -s http://localhost:8080 >/dev/null || exit 1

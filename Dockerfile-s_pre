@@ -11,3 +11,6 @@ COPY ./secrets/gcp_server_key.json secrets/gcp_server_key.json
 #RUN mkdir "db"
 
 ENTRYPOINT ["java","-jar","/app.jar"]
+
+HEALTHCHECK --start-interval=3s --interval=60s --start-period=20s --timeout=5s --retries=10 \
+  CMD curl -s http://localhost:8080 >/dev/null || exit 1

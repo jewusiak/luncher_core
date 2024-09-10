@@ -2,5 +2,5 @@ FROM elasticsearch:8.15.0
 RUN bin/elasticsearch-plugin install analysis-stempel
 RUN bin/elasticsearch-plugin install pl.allegro.tech.elasticsearch.plugin:elasticsearch-analysis-morfologik:8.15.0
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=50 \
+HEALTHCHECK --interval=30s --start-interval=3s --timeout=5s --start-period=20s --retries=10 \
   CMD curl -s http://localhost:9200 >/dev/null || exit 1
