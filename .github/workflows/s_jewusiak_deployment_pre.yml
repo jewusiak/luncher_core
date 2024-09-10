@@ -24,6 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+
       - name: Build docker Image
         id: docker-build
         run: 'docker build -t ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-elasticsearch .'
@@ -45,6 +50,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
 
       - name: Build docker Image
         id: docker-build
@@ -96,6 +106,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+
       - name: Copy App GCP credentials
         run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
 
@@ -119,7 +134,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@0.9.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
 
@@ -135,7 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@0.9.0
+        uses: webfactory/webfactory/ssh-agent@v0.9.0@v0.9.0
         with:
           ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
 
