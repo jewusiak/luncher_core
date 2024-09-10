@@ -180,7 +180,7 @@ jobs:
         run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Run Docker application
-        run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d -p 8080:8080 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} -p 8080:8080 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
 #  cleanup:
 #    needs: [ push ]

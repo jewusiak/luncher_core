@@ -12,3 +12,6 @@ RUN apt-get update \
       && apt-get -y install postgresql-15-postgis-3 
 
 COPY src/test/resources/psql_init/* /docker-entrypoint-initdb.d/
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=10 \
+  CMD pg_isready
