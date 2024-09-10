@@ -27,8 +27,8 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
-          chmod 600 ~/.ssh/id_25519
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Build docker Image
@@ -56,8 +56,8 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
-          chmod 600 ~/.ssh/id_25519
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Build docker Image
@@ -113,8 +113,8 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
-          chmod 600 ~/.ssh/id_25519
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Copy App GCP credentials
@@ -142,8 +142,8 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
-          chmod 600 ~/.ssh/id_25519
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Create Network
@@ -160,8 +160,8 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
-          chmod 600 ~/.ssh/id_25519
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Stop old app
