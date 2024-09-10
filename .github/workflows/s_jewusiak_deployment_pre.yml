@@ -2,8 +2,8 @@ name: Deploy to s.jewusiak.pl
 
 on:
   workflow_dispatch:
-#  push:
-#    branches: [ "master" ]
+  push:
+    branches: [ "master" ]
 
 env:
   APP_NAME: "luncher_core"
@@ -150,7 +150,7 @@ jobs:
         run: 'ssh github_uploads@s.jewusiak.pl "docker network inspect ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net >/dev/null 2>&1 || docker network create --driver bridge ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net"'
 
   stop_old_apps:
-    #    needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
+    needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
     permissions:
       contents: 'read'
       id-token: 'write'
