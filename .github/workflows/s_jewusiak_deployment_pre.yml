@@ -71,7 +71,7 @@ jobs:
 
 
   test_app:
-    needs: [ elasticsearch_build, postgres_build ]
+    #    needs: [ elasticsearch_build, postgres_build ]
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -137,6 +137,14 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+
+
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
+          chmod 600 ~/.ssh/id_25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Create Network
         run: 'ssh github_uploads@s.jewusiak.pl "docker network create --driver bridge ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net || true"'
