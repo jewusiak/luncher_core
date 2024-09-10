@@ -33,7 +33,8 @@ class PlaceSearchWithHibernateSearch implements PlaceSearch {
       root.add(f.matchAll());
 
       if (textQuery != null) {
-        root.add(f.match().fields("name", "longName", "description").matching(textQuery).fuzzy(2));
+        root.add(f.match().fields("name", "longName", "description").matching(textQuery)
+            .fuzzy(textQuery.length() > 4 ? 2 : 1));
       }
 
       if (placeTypeIdentifier != null) {

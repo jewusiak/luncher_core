@@ -47,11 +47,11 @@ public class PlaceDb {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  @FullTextField
+  @FullTextField(analyzer = "morfologik_polish")
   private String name;
-  @FullTextField
+  @FullTextField(analyzer = "morfologik_polish")
   private String longName;
-  @FullTextField
+  @FullTextField(analyzer = "morfologik_polish")
   private String description;
 
   private String facebookPageId;
@@ -78,6 +78,7 @@ public class PlaceDb {
 
   @ManyToOne
   @IndexedEmbedded
+  @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
   private PlaceTypeDb placeType;
 
   @Column(columnDefinition = "geography(Point, 4326)")

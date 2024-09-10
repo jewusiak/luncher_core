@@ -2,8 +2,8 @@ name: Deploy to GCP
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "master" ]
+#  push:
+#    branches: [ "master" ]
 
 env:
   PROJECT_ID: "luncher-corp"

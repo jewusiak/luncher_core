@@ -3,6 +3,7 @@ package pl.luncher.v3.luncher_core.common.domain.place;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -56,6 +57,13 @@ abstract class PlaceDbMapper {
   @Mapping(target = "owner", source = "owner.dbEntity")
   abstract PlaceDb fromCreation(PlaceCreateRequest request, User owner,
       @Context PlaceTypeRepository placeTypeRepository);
+
+  @AfterMapping
+  void ensureOpeningWindowsHavePlaceReference(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getStandardOpeningTimes() != null) {
+      placeDb.getStandardOpeningTimes().forEach(e -> e.setPlace(placeDb));
+    }
+  }
 
 
   @Named("resolvePlaceTypeDb")

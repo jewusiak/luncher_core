@@ -39,9 +39,9 @@ import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 //@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestsItConfig {
 
-  private final static boolean shouldDeleteAll = false;
+  private final static boolean shouldDeleteAll = true;
 
-  private static ElasticsearchContainer elasticsearchContainer;
+  private static GenericContainer<?> elasticsearchContainer;
   private static GenericContainer<?> postgresContainer;
   private static boolean elasticsearchStarted;
   private static boolean postgresStarted;
@@ -116,7 +116,7 @@ public class TestsItConfig {
 
   private static void setUpElasticsearchContainer() {
     log.info("BA >> Set up Elasticsearch");
-    elasticsearchContainer = new ElasticsearchContainer("elasticsearch:8.12.2");
+    elasticsearchContainer = new GenericContainer<>(DockerImageName.parse("luncher_core_elasticsearch"));
     elasticsearchContainer.withEnv("discovery.type", "single-node");
     elasticsearchContainer.withEnv("xpack.security.enabled", "false");
     elasticsearchContainer.withExposedPorts(9200, 9300);
@@ -137,7 +137,7 @@ public class TestsItConfig {
    */
   private static void setUpPostgresContainer() {
     log.info("BA >> Set up Postgres");
-    postgresContainer = new GenericContainer<>(DockerImageName.parse("luncher_core-postgres-test"));
+    postgresContainer = new GenericContainer<>(DockerImageName.parse("luncher_core_postgres"));
 
     // below env vars seem to be overwritten by testcontainers/image etc.
     postgresContainer.withEnv("POSTGRES_DB", "luncher_core");

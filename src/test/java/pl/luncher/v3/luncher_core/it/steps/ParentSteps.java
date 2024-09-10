@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -184,5 +185,18 @@ public class ParentSteps {
     PLACE(0), ASSET(1), USER(2);
 
     private final int index;
+  }
+
+  public static String replaceIds(String text) {
+    var replacedText = Pattern.compile("\\[ID:\\w+:-?\\d+]").matcher(text).replaceAll((result) -> {
+      var gr = result.group();
+      // [ID:PLACE:109]
+      //
+      String[] colonSplitted = gr.split(":");
+      EntityIdType entityType = EntityIdType.valueOf(colonSplitted[1]);
+      String idx = colonSplitted[2].split("]")[0];
+      return getIdFromCache(idx, entityType);
+    });
+    return replacedText;
   }
 }

@@ -15,6 +15,5 @@ public class UtilSteps {
   public void refreshIndexes() throws InterruptedException {
     Search.mapping(entityManager.getEntityManagerFactory()).scope(PlaceDb.class).workspace()
         .refresh();
-    Thread.sleep(2000);
   }
 }

@@ -1,0 +1,181 @@
+name: Deploy to s.jewusiak.pl
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+
+env:
+  APP_NAME: "luncher_core"
+  POSTGRES_NAME: "postgres_luncher_core"
+  ELASTICSEARCH_NAME: "elasticsearch_luncher_core"
+  ENV_SUFFIX: "_pre"
+
+  VERSION: 3.0.1
+
+
+jobs:
+  elasticsearch_build:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-elasticsearch .'
+
+      - name: Save Docker image
+        run: 'docker save --output /tmp/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}'
+
+      - name: Upload Docker image to remote server
+        run: 'scp /tmp/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}_image.tar github_uploads@s.jewusiak.pl:images/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}_image.tar'
+
+      - name: Load image
+        run: 'ssh github_uploads@s.jewusiak.pl "docker load --input images/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}_image.tar"'
+
+  postgres_build:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-postgres .'
+
+      - name: Save Docker image
+        run: 'docker save --output /tmp/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}'
+
+      - name: Upload Docker image to remote server
+        run: 'scp /tmp/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}_image.tar github_uploads@s.jewusiak.pl:images/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}_image.tar'
+
+      - name: Load image
+        run: 'ssh github_uploads@s.jewusiak.pl "docker load --input images/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}_image.tar"'
+
+
+  test_app:
+    needs: [ elasticsearch_build, postgres_build ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build test helper services images
+        run: 'bash ./build_images_for_testing.sh'
+
+      - name: Copy Test GCP credentials
+        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }}'' > secrets/gcp_server_key.json'
+
+      - name: Set up java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build & test
+        run: 'mvn clean verify -Plocal_test'
+
+  build_app:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy App GCP credentials
+        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-s_pre .'
+
+      - name: Save Docker image
+        run: 'docker save --output /tmp/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}'
+
+      - name: Upload Docker image to remote server
+        run: 'scp /tmp/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar github_uploads@s.jewusiak.pl:images/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar'
+
+      - name: Load image
+        run: 'ssh github_uploads@s.jewusiak.pl "docker load --input images/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar"'
+
+  environment_setup:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@0.9.0
+        with:
+          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+
+      - name: Create Network
+        run: 'ssh github_uploads@s.jewusiak.pl "docker network create --driver bridge ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net || true"'
+
+  deploy:
+    needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@0.9.0
+        with:
+          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+
+      - name: Stop old app
+        run: 'ssh github_uploads@s.jewusiak.pl "docker stop ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} || true"'
+
+      - name: Stop old postgres
+        run: 'ssh github_uploads@s.jewusiak.pl "docker stop ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} || true"'
+
+      - name: Stop old elasticsearch
+        run: 'ssh github_uploads@s.jewusiak.pl "docker stop ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} || true"'
+
+      - name: Run new postgres
+        run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+
+      - name: Run new elasticsearch
+        run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+
+      - name: Run Docker application
+        run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d -p 8080:8080 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+
+#  cleanup:
+#    needs: [ push ]
+#    if: ${{ always() }}
+#
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: geekyeggo/delete-artifact@v5
+#        with:
+#          name: |
+#            *_image.tar
+#            *_image
+
+#  cleanup_if_test_fails:
+#    needs: [ test, build ]
+#    if: ${{ needs.test.result == 'failure' && needs.build.result == 'success' }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: geekyeggo/delete-artifact@v5
+#        with:
+#          name: |
+#            *_image.tar
+#            *_image

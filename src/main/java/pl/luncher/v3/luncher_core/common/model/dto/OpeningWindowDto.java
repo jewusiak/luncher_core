@@ -11,8 +11,6 @@ import pl.luncher.v3.luncher_core.common.model.valueobjects.WeekDayTime;
 @Getter
 public class OpeningWindowDto implements Serializable {
 
-  private final UUID uuid;
-  private final DayOfWeek dayOfWeek;
-  private final WeekDayTime startTime;
-  private final WeekDayTime endTime;
+  private WeekDayTime startTime;
+  private WeekDayTime endTime;
 }

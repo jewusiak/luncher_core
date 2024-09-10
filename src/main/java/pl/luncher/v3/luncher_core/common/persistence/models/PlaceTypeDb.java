@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 @Entity
 @Table(name = "place_types", schema = "luncher_core")
@@ -20,6 +21,7 @@ import lombok.Setter;
 public class PlaceTypeDb {
 
   @Id
+  @KeywordField
   private String identifier;
 
   private String iconName;

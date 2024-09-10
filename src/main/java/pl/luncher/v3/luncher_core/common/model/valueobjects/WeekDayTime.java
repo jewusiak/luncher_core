@@ -14,7 +14,7 @@ public class WeekDayTime {
   private final LocalTime time;
   private final DayOfWeek day;
 
-  private WeekDayTime(LocalTime time, DayOfWeek day) {
+  public WeekDayTime(LocalTime time, DayOfWeek day) {
     this.time = time;
     this.day = day;
   }

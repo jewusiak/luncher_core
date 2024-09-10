@@ -19,7 +19,16 @@ public class ResponseAssertionsSteps {
       List<Map<String, String>> expected) {
     var resp = ParentSteps.getCachedHttpResp().jsonPath();
     for (String key : expected.get(0).keySet()) {
-      Assertions.assertThat(resp.getString(key)).isEqualTo(expected.get(0).get(key));
+      String expectedAfterIdReplacement = ParentSteps.replaceIds(expected.get(0).get(key));
+      Assertions.assertThat(resp.getString(key)).isEqualTo(expectedAfterIdReplacement);
+    }
+  }
+
+  @And("HTTP Response contains:")
+  public void responseContains(List<String> expected) {
+    var resp = ParentSteps.getCachedHttpResp().asString();
+    for (String expVal : expected) {
+      Assertions.assertThat(resp).contains(ParentSteps.replaceIds(expVal));
     }
   }
 }
