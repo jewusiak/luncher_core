@@ -194,13 +194,17 @@ jobs:
 
       - name: Wait for postgres to start
         run: |
-          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`"=="starting" ]; do
+          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`" == "starting" ]
+          do
             sleep 0.1;
+            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`"
           done;
-          if [[ "`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`"!="healthy" ]]; then
-            echo "Postgres failed to start"
+          if [ "`docker inspect -f {{.State.Health.Status}} ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}`" != "healthy" ]
+          then
+            echo "postgres failed to start"
             exit 1
           fi
+          echo "postgres started successfully"
 
   deploy_elasticsearch:
     needs: [ stop_old_apps ]
@@ -222,13 +226,17 @@ jobs:
 
       - name: Wait for elasticsearch to start
         run: |
-          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`"=="starting" ]; do
+          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`" == "starting" ]
+          do
             sleep 0.1;
+            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`"
           done;
-          if [[ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`"!="healthy" ]]; then
+          if [ "`docker inspect -f {{.State.Health.Status}} ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}`" != "healthy" ]
+          then
             echo "Elasticsearch failed to start"
             exit 1
           fi
+          echo "Elasticsearch started successfully"
 
   deploy_main_app:
     needs: [ deploy_elasticsearch, deploy_postgres ]
@@ -250,13 +258,17 @@ jobs:
 
       - name: Wait for application to start
         run: |
-          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`"=="starting" ]; do
+          while [ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`" == "starting" ]
+          do
             sleep 0.1;
+            echo "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`"
           done;
-          if [[ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`"!="healthy" ]]; then
-            echo "luncher_core failed to start"
+          if [ "`docker inspect -f {{.State.Health.Status}} ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}`" != "healthy" ]
+          then
+            echo "Docker application failed to start"
             exit 1
           fi
+          echo "Docker application started successfully"
 
 #  cleanup:
 #    needs: [ push ]
