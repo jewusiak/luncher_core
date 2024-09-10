@@ -25,9 +25,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
+          chmod 600 ~/.ssh/id_25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Build docker Image
         id: docker-build
@@ -52,9 +54,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
+          chmod 600 ~/.ssh/id_25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Build docker Image
         id: docker-build
@@ -107,9 +111,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
+          chmod 600 ~/.ssh/id_25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Copy App GCP credentials
         run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
@@ -134,12 +140,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
-
-
-      - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
@@ -158,9 +158,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH keys
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.S_JEWUSIAK_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_25519
+          chmod 600 ~/.ssh/id_25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Stop old app
         run: 'ssh github_uploads@s.jewusiak.pl "docker stop ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} || true"'
