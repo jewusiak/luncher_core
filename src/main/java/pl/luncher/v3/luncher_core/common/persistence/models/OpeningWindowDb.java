@@ -14,15 +14,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 @Entity
 @Table(name = "opening_windows", schema = "luncher_core")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-@Builder(access = AccessLevel.MODULE)
+@Builder
 @Getter
 @Setter
+@ToString(exclude = "place")
 public class OpeningWindowDb {
 
   @Id

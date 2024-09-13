@@ -23,6 +23,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.search.engine.backend.types.ObjectStructure;
 import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
@@ -42,12 +44,13 @@ import pl.luncher.v3.luncher_core.common.persistence.LocationToPointPersistenceC
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@ToString(exclude = {"owner", "images"})
 public class PlaceDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  @FullTextField(analyzer = "morfologik_polish")
+  @FullTextField(analyzer = "names_analyzer")
   private String name;
   @FullTextField(analyzer = "morfologik_polish")
   private String longName;
@@ -68,8 +71,7 @@ public class PlaceDb {
   private String googleMapsReference;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-  @JoinTable(schema = "luncher_core")
-  @IndexedEmbedded
+  @IndexedEmbedded(structure = ObjectStructure.NESTED)
   @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
   private List<OpeningWindowDb> standardOpeningTimes;
 //todo: not mvp

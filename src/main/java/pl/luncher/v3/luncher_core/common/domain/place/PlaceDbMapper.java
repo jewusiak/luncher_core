@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.common.domain.place;
 
+import java.util.Collection;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -43,11 +44,27 @@ abstract class PlaceDbMapper {
 
   abstract FullPlaceResponse mapToFull(PlaceDb placeDb);
 
-  @Mapping(target = "uuid", ignore = true)
-  abstract OpeningWindowDb mapToDb(OpeningWindowDto openingWindow, PlaceDb place);
+  OpeningWindowDb mapToDb(OpeningWindowDto openingWindow) {
+    if (openingWindow == null) {
+      return null;
+    }
+    int endTime = openingWindow.getStartTime().compareTo(openingWindow.getEndTime()) > 0
+        ? openingWindow.getEndTime().toIncrementedIntTime()
+        : openingWindow.getEndTime().toIntTime();
+    return OpeningWindowDb.builder()
+        .startTime(openingWindow.getStartTime().toIntTime())
+        .endTime(endTime)
+        .build();
+  }
 
-  @BeanMapping(ignoreUnmappedSourceProperties = "place")
-  abstract OpeningWindowDto mapToDto(OpeningWindowDb openingWindowDb);
+
+  OpeningWindowDto mapToDto(OpeningWindowDb openingWindowDb) {
+    if (openingWindowDb == null) {
+      return null;
+    }
+    return new OpeningWindowDto(WeekDayTime.of(openingWindowDb.getStartTime()),
+        WeekDayTime.of(openingWindowDb.getEndTime()));
+  }
 
 
   @Mapping(target = "images", ignore = true)
@@ -71,20 +88,5 @@ abstract class PlaceDbMapper {
     return placeTypeRepository.findById(placeTypeIdentifier).orElseThrow();
   }
 
-  Point mapToPoint(Location location) {
-    return new GeometryFactory().createPoint(
-        new Coordinate(location.getLongitude(), location.getLatitude()));
-  }
 
-  Location mapToLocation(Point point) {
-    return new Location(point.getY(), point.getX());
-  }
-
-  int mapToInt(WeekDayTime time) {
-    return time.toIntTime();
-  }
-
-  WeekDayTime toWeekDayTime(Integer time) {
-    return WeekDayTime.of(time);
-  }
 }

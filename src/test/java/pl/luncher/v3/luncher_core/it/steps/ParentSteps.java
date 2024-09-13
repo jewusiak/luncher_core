@@ -1,9 +1,12 @@
 package pl.luncher.v3.luncher_core.it.steps;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +25,10 @@ import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse
 @RequiredArgsConstructor
 public class ParentSteps {
 
-  private static ObjectMapper objectMapper = new ObjectMapper();
+  private static ObjectMapper objectMapper = new ObjectMapper() {{
+    this.registerModule(new JavaTimeModule());
+    this.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+  }};
 
   private static Map<String, Object> cache = new HashMap<>();
 

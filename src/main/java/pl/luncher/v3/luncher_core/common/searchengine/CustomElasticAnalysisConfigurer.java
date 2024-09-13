@@ -44,5 +44,7 @@ public class CustomElasticAnalysisConfigurer implements ElasticsearchAnalysisCon
     context.analyzer("morfologik_polish").custom()
         .tokenizer(/*"/*edge_ngram_pl"*/"whitespace"/* or standard tokenizer*/)
         .tokenFilters("lowercase", "morfologik_stem", "pl_stopwords");
+
+    context.analyzer("names_analyzer").custom().tokenizer("standard").tokenFilters("lowercase", "asciifolding");
   }
 }

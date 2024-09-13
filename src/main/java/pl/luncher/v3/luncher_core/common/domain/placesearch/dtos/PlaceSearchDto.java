@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Value;
 import pl.luncher.v3.luncher_core.common.model.dto.Location;
+import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb}
@@ -21,6 +22,7 @@ public class PlaceSearchDto implements Serializable {
   PlaceTypeDto placeType;
   Location location;
   List<AssetDto> images;
+  OpeningWindowDto nearestWindow;
 
   /**
    * DTO for {@link pl.luncher.v3.luncher_core.common.domain.place.valueobject.Address}

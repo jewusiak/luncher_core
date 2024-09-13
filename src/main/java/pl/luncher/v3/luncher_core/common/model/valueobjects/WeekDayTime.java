@@ -2,12 +2,13 @@ package pl.luncher.v3.luncher_core.common.model.valueobjects;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import lombok.Getter;
 
 @Getter
-public class WeekDayTime {
+public class WeekDayTime implements Comparable<WeekDayTime> {
 
   private static final int SECONDS_IN_A_DAY = 86400;
   public static final int SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7;
@@ -46,5 +47,10 @@ public class WeekDayTime {
 
   public int toIncrementedIntTime() {
     return (day.getValue() - 1) * SECONDS_IN_A_DAY + time.toSecondOfDay() + SECONDS_IN_A_WEEK;
+  }
+
+  @Override
+  public int compareTo(@NotNull WeekDayTime o) {
+    return this.toIntTime() - o.toIntTime();
   }
 }
