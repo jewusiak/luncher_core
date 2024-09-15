@@ -1,4 +1,4 @@
-Feature: Place search engine
+Feature: Place search based on opening times
 
   Background:
     Given User exists:
@@ -115,6 +115,8 @@ Feature: Place search engine
 }
     """
 
+    And Refresh Hibernate Search indexes
+
     And response code is 200
     And User logs out (by removing saved auth token)
 
@@ -126,7 +128,6 @@ Feature: Place search engine
     And response code is 200
     And User is logged in as user@luncher.corp
 
-    And Refresh Hibernate Search indexes
 
     When Place Search request is sent as below:
       | dayOfWeek   | openAt   | size | page |
