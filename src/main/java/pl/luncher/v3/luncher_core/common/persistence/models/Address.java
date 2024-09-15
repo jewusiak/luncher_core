@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.domain.place.valueobject;
+package pl.luncher.v3.luncher_core.common.persistence.models;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;

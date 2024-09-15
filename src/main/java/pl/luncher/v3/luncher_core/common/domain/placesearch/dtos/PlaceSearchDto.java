@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.Value;
 import pl.luncher.v3.luncher_core.common.model.dto.Location;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.persistence.models.Address;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb}
@@ -25,7 +26,7 @@ public class PlaceSearchDto implements Serializable {
   OpeningWindowDto nearestWindow;
 
   /**
-   * DTO for {@link pl.luncher.v3.luncher_core.common.domain.place.valueobject.Address}
+   * DTO for {@link Address}
    */
   @Value
   public static class AddressDto implements Serializable {

@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.luncher.v3.luncher_core.common.domain.place.valueobject.Address;
 import pl.luncher.v3.luncher_core.common.model.dto.Location;
 import pl.luncher.v3.luncher_core.common.model.dto.OpeningWindowDto;
+import pl.luncher.v3.luncher_core.common.persistence.models.Address;
 
 @Data
 @Builder

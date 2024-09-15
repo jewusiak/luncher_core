@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.common.domain.place.Place;
 import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
 import pl.luncher.v3.luncher_core.common.domain.placesearch.PlaceSearchFactory;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
@@ -47,7 +47,8 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PostMapping
-  public ResponseEntity<?> createPlace(@RequestBody PlaceCreateRequest request, User requestingUser) {
+  public ResponseEntity<?> createPlace(@RequestBody PlaceCreateRequest request,
+      User requestingUser) {
     Place place = placeFactory.of(request, requestingUser);
     place.save();
 
@@ -56,7 +57,8 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PutMapping("/{placeUuid}")
-  public ResponseEntity<?> updatePlace(@PathVariable UUID placeUuid, @RequestBody PlaceUpdateRequest placeUpdateRequest,
+  public ResponseEntity<?> updatePlace(@PathVariable UUID placeUuid,
+      @RequestBody PlaceUpdateRequest placeUpdateRequest,
       User requestingUser) {
     Place place = placeFactory.pullFromRepo(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();

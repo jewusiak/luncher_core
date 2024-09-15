@@ -13,8 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
-import pl.luncher.v3.luncher_core.common.domain.place.Place;
 import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
+import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
 import pl.luncher.v3.luncher_core.common.persistence.models.AssetDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.AssetRepository;
 
@@ -31,8 +31,10 @@ class ImageAssetImpl implements Asset {
   /**
    * Creates and initializes new asset
    */
-  ImageAssetImpl(String bucketName, String pathPrefix, String gcpHost, MimeContentFileType filetype, String fileName,
-      String fileDescription, Storage storage, AssetRepository assetRepository, PlaceFactory placeFactory) {
+  ImageAssetImpl(String bucketName, String pathPrefix, String gcpHost, MimeContentFileType filetype,
+      String fileName,
+      String fileDescription, Storage storage, AssetRepository assetRepository,
+      PlaceFactory placeFactory) {
     this.assetRepository = assetRepository;
     this.storage = storage;
     this.placeFactory = placeFactory;
@@ -49,7 +51,8 @@ class ImageAssetImpl implements Asset {
   /**
    * Creates new asset from data source
    */
-  ImageAssetImpl(AssetDb assetDb, Storage storage, AssetRepository assetRepository, PlaceFactory placeFactory) {
+  ImageAssetImpl(AssetDb assetDb, Storage storage, AssetRepository assetRepository,
+      PlaceFactory placeFactory) {
     this.storage = storage;
     this.assetRepository = assetRepository;
     this.assetDb = assetDb;

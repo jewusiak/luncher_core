@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 
 @Component
@@ -49,6 +49,7 @@ public class PlaceFactory {
   }
 
   public Place of(PlaceDb placeDb) {
-    return new PlaceImpl(placeDb, placeEntityPersistenceService, placeDbMapper, placeTypeRepository, userFactory);
+    return new Place(placeDb, placeEntityPersistenceService, placeDbMapper, placeTypeRepository,
+        userFactory);
   }
 }

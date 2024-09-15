@@ -1,7 +1,7 @@
 package pl.luncher.v3.luncher_core.common.domain.assets;
 
 import java.util.UUID;
-import pl.luncher.v3.luncher_core.common.domain.place.Place;
+import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
 
 public interface Asset {
 
