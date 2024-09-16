@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.domain.place.model.dtos;
+package pl.luncher.v3.luncher_core.common.domain.place.domain.dtos;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,6 @@ import pl.luncher.v3.luncher_core.common.model.dto.Location;
  */
 @AllArgsConstructor
 @Getter
-@Setter
 public class PlaceDto implements Serializable {
 
   private UUID id;
@@ -30,5 +29,6 @@ public class PlaceDto implements Serializable {
   private PlaceTypeDto placeType;
   private Location location;
   private List<AssetDto> images;
+  @Setter
   private UserDto owner;
 }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
+import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
 import pl.luncher.v3.luncher_core.common.domain.placesearch.PlaceSearchFactory;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;

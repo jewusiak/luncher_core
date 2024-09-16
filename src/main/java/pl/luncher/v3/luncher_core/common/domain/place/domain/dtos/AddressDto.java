@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.domain.place.model.dtos;
+package pl.luncher.v3.luncher_core.common.domain.place.domain.dtos;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

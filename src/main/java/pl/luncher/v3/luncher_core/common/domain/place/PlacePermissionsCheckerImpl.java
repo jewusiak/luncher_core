@@ -1,7 +1,7 @@
 package pl.luncher.v3.luncher_core.common.domain.place;
 
 import lombok.RequiredArgsConstructor;
-import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
+import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;

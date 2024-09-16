@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
+import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
 import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
 import pl.luncher.v3.luncher_core.common.model.requests.PlaceCreateRequest;

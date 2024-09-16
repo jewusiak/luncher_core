@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
 import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.domain.place.model.Place;
+import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
 import pl.luncher.v3.luncher_core.common.persistence.models.AssetDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.AssetRepository;
 
