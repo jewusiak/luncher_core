@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import pl.luncher.v3.luncher_core.common.model.dto.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 class PlaceTypeImpl implements

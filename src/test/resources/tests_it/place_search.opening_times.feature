@@ -40,7 +40,7 @@ Feature: Place search based on opening times
     And Send PUT request to /place/[ID:PLACE:1] with body as below:
   """
 {
-   "standardOpeningTimes": [
+   "openingWindows": [
       {
          "startTime": {
             "day": "MONDAY",
@@ -130,40 +130,40 @@ Feature: Place search based on opening times
 
 
     When Place Search request is sent as below:
-      | dayOfWeek   | openAt   | size | page |
-      | <dayOfWeek> | <openAt> | 10   | 0    |
+      | openAt.day  | openAt.time | size | page |
+      | <dayOfWeek> | <openAt>    | 10   | 0    |
 
     Then response code is 200
     And HTTP Response has a list of size <expectedResults> in path results
 
     Examples:
       | dayOfWeek | openAt | expectedResults |
-      | 1         | 09:59  | 0               |
-      | 1         | 10:00  | 1               |
-      | 1         | 22:00  | 0               |
-      | 1         | 21:59  | 1               |
-      | 2         | 09:59  | 0               |
-      | 2         | 10:00  | 1               |
-      | 2         | 23:59  | 1               |
-      | 3         | 00:01  | 1               |
-      | 3         | 01:59  | 1               |
-      | 3         | 02:00  | 0               |
-      | 3         | 09:59  | 0               |
-      | 3         | 10:00  | 1               |
-      | 3         | 22:00  | 0               |
-      | 4         | 09:59  | 0               |
-      | 4         | 10:00  | 1               |
-      | 4         | 22:00  | 0               |
-      | 5         | 09:59  | 0               |
-      | 5         | 10:00  | 1               |
-      | 5         | 22:59  | 1               |
-      | 5         | 23:00  | 0               |
-      | 6         | 08:59  | 0               |
-      | 6         | 09:00  | 1               |
-      | 6         | 23:00  | 0               |
-      | 7         | 08:59  | 0               |
-      | 7         | 09:00  | 1               |
-      | 7         | 23:59  | 1               |
-      | 1         | 00:01  | 1               |
-      | 1         | 02:59  | 1               |
-      | 1         | 03:00  | 0               |
+      | MONDAY    | 09:59  | 0               |
+      | MONDAY    | 10:00  | 1               |
+      | MONDAY    | 22:00  | 0               |
+      | MONDAY    | 21:59  | 1               |
+      | TUESDAY   | 09:59  | 0               |
+      | TUESDAY   | 10:00  | 1               |
+      | TUESDAY   | 23:59  | 1               |
+      | WEDNESDAY | 00:01  | 1               |
+      | WEDNESDAY | 01:59  | 1               |
+      | WEDNESDAY | 02:00  | 0               |
+      | WEDNESDAY | 09:59  | 0               |
+      | WEDNESDAY | 10:00  | 1               |
+      | WEDNESDAY | 22:00  | 0               |
+      | THURSDAY  | 09:59  | 0               |
+      | THURSDAY  | 10:00  | 1               |
+      | THURSDAY  | 22:00  | 0               |
+      | FRIDAY    | 09:59  | 0               |
+      | FRIDAY    | 10:00  | 1               |
+      | FRIDAY    | 22:59  | 1               |
+      | FRIDAY    | 23:00  | 0               |
+      | SATURDAY  | 08:59  | 0               |
+      | SATURDAY  | 09:00  | 1               |
+      | SATURDAY  | 23:00  | 0               |
+      | SUNDAY    | 08:59  | 0               |
+      | SUNDAY    | 09:00  | 1               |
+      | SUNDAY    | 23:59  | 1               |
+      | MONDAY    | 00:01  | 1               |
+      | MONDAY    | 02:59  | 1               |
+      | MONDAY    | 03:00  | 0               |

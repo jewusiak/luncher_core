@@ -13,10 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.Getter;
-import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
-import pl.luncher.v3.luncher_core.common.persistence.models.AssetDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.AssetRepository;
+import pl.luncher.v3.luncher_core.place.persistence.model.AssetDb;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.AssetRepository;
 
 
 @Getter(AccessLevel.PACKAGE)
@@ -24,7 +22,7 @@ class ImageAssetImpl implements Asset {
 
   private final AssetRepository assetRepository;
   private final Storage storage;
-  private final PlaceFactory placeFactory;
+  //  private final PlaceFactory placeFactory;
   private AssetDb assetDb;
   private Blob blob;
 
@@ -33,11 +31,10 @@ class ImageAssetImpl implements Asset {
    */
   ImageAssetImpl(String bucketName, String pathPrefix, String gcpHost, MimeContentFileType filetype,
       String fileName,
-      String fileDescription, Storage storage, AssetRepository assetRepository,
-      PlaceFactory placeFactory) {
+      String fileDescription, Storage storage, AssetRepository assetRepository) {
     this.assetRepository = assetRepository;
     this.storage = storage;
-    this.placeFactory = placeFactory;
+//    this.placeFactory = placeFactory;
 
     UUID fileUuid = UUID.randomUUID();
     String filePath = pathPrefix + fileUuid + "." + filetype.getOutputExtension();
@@ -51,12 +48,11 @@ class ImageAssetImpl implements Asset {
   /**
    * Creates new asset from data source
    */
-  ImageAssetImpl(AssetDb assetDb, Storage storage, AssetRepository assetRepository,
-      PlaceFactory placeFactory) {
+  ImageAssetImpl(AssetDb assetDb, Storage storage, AssetRepository assetRepository) {
     this.storage = storage;
     this.assetRepository = assetRepository;
     this.assetDb = assetDb;
-    this.placeFactory = placeFactory;
+//    this.placeFactory = placeFactory;
   }
 
   @Override
@@ -97,16 +93,16 @@ class ImageAssetImpl implements Asset {
   public AssetPermissionsChecker permissions() {
     return new AssetPermissionsCheckerImpl(this);
   }
-
-  @Override
-  public Place getPlace() {
-    return placeFactory.of(assetDb.getRefToPlaceImages());
-  }
-
-  @Override
-  public void setPlace(Place place) {
-    assetDb.setRefToPlaceImages(place.getDbEntity());
-  }
+//
+//  @Override
+//  public Place getPlace() {
+//    return placeFactory.of(assetDb.getPlace());
+//  }
+//
+//  @Override
+//  public void setPlace(Place place) {
+//    assetDb.setPlace(place.getDbEntity());
+//  }
 
   private Blob getBlob() {
     if (blob != null) {

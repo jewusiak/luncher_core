@@ -18,68 +18,29 @@ Feature: Authentication controller features
       | e@luncher.corp | Zbigniew  | Json    | USER |
 
 
-  Scenario: Bad requests
+  Scenario Outline: Bad requests
     When User registers as below:
-      | email | password | firstName | surname |
-      |       | 1234     | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl |          | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     |           | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     | Zbigniew  |         |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     |           |         |
-    Then response code is 400
-
-    When User registers as below:
-      | email | password | firstName | surname |
-      | e@    | 1234     | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email | password | firstName | surname |
-      | @b.pl | 1234     | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email | password | firstName | surname |
-      | ""    | 1234     | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | ""       | Zbigniew  | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     | ""        | Json    |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     | Zbigniew  | ""      |
-    Then response code is 400
-
-    When User registers as below:
-      | email  | password | firstName | surname |
-      | e@b.pl | 1234     | Zbigniew  | Json    |
-    Then response code is 204
+      | email   | password   | firstName   | surname   |
+      | <email> | <password> | <firstName> | <surname> |
+    Then response code is <expectedCode>
 
 
+    Examples:
+      | email  | password | firstName | surname | expectedCode |
+      | email  | password | firstName | surname | 400          |
+      |        | 1234     | Zbigniew  | Json    | 400          |
+      | e@b.pl |          | Zbigniew  | Json    | 400          |
+      | e@b.pl | 1234     |           | Json    | 400          |
+      | e@b.pl | 1234     | Zbigniew  |         | 400          |
+      | e@b.pl | 1234     |           |         | 400          |
+      | e@     | 1234     | Zbigniew  | Json    | 400          |
+      | @b.pl  | 1234     | Zbigniew  | Json    | 400          |
+      | ""     | 1234     | Zbigniew  | Json    | 400          |
+      | e@b.pl | ""       | Zbigniew  | Json    | 400          |
+      | e@b.pl | 1234     | ""        | Json    | 400          |
+      | e@b.pl | 1234     | Zbigniew  | ""      | 400          |
+      | e@b.pl | 1234     | Zbigniew  | Json    | 204          |
+    
   Scenario: Duplicate email
     Given User registers as below:
       | email              | password | firstName | surname |
@@ -91,4 +52,3 @@ Feature: Authentication controller features
       | user1@luncher.corp | 12345    | Zbigniewa | Jsona   |
     And response code is 409
      
-    

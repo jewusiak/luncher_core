@@ -10,8 +10,8 @@ import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import pl.luncher.v3.luncher_core.common.model.requests.LoginRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.NewPasswordRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.LoginRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.NewPasswordRequest;
 
 @RequiredArgsConstructor
 public class AuthControllerSteps {

@@ -2,7 +2,7 @@ package pl.luncher.v3.luncher_core.common.domain.users;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import pl.luncher.v3.luncher_core.common.model.responses.CreatePasswordResetIntentResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.CreatePasswordResetIntentResponse;
 import pl.luncher.v3.luncher_core.common.persistence.models.ForgottenPasswordIntentDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
 

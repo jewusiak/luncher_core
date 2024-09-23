@@ -3,7 +3,7 @@ package pl.luncher.v3.luncher_core.common.domain.placetype;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
 
 @Service
 @RequiredArgsConstructor

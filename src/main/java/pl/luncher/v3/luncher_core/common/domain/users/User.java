@@ -1,10 +1,10 @@
 package pl.luncher.v3.luncher_core.common.domain.users;
 
 import java.util.UUID;
-import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.BasicUserDataResponse;
-import pl.luncher.v3.luncher_core.common.model.responses.FullUserDataResponse;
-import pl.luncher.v3.luncher_core.common.model.responses.UserProfileResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserUpdateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.BasicUserDataResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.FullUserDataResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.UserProfileResponse;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
 

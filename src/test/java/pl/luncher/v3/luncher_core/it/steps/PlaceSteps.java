@@ -18,15 +18,15 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.common.model.requests.PlaceCreateRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.PlaceOwnerUpdateRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.PlaceSearchRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.PlaceUpdateRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.FullPlaceResponse;
 import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceCreateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceUpdateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.responses.PlaceFullResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.PlaceOwnerUpdateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceSearchRequest;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,8 +51,8 @@ public class PlaceSteps {
     Response response = givenHttpRequest().when().get("/place/%s".formatted(id)).thenReturn();
     saveHttpResp(response);
 
-    var expected = castMap(data.get(0), FullPlaceResponse.class);
-    var actual = response.as(FullPlaceResponse.class);
+    var expected = castMap(data.get(0), PlaceFullResponse.class);
+    var actual = response.as(PlaceFullResponse.class);
 
     Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields()
         .isEqualTo(expected);

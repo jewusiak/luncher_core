@@ -8,15 +8,13 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
-import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.FullUserDataResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserUpdateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.FullUserDataResponse;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor

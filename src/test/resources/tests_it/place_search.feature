@@ -42,7 +42,7 @@ Feature: Place search engine
 #    And Send PUT request to /place/[ID:PLACE:1] with body as below:
 #    """
 #    {
-#   "standardOpeningTimes":[
+#   "openingWindows":[
 #      {
 #         "startTime":{
 #            "day":"MONDAY",

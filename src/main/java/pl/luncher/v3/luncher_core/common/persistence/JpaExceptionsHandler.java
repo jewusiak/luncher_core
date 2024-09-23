@@ -2,9 +2,8 @@ package pl.luncher.v3.luncher_core.common.persistence;
 
 
 import jakarta.persistence.PersistenceException;
-import org.springframework.dao.DataIntegrityViolationException;
-
 import java.util.function.Function;
+import org.springframework.dao.DataIntegrityViolationException;
 
 public class JpaExceptionsHandler {
     public static <ARG, T> T proxySave(SQLOperationWithArg<ARG, T> saveMethodRef, ARG arg, Function<String, ? extends RuntimeException> exceptionWithMessageSupplier) {

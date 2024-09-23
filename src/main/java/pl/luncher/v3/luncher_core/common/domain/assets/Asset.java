@@ -1,7 +1,6 @@
 package pl.luncher.v3.luncher_core.common.domain.assets;
 
 import java.util.UUID;
-import pl.luncher.v3.luncher_core.common.domain.place.domain.Place;
 
 public interface Asset {
 
@@ -16,8 +15,8 @@ public interface Asset {
   UUID getAssetId();
 
   AssetPermissionsChecker permissions();
-
-  Place getPlace();
-
-  void setPlace(Place place);
+//
+//  Place getPlace();
+//
+//  void setPlace(Place place);
 }

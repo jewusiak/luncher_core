@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.common.model.requests.CreateAssetRequest;
-import pl.luncher.v3.luncher_core.common.persistence.models.AssetDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
+import pl.luncher.v3.luncher_core.place.persistence.model.AssetDb;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.CreateAssetRequest;
 
 @RequiredArgsConstructor
 public class AssetSteps {

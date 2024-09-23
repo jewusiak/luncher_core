@@ -10,9 +10,9 @@ Feature: CRUD - Place
       | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e7 | mod@luncher.corp       | 1234     | MOD      | Json2   | SYS_MOD      |
 
     And place types exist:
-      | identifier | iconName   | name       |
-      | RESTAURANT | restaurant | Restaurant |
-      | BAR        | bar        | Bar        |
+      | identifier | iconName   | name                |
+      | RESTAURANT | restaurant | Restaurant category |
+      | BAR        | bar        | Bar category name   |
 
 
   Scenario: User creates place
@@ -29,13 +29,8 @@ Feature: CRUD - Place
     Then response code is 200
 
     And GET place with ID 3 is as below:
-      | name | description |
-      | name | descr       |
-
-    And Place ID 3 is as below:
-      | owner.email           |
-      | rmanager@luncher.corp |
-
+      | name | description | owner.email           | placeType.identifier |
+      | name | descr       | rmanager@luncher.corp | RESTAURANT           |
 
   Scenario: Try to create place by end-user:
     Given User logs in using credentials:
@@ -89,20 +84,31 @@ Feature: CRUD - Place
     And User is logged in as rmanager@luncher.corp
 
     When User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier | facebookPageId |
-      | name | descr       | RESTAURANT          | fbid           |
+      | name | description | placeTypeIdentifier | facebookPageId | location.latitude | location.longitude |
+      | name | descr       | RESTAURANT          | fbid           | 52.21507395584024 | 21.02108986309555  |
 
     Then response code is 200
 
     And GET place with ID -1 is as below:
-      | name | description | phoneNumber | facebookPageId |
-      | name | descr       |             | fbid           |
+      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier |
+      | name | descr       |             | fbid           | 52.21507395584024 | 21.02108986309555  | RESTAURANT           |
 
     And Place ID -1 is as below:
       | owner.email           |
       | rmanager@luncher.corp |
 
     # update (BEGIN)
+
+    # description is null so not updated
+    When Updates Place with ID -1 with data below:
+      | location.latitude | location.longitude | placeTypeIdentifier |
+      | -10               | -15.666            | BAR                 |
+
+    Then response code is 200
+
+    And GET place with ID -1 is as below:
+      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier |
+      | name | descr       |             | fbid           | -10               | -15.666            | BAR                  |
 
     # description is null so not updated
     When Updates Place with ID -1 with data below:
@@ -117,11 +123,19 @@ Feature: CRUD - Place
 
     # change owner (BEGIN)
 
-    When Request to change owner for Place ID -1 is sent:
-      | email                  |
+    When Updates Place with ID -1 with data below:
+      | owner.email            |
       | rmanager2@luncher.corp |
 
     Then response code is 200
+
+    # after transferring ownership
+
+    When Updates Place with ID -1 with data below:
+      | owner.email            |
+      | rmanager1@luncher.corp |
+
+    Then response code is 403
 
     # try to update (BEGIN)
 
@@ -148,3 +162,5 @@ Feature: CRUD - Place
       | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
       | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
     And response code is 200
+
+    #todo: create/delete/edit opening times

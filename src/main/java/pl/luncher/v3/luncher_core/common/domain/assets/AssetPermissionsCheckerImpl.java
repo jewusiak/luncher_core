@@ -18,11 +18,13 @@ class AssetPermissionsCheckerImpl implements AssetPermissionsChecker {
 
   @Override
   public PermissionChecker delete() {
-    return () -> asset.getPlace().getOwner().equals(user);
+    throw new UnsupportedOperationException("To be implemented!");
+//    return () -> asset.getPlace().getOwner().equals(user);
   }
 
   @Override
   public PermissionChecker edit() {
-    return () -> asset.getPlace().getOwner().equals(user);
+    throw new UnsupportedOperationException("To be implemented!");
+//    return () -> asset.getPlace().getOwner().equals(user);
   }
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,8 +17,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
-import pl.luncher.v3.luncher_core.common.model.responses.SuccessfulLoginResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.SuccessfulLoginResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.errorhandling.model.ErrorResponse;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -19,12 +19,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 

@@ -11,8 +11,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.UserRegistrationRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserRegistrationRequest;
 import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 

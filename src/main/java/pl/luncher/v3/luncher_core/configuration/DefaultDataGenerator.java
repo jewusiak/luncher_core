@@ -7,7 +7,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.common.domain.assets.AssetFactory;
-import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
 import pl.luncher.v3.luncher_core.common.domain.placetype.PlaceTypeFactory;
 import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
@@ -19,7 +18,7 @@ public class DefaultDataGenerator {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final PlaceTypeFactory placeTypeFactory;
-  private final PlaceFactory placeFactory;
+  //  private final PlaceFactory placeFactory;
   private final AssetFactory assetFactory;
 
 

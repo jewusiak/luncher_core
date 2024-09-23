@@ -1,6 +1,6 @@
 package pl.luncher.v3.luncher_core.common.exceptions;
 
-import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.errorhandling.model.ErrorResponse;
 
 public class DuplicateEntityException extends RuntimeException {
 
