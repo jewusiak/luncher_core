@@ -33,7 +33,7 @@ import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.Create
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.SuccessfulLoginResponse;
 import pl.luncher.v3.luncher_core.common.domain.users.ForgottenPasswordIntentFactory;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
-import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
+import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtService;
 
 @Tag(name = "authentication", description = "Authentication")

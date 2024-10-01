@@ -7,17 +7,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.place.model.PlaceType;
+import pl.luncher.v3.luncher_core.place.model.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.place.model.UserDto;
 import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
 import pl.luncher.v3.luncher_core.place.persistence.model.mappers.PlaceDbMapper;
 import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
+import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +33,9 @@ class JpaPlacePersistenceService implements PlacePersistenceService {
   @Override
   public Place save(Place place) {
 
-    PlaceTypeDb placeType = Optional.ofNullable(place.getPlaceType()).map(PlaceType::getIdentifier)
-        .map(id -> placeTypeRepository.findById(id).orElseThrow()).orElse(null);
+    PlaceTypeDb placeType = Optional.ofNullable(place.getPlaceType())
+        .map(PlaceTypeDto::getIdentifier).map(id -> placeTypeRepository.findById(id).orElseThrow())
+        .orElse(null);
 
     UserDb owner = Optional.ofNullable(place.getOwner()).map(UserDto::getEmail)
         .map(email -> userRepository.findUserByEmail(email).orElseThrow()).orElse(null);

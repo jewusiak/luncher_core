@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.persistence.models;
+package pl.luncher.v3.luncher_core.user.persistence.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,6 +1,8 @@
-package pl.luncher.v3.luncher_core.common.domain.users;
+package pl.luncher.v3.luncher_core.user.domainservices;
 
 import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
+import pl.luncher.v3.luncher_core.place.model.UserDto;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 public interface UserPermissionsChecker {
 
@@ -8,7 +10,7 @@ public interface UserPermissionsChecker {
 
   PermissionChecker delete();
 
-  PermissionChecker update();
+  PermissionChecker edit();
 
   PermissionChecker createThisUser();
 }

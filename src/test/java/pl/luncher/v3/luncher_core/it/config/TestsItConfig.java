@@ -22,9 +22,9 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
-import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.ForgottenPasswordIntentRepository;
+import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)

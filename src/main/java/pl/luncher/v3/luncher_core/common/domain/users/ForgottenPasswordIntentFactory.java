@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.persistence.models.ForgottenPasswordIntentDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
+import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
+import pl.luncher.v3.luncher_core.user.persistence.model.ForgottenPasswordIntentDb;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.ForgottenPasswordIntentRepository;
 import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
 
 @Component

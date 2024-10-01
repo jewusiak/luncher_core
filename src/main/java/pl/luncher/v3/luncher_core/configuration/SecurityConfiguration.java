@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
+import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
 import pl.luncher.v3.luncher_core.common.jwtUtils.JwtAuthFilter;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 

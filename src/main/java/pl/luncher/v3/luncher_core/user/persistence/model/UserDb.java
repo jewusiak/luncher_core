@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.persistence.models;
+package pl.luncher.v3.luncher_core.user.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -31,12 +31,6 @@ public class UserDb {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
-
-  // postgres specific?
-  @Column(columnDefinition = "serial", updatable = false, insertable = false)
-  @JsonIgnore
-  @Generated
-  private int sequence;
 
   @FullTextField(name = "email", analyzer = "email")
   @Column(unique = true)

@@ -14,7 +14,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
-import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
+import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
 import pl.luncher.v3.luncher_core.common.exceptions.UserExtractionFromContextFailed;
 
 @Component

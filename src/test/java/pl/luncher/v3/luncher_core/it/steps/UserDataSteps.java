@@ -7,8 +7,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
-import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor
 public class UserDataSteps {

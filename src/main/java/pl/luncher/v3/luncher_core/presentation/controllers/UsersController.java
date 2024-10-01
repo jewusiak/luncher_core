@@ -27,11 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserCreateRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.AvailableRolesResponse;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.BasicUserDataResponse;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.BasicUserResponse;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.FullUserDataResponse;
 import pl.luncher.v3.luncher_core.presentation.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.common.domain.users.User;
-import pl.luncher.v3.luncher_core.common.domain.users.UserFactory;
+import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole.hasRole;
 
@@ -49,7 +49,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved users", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedBasicUserDataResponse.class))),
   })
   @GetMapping("")
-  public ResponseEntity<Page<BasicUserDataResponse>> getUsersPaged(@RequestParam(defaultValue = "20") int size,
+  public ResponseEntity<Page<BasicUserResponse>> getUsersPaged(@RequestParam(defaultValue = "20") int size,
       @RequestParam(defaultValue = "0") int page) {
     var usersPage = userFactory.findByStringQueryPaged(null, PageRequest.of(page, size));
 
@@ -121,7 +121,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved users", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedBasicUserDataResponse.class))),
   })
   @GetMapping("/search")
-  public ResponseEntity<Page<BasicUserDataResponse>> adminSearchUsers(
+  public ResponseEntity<Page<BasicUserResponse>> adminSearchUsers(
       @RequestParam(required = false) String query,
       @RequestParam(defaultValue = "20", required = false) int size,
       @RequestParam(defaultValue = "0", required = false) int page) {
@@ -140,7 +140,7 @@ public class UsersController {
   }
 
   // swagger schema class
-  interface PagedBasicUserDataResponse extends Page<BasicUserDataResponse> {
+  interface PagedBasicUserDataResponse extends Page<BasicUserResponse> {
 
   }
 }

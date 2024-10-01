@@ -30,8 +30,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 import pl.luncher.v3.luncher_core.common.persistence.LocationToPointPersistenceConverter;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
+import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 
 
 @Entity

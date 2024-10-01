@@ -14,6 +14,7 @@ import pl.luncher.v3.luncher_core.place.persistence.model.AddressDb;
 import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
 import pl.luncher.v3.luncher_core.place.persistence.model.LocationDb;
 import pl.luncher.v3.luncher_core.place.persistence.model.OpeningWindowDb;
+import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
 
 /**
  * DTO for {@link PlaceDb}
@@ -35,7 +36,7 @@ public class Place {
   private Address address;
   private String googleMapsReference;
   private List<OpeningWindow> openingWindows;
-  private PlaceType placeType;
+  private PlaceTypeDto placeType;
   private Location location;
   private UserDto owner;
   private List<Asset> images;

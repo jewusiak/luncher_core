@@ -1,8 +1,9 @@
-package pl.luncher.v3.luncher_core.common.domain.users;
+package pl.luncher.v3.luncher_core.user.domainservices;
 
 import lombok.RequiredArgsConstructor;
 import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 @RequiredArgsConstructor
 class UserPermissionsCheckerImpl implements UserPermissionsChecker {
@@ -11,8 +12,8 @@ class UserPermissionsCheckerImpl implements UserPermissionsChecker {
   private User requestingUser;
 
   @Override
-  public UserPermissionsChecker byUser(User user) {
-    this.requestingUser = user;
+  public UserPermissionsChecker byUser(User requestingUser) {
+    this.requestingUser = requestingUser;
     return this;
   }
 
@@ -22,7 +23,8 @@ class UserPermissionsCheckerImpl implements UserPermissionsChecker {
   }
 
   /**
-   * user role has to be higher than SYS_MOD and higher than the edited user unless its the highest.
+   * user role has to be higher than SYS_MOD and higher than the edited user unless its the
+   * highest.
    */
   private boolean isHigherThanModAndEditedUserOrHighestRole() {
     return (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) >= 0
@@ -31,7 +33,7 @@ class UserPermissionsCheckerImpl implements UserPermissionsChecker {
   }
 
   @Override
-  public PermissionChecker update() {
+  public PermissionChecker edit() {
     return this::isHigherThanModAndEditedUserOrHighestRole;
   }
 

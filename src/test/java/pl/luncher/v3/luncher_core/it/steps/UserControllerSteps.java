@@ -15,7 +15,7 @@ import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserCreateRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.FullUserDataResponse;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor
 public class UserControllerSteps {

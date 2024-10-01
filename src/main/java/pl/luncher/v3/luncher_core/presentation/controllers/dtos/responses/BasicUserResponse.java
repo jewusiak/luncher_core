@@ -4,8 +4,11 @@ import java.util.UUID;
 import lombok.Value;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 
-@Value
-public class BasicUserDataResponse {
+/**
+ * DTO for {@link pl.luncher.v3.luncher_core.user.model.User}
+ */
+@Data
+public class BasicUserResponse {
 
   UUID uuid;
   String email;

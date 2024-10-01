@@ -21,7 +21,7 @@ import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.responses.
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
     OpeningWindowDtoMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface PlaceConcerningDtoMapper {
+public interface PlaceDtoMapper {
 
   // Requests
 
@@ -31,6 +31,7 @@ public interface PlaceConcerningDtoMapper {
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(source = "placeTypeIdentifier", target = "placeType.identifier")
+  @Mapping(target = "id", ignore = true)
   Place updateDomain(
       PlaceUpdateRequest placeUpdateRequest, @MappingTarget Place place);
 

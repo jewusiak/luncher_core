@@ -22,7 +22,7 @@ import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.model.UserDto;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.mappers.PlaceConcerningDtoMapper;
+import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceUpdateRequest;
@@ -36,7 +36,7 @@ import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.PlaceS
 @RequiredArgsConstructor
 public class PlaceController {
 
-  private final PlaceConcerningDtoMapper placeConcerningDtoMapper;
+  private final PlaceDtoMapper placeDtoMapper;
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
 
@@ -44,19 +44,19 @@ public class PlaceController {
   public ResponseEntity<?> getById(@PathVariable UUID uuid) {
     Place place = placePersistenceService.getById(uuid);
 
-    return ResponseEntity.ok(placeConcerningDtoMapper.toPlaceFullResponse(place));
+    return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(place));
   }
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PostMapping
   public ResponseEntity<?> createPlace(@RequestBody PlaceCreateRequest request,
       User requestingUser) {
-    Place place = placeConcerningDtoMapper.toDomain(request, requestingUser);
+    Place place = placeDtoMapper.toDomain(request, requestingUser);
 
     place.validate();
     Place savedPlace = placePersistenceService.save(place);
 
-    return ResponseEntity.ok(placeConcerningDtoMapper.toPlaceFullResponse(savedPlace));
+    return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
 
   @PreAuthorize(hasRole.REST_MANAGER)
@@ -69,15 +69,15 @@ public class PlaceController {
 
     place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).edit().throwIfNotPermitted();
 
-    if (placeUpdateRequest != null) {
+    if (placeUpdateRequest.getOwner() != null) {
       place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).changeOwner().throwIfNotPermitted();
     }
 
-    place = placeConcerningDtoMapper.updateDomain(placeUpdateRequest, place);
+    place = placeDtoMapper.updateDomain(placeUpdateRequest, place);
     place.validate();
     Place savedPlace = placePersistenceService.save(place);
 
-    return ResponseEntity.ok(placeConcerningDtoMapper.toPlaceFullResponse(savedPlace));
+    return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
 
   //FIXME
@@ -102,7 +102,7 @@ public class PlaceController {
   @GetMapping
   public ResponseEntity<?> getAllPlacesPaged(@RequestParam int size, @RequestParam int page) {
     List<PlaceBasicResponse> placesList = placePersistenceService.getAllPaged(size, page).stream()
-        .map(placeConcerningDtoMapper::toBasicResponse)
+        .map(placeDtoMapper::toBasicResponse)
         .toList();
 
     return ResponseEntity.ok(placesList);
@@ -112,12 +112,12 @@ public class PlaceController {
   public ResponseEntity<PlaceSearchResponse> searchQuery(
       @RequestBody @Valid PlaceSearchRequest request, User user) {
 
-    var searchRequest = placeConcerningDtoMapper.toSearchRequest(request);
+    var searchRequest = placeDtoMapper.toSearchRequest(request);
 
     List<Place> searchResponse = placeSearchService.search(searchRequest);
 
     List<PlaceFullResponse> responseList = searchResponse.stream()
-        .map(placeConcerningDtoMapper::toPlaceFullResponse)
+        .map(placeDtoMapper::toPlaceFullResponse)
         .toList();
 
     return ResponseEntity.ok(new PlaceSearchResponse(responseList));

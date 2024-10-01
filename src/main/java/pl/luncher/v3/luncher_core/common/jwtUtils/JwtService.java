@@ -83,7 +83,7 @@ public class JwtService {
     String roleClaim = claims.get("role", String.class);
     try {
       AppRole appRole = AppRole.valueOf(roleClaim);
-      return List.of(appRole.authorityObj());
+      return List.of(appRole.getAuthorityObj());
     } catch (Exception ignored) {
       return new ArrayList<>();
     }
