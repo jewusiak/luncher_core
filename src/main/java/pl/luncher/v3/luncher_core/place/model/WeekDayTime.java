@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import lombok.Getter;
-import org.mapstruct.Mapper;
 
 @Getter
 public class WeekDayTime implements Comparable<WeekDayTime> {

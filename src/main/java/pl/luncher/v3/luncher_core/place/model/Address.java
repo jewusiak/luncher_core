@@ -1,10 +1,8 @@
 package pl.luncher.v3.luncher_core.place.model;
 
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.luncher.v3.luncher_core.place.persistence.model.AddressDb;
 
 
 @Data

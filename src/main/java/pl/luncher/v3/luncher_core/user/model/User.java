@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.domainservices.UserPermissionsChecker;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.user.persistence.model.UserDb}
@@ -28,8 +29,12 @@ public class User implements UserDetails {
   private boolean enabled;
 
 
-  void validate() {
+  public void validate() {
     log.info("User is being validated...");
+  }
+
+  public UserPermissionsChecker permissions() {
+    return new UserPermissionsChecker(this);
   }
 
   @Override
@@ -78,7 +83,7 @@ public class User implements UserDetails {
     if (this == obj) {
       return true;
     }
-    if (obj instanceof pl.luncher.v3.luncher_core.common.domain.users.User user
+    if (obj instanceof User user
         && user.getUuid() != null) {
       return user.getUuid().equals(this.getUuid());
     }

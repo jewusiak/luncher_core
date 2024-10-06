@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.placetype.persistence.repositories;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

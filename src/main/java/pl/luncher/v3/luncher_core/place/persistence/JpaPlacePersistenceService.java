@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
-import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.model.PlaceTypeDto;
@@ -18,6 +16,8 @@ import pl.luncher.v3.luncher_core.place.persistence.model.mappers.PlaceDbMapper;
 import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
 import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor

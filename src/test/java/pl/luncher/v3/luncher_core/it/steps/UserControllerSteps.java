@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserCreateRequest;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.UserUpdateRequest;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.FullUserDataResponse;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicResponse;
 import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor
@@ -43,8 +43,9 @@ public class UserControllerSteps {
 
     saveHttpResp(resp);
 
-    var expected = ParentSteps.castMapWithErrorHandling(data.get(0), FullUserDataResponse.class, resp.getStatusCode());
-    var actual = ParentSteps.getResponseBody(resp, FullUserDataResponse.class);
+    var expected = ParentSteps.castMapWithErrorHandling(data.get(0), UserBasicResponse.class,
+        resp.getStatusCode());
+    var actual = ParentSteps.getResponseBody(resp, UserBasicResponse.class);
 
     Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder()
         .ignoringExpectedNullFields()

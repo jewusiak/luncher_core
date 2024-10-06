@@ -40,7 +40,7 @@ Feature: Authentication controller features
       | e@b.pl | 1234     | ""        | Json    | 400          |
       | e@b.pl | 1234     | Zbigniew  | ""      | 400          |
       | e@b.pl | 1234     | Zbigniew  | Json    | 204          |
-    
+
   Scenario: Duplicate email
     Given User registers as below:
       | email              | password | firstName | surname |

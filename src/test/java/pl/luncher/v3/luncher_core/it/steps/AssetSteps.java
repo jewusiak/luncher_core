@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
+import pl.luncher.v3.luncher_core.controllers.dtos.assets.requests.CreateAssetRequest;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
 import pl.luncher.v3.luncher_core.place.persistence.model.AssetDb;
 import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.CreateAssetRequest;
 
 @RequiredArgsConstructor
 public class AssetSteps {
@@ -26,7 +26,8 @@ public class AssetSteps {
   private final PlaceRepository placeRepository;
 
   @When("User requests creation of a new asset for Place ID {} at ID {}:")
-  public void userRequestsCreationOfANewAssetForTheLatestCreatedPlace(String placeIdx, Integer assetIdx,
+  public void userRequestsCreationOfANewAssetForTheLatestCreatedPlace(String placeIdx,
+      Integer assetIdx,
       List<Map<String, String>> data) {
     String newPlaceUuid = getIdFromCache(placeIdx, EntityIdType.PLACE);
     CreateAssetRequest crr = castMap(data.get(0), CreateAssetRequest.class);
@@ -38,19 +39,22 @@ public class AssetSteps {
   }
 
   @And("Place ID {} has {int} asset(s):")
-  public void lastCreatedPlaceHasAsset(String placeIdx, int assetCount, List<Map<String, String>> assetData) {
-    placeRepository.findById(UUID.fromString(getIdFromCache(placeIdx, EntityIdType.PLACE))).ifPresentOrElse(place -> {
+  public void lastCreatedPlaceHasAsset(String placeIdx, int assetCount,
+      List<Map<String, String>> assetData) {
+    placeRepository.findById(UUID.fromString(getIdFromCache(placeIdx, EntityIdType.PLACE)))
+        .ifPresentOrElse(place -> {
 
-          var expectedAssets = assetData.stream().map(map -> castMap(map, AssetDb.class))
-              .toList();
-          Assertions.assertThat(place.getImages().size()).isEqualTo(assetCount);
-          Assertions.assertThat(place.getImages()).usingRecursiveComparison().ignoringCollectionOrder()
-              .comparingOnlyFields("name", "description").isEqualTo(expectedAssets);
+              var expectedAssets = assetData.stream().map(map -> castMap(map, AssetDb.class))
+                  .toList();
+              Assertions.assertThat(place.getImages().size()).isEqualTo(assetCount);
+              Assertions.assertThat(place.getImages()).usingRecursiveComparison()
+                  .ignoringCollectionOrder()
+                  .comparingOnlyFields("name", "description").isEqualTo(expectedAssets);
 
-        },
-        () -> {
-          throw new EntityNotFoundException();
-        });
+            },
+            () -> {
+              throw new EntityNotFoundException();
+            });
   }
 
   @When("User deletes Asset ID {}")
@@ -58,7 +62,7 @@ public class AssetSteps {
     var assetId = getIdFromCache(assetIdx, EntityIdType.ASSET);
 
     saveHttpResp(givenHttpRequest().when().delete("/asset/%s".formatted(assetId))
-                  .thenReturn());
+        .thenReturn());
 
   }
 }

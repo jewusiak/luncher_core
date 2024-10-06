@@ -17,14 +17,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.responses.SuccessfulLoginResponse;
-import pl.luncher.v3.luncher_core.presentation.controllers.errorhandling.model.ErrorResponse;
+import pl.luncher.v3.luncher_core.controllers.dtos.auth.responses.SuccessfulLoginResponse;
+import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ParentSteps {
 
-  private static ObjectMapper objectMapper = new ObjectMapper() {{
+  private static final ObjectMapper objectMapper = new ObjectMapper() {{
     this.registerModule(new JavaTimeModule());
     this.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }};
@@ -99,14 +99,15 @@ public class ParentSteps {
     }
     return resp.as(ErrorResponse.class);
   }
-  
-  public static Object castMapWithErrorHandling(Map<String, String> map, Class<?> tClass, int respStatusCode) {
+
+  public static Object castMapWithErrorHandling(Map<String, String> map, Class<?> tClass,
+      int respStatusCode) {
     if (respStatusCode >= 200 && respStatusCode < 300) {
       return castMap(map, tClass);
     }
     return castMap(map, ErrorResponse.class);
-  }  
-  
+  }
+
   public static <T> T castMap(Map<String, String> map, Class<T> tClass) {
     if (map == null || map.containsKey(null)) {
       return null;
@@ -159,7 +160,8 @@ public class ParentSteps {
 
   public static void putIdToCache(String value, int idx, EntityIdType entityIdType) {
     if (entityIds.get(entityIdType.getIndex()).containsKey(idx)) {
-      log.info("Putting {} in place of {} (at index {}).", value, entityIds.get(entityIdType.getIndex()).get(idx), idx);
+      log.info("Putting {} in place of {} (at index {}).", value,
+          entityIds.get(entityIdType.getIndex()).get(idx), idx);
     }
     entityIds.get(entityIdType.getIndex()).put(idx, value);
     entityIds.get(entityIdType.getIndex()).put(-1, value);
@@ -184,14 +186,6 @@ public class ParentSteps {
     return entityIds.get(entityIdType.getIndex()).get(idx);
   }
 
-  @RequiredArgsConstructor
-  @Getter
-  public enum EntityIdType {
-    PLACE(0), ASSET(1), USER(2);
-
-    private final int index;
-  }
-
   public static String replaceIds(String text) {
     var replacedText = Pattern.compile("\\[ID:\\w+:-?\\d+]").matcher(text).replaceAll((result) -> {
       var gr = result.group();
@@ -203,5 +197,13 @@ public class ParentSteps {
       return getIdFromCache(idx, entityType);
     });
     return replacedText;
+  }
+
+  @RequiredArgsConstructor
+  @Getter
+  public enum EntityIdType {
+    PLACE(0), ASSET(1), USER(2);
+
+    private final int index;
   }
 }

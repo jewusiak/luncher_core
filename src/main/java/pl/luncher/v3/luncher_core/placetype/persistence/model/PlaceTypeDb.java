@@ -24,7 +24,7 @@ public class PlaceTypeDb {
   @Id
   @KeywordField
   private String identifier;
-  
+
   @NotNull
   private String iconName;
 

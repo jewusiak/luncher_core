@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class OpeningWindowDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID uuid;
+  private UUID id;
 
   //todo: introduce system which takes into account opening windows tue 22:00 - wed 02:00, and sun 22:00 - mon 02:00
   // for now - tue 22:00 - wed 02:00 => two windows: tue 22:00-23:59 and wed 00:00-02:00

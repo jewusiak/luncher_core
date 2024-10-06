@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
+import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
 
 @Entity
 @Table(name = "assets", schema = "luncher_core")
@@ -26,17 +27,14 @@ public class AssetDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID uuid;
+  private UUID id;
 
-  private String name;
   private String description;
-  private String bucketPath;
-  private String bucketName;
-  private OffsetDateTime dateCreated;
-  private String publicUrl;
+  private String storagePath;
+  private String accessUrl;
+  private MimeContentFileType mimeType;
+  private AssetUploadStatus uploadStatus;
 
   @ManyToOne
   private PlaceDb place;
-
-
 }

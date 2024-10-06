@@ -13,16 +13,16 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import pl.luncher.v3.luncher_core.common.domain.users.User;
-import pl.luncher.v3.luncher_core.user.domainservices.UserFactory;
 import pl.luncher.v3.luncher_core.common.exceptions.UserExtractionFromContextFailed;
+import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticatedUserAttributeResolver implements HandlerMethodArgumentResolver {
 
-  private final UserFactory userFactory;
+  private final UserPersistenceService userPersistenceService;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -37,7 +37,7 @@ public class AuthenticatedUserAttributeResolver implements HandlerMethodArgument
           .map(SecurityContext::getAuthentication)
           .map(Authentication::getPrincipal)
           .map(UUID.class::cast)
-          .map(userFactory::pullFromRepo)
+          .map(userPersistenceService::getById)
           .orElse(null);
     } catch (Exception e) {
       log.info("Couldn't extract required user because of {}", e.toString());

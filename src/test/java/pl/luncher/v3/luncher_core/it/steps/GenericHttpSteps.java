@@ -11,7 +11,7 @@ public class GenericHttpSteps {
   public void sendHttpRequest(String type, String path) {
     sendHttpRequest(type, path, null);
   }
-  
+
 
   @When("Send {} request to {} with body as below:")
   public void sendHttpRequest(String type, String path, String body) {

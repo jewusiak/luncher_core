@@ -18,15 +18,15 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
+import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceOwnerUpdateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
 import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
+import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceCreateRequest;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceUpdateRequest;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.responses.PlaceFullResponse;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.requests.PlaceOwnerUpdateRequest;
-import pl.luncher.v3.luncher_core.presentation.controllers.dtos.place.requests.PlaceSearchRequest;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +45,8 @@ public class PlaceSteps {
   }
 
   @Then("GET place with ID {} is as below:")
-  public void retrievedPlaceWithLastCreatedUUIDIsAsBelow(String idx, List<Map<String, String>> data) {
+  public void retrievedPlaceWithLastCreatedUUIDIsAsBelow(String idx,
+      List<Map<String, String>> data) {
     String id = getIdFromCache(idx, EntityIdType.PLACE);
 
     Response response = givenHttpRequest().when().get("/place/%s".formatted(id)).thenReturn();
@@ -54,7 +55,8 @@ public class PlaceSteps {
     var expected = castMap(data.get(0), PlaceFullResponse.class);
     var actual = response.as(PlaceFullResponse.class);
 
-    Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields()
+    Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder()
+        .ignoringExpectedNullFields()
         .isEqualTo(expected);
   }
 
@@ -90,7 +92,8 @@ public class PlaceSteps {
 
     var req = castMap(data.get(0), PlaceUpdateRequest.class);
 
-    Response response = givenHttpRequest().body(req).when().put("/place/%s".formatted(placeId)).thenReturn();
+    Response response = givenHttpRequest().body(req).when().put("/place/%s".formatted(placeId))
+        .thenReturn();
     saveHttpResp(response);
 
   }
@@ -102,7 +105,8 @@ public class PlaceSteps {
 
     var req = castMap(data.get(0), PlaceOwnerUpdateRequest.class);
 
-    Response response = givenHttpRequest().body(req).when().put("place/%s/owner".formatted(placeId)).thenReturn();
+    Response response = givenHttpRequest().body(req).when().put("place/%s/owner".formatted(placeId))
+        .thenReturn();
     saveHttpResp(response);
   }
 

@@ -117,7 +117,7 @@ Feature: Place types management
     """
 
     Then response code is 403
-    
+
     And Send GET request to /placetype without body
 
     And response code is 200

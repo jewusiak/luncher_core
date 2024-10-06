@@ -9,10 +9,10 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
-import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
+import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
     OpeningWindowMapper.class}, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)

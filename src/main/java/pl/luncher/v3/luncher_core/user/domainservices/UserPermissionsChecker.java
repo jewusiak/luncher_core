@@ -1,16 +1,40 @@
 package pl.luncher.v3.luncher_core.user.domainservices;
 
+import lombok.RequiredArgsConstructor;
 import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
-import pl.luncher.v3.luncher_core.place.model.UserDto;
+import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
-public interface UserPermissionsChecker {
+@RequiredArgsConstructor
+public class UserPermissionsChecker {
 
-  UserPermissionsChecker byUser(User user);
+  private final User editedUser;
+  private User requestingUser;
 
-  PermissionChecker delete();
+  public UserPermissionsChecker byUser(User requestingUser) {
+    this.requestingUser = requestingUser;
+    return this;
+  }
 
-  PermissionChecker edit();
+  public PermissionChecker delete() {
+    return this::isHigherThanModAndEditedUserOrHighestRole;
+  }
 
-  PermissionChecker createThisUser();
+  /**
+   * user role has to be higher than SYS_MOD and higher than the edited user unless its the
+   * highest.
+   */
+  private boolean isHigherThanModAndEditedUserOrHighestRole() {
+    return (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) >= 0
+        && requestingUser.getRole().compareRoleTo(editedUser.getRole()) > 0)
+        || requestingUser.getRole().equals(AppRole.getHighestRole());
+  }
+
+  public PermissionChecker edit() {
+    return this::isHigherThanModAndEditedUserOrHighestRole;
+  }
+
+  public PermissionChecker createThisUser() {
+    return this::isHigherThanModAndEditedUserOrHighestRole;
+  }
 }

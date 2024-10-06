@@ -26,12 +26,12 @@ public class ForgottenPasswordIntentDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID requestUuid;
+  private UUID id;
   @NotNull
   private LocalDateTime validityDate;
   @NotNull
   private boolean used;
-  
+
   @ManyToOne
   private UserDb user;
 }

@@ -26,7 +26,8 @@ public class UserDataSteps {
   private UserDb fromMap(Map<String, String> um) {
     return UserDb.builder().uuid(UUID.fromString(um.get("uuid"))).email(um.get("email"))
         .passwordHash(passwordEncoder.encode(um.get("password")))
-        .enabled(true).role(AppRole.valueOf(um.get("role"))).firstName(um.get("name")).surname(um.get("surname"))
+        .enabled(true).role(AppRole.valueOf(um.get("role"))).firstName(um.get("name"))
+        .surname(um.get("surname"))
         .build();
   }
 }

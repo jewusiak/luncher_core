@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 
 
-public interface UserRepository extends JpaRepository<UserDb, String> {
+public interface UserRepository extends JpaRepository<UserDb, UUID> {
 
   Optional<UserDb> findUserByEmail(String email);
 
