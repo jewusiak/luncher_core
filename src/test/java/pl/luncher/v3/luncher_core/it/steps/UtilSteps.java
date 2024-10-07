@@ -4,7 +4,7 @@ import io.cucumber.java.en.And;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
+import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
 
 @RequiredArgsConstructor
 public class UtilSteps {

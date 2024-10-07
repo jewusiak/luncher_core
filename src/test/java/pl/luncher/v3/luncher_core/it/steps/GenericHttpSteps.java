@@ -1,15 +1,24 @@
 package pl.luncher.v3.luncher_core.it.steps;
 
-import io.cucumber.java.en.And;
+import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GenericHttpSteps {
 
-  @And("Send {} request to {} (with body as below:)")
+
+  @When("Send {} request to {} without body")
+  public void sendHttpRequest(String type, String path) {
+    sendHttpRequest(type, path, null);
+  }
+
+
+  @When("Send {} request to {} with body as below:")
   public void sendHttpRequest(String type, String path, String body) {
     path = ParentSteps.replaceIds(path);
-    body = ParentSteps.replaceIds(body);
+    if (body != null) {
+      body = ParentSteps.replaceIds(body);
+    }
 
     log.info("{} {}, body \n{}", type, path, body);
 

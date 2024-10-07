@@ -4,23 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.domain.assets.AssetFactory;
-import pl.luncher.v3.luncher_core.common.domain.place.PlaceFactory;
-import pl.luncher.v3.luncher_core.common.domain.placetype.PlaceTypeFactory;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class DefaultDataGenerator {
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final PlaceTypeFactory placeTypeFactory;
-  private final PlaceFactory placeFactory;
-  private final AssetFactory assetFactory;
+//  private final UserRepository userRepository;
+//  private final PasswordEncoder passwordEncoder;
+//  private final PlaceTypePersistenceService placeTypePersistenceService;
+//    private final PlaceFactory placeFactory;
+//  private final AssetFactory assetFactory;
 
 
   @EventListener(ApplicationReadyEvent.class)
@@ -55,10 +50,10 @@ public class DefaultDataGenerator {
 //    User owner = userRepository.findUserByEmail("manager@g.pl").orElseThrow();
 //    User employee = userRepository.findUserByEmail("employee@g.pl").orElseThrow();
 
-    //place types
-    var restType = placeTypeFactory.of("RESTAURANT", "restaurant", "Restauracja");
-    var barType = placeTypeFactory.of("BAR", "wine_bar", "Bar");
-    var clubType = placeTypeFactory.of("CLUB", "nightlife", "Klub");
+//    //place types
+//    var restType = placeTypeFactory.of("RESTAURANT", "restaurant", "Restauracja");
+//    var barType = placeTypeFactory.of("BAR", "wine_bar", "Bar");
+//    var clubType = placeTypeFactory.of("CLUB", "nightlife", "Klub");
 //
 //    List.of(restType, barType, clubType).forEach(PlaceType::save);
 //

@@ -19,14 +19,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.ForgottenPasswordIntentRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
+import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
+import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.ForgottenPasswordIntentRepository;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @CucumberContextConfiguration
@@ -45,15 +44,12 @@ public class TestsItConfig {
   private static GenericContainer<?> postgresContainer;
   private static boolean elasticsearchStarted;
   private static boolean postgresStarted;
-
-  @LocalServerPort
-  private int port;
-
   private final Environment environment;
-
   private final UserRepository userRepository;
   private final PlaceRepository placeRepository;
   private final PlaceTypeRepository placeTypeRepository;
+  @LocalServerPort
+  private int port;
   @Autowired
   private ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
 
@@ -108,15 +104,10 @@ public class TestsItConfig {
     ParentSteps.resetAll();
   }
 
-  @Before
-  public void before() {
-    log.info("BEFORE EACH >>");
-    RestAssured.port = port;
-  }
-
   private static void setUpElasticsearchContainer() {
     log.info("BA >> Set up Elasticsearch");
-    elasticsearchContainer = new GenericContainer<>(DockerImageName.parse("luncher_core_elasticsearch"));
+    elasticsearchContainer = new GenericContainer<>(
+        DockerImageName.parse("luncher_core_elasticsearch"));
     elasticsearchContainer.withEnv("discovery.type", "single-node");
     elasticsearchContainer.withEnv("xpack.security.enabled", "false");
     elasticsearchContainer.withExposedPorts(9200, 9300);
@@ -165,6 +156,12 @@ public class TestsItConfig {
     postgresContainer.stop();
     postgresStarted = false;
     log.info("AA >> Postgres is down");
+  }
+
+  @Before
+  public void before() {
+    log.info("BEFORE EACH >>");
+    RestAssured.port = port;
   }
 
   @After

@@ -25,7 +25,7 @@ public enum AppRole {
     return "ROLE_" + this.name();
   }
 
-  public SimpleGrantedAuthority authorityObj() {
+  public SimpleGrantedAuthority getAuthorityObj() {
     return new SimpleGrantedAuthority(authorityName());
   }
 

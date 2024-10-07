@@ -8,16 +8,14 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.common.controllers.errorhandling.model.ErrorResponse;
-import pl.luncher.v3.luncher_core.common.model.requests.UserCreateRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.UserUpdateRequest;
-import pl.luncher.v3.luncher_core.common.model.responses.FullUserDataResponse;
-import pl.luncher.v3.luncher_core.common.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicResponse;
+import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor
 public class UserControllerSteps {
@@ -45,8 +43,9 @@ public class UserControllerSteps {
 
     saveHttpResp(resp);
 
-    var expected = ParentSteps.castMapWithErrorHandling(data.get(0), FullUserDataResponse.class, resp.getStatusCode());
-    var actual = ParentSteps.getResponseBody(resp, FullUserDataResponse.class);
+    var expected = ParentSteps.castMapWithErrorHandling(data.get(0), UserBasicResponse.class,
+        resp.getStatusCode());
+    var actual = ParentSteps.getResponseBody(resp, UserBasicResponse.class);
 
     Assertions.assertThat(actual).usingRecursiveComparison().ignoringCollectionOrder()
         .ignoringExpectedNullFields()

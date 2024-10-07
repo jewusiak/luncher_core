@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import pl.luncher.v3.luncher_core.common.persistence.models.PlaceDb;
-import pl.luncher.v3.luncher_core.common.persistence.models.UserDb;
+import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
+import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 public class LuncherCoreApplication {

@@ -10,8 +10,8 @@ import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import pl.luncher.v3.luncher_core.common.model.requests.LoginRequest;
-import pl.luncher.v3.luncher_core.common.model.requests.NewPasswordRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.auth.requests.LoginRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.NewPasswordRequest;
 
 @RequiredArgsConstructor
 public class AuthControllerSteps {
@@ -39,11 +39,12 @@ public class AuthControllerSteps {
 
   @When("User requests password reset for user {}")
   public void userRequestsPasswordResetForUserUserLuncherCorp(String email) {
-    Response response = ParentSteps.givenHttpRequest().when().post("auth/requestreset/%s".formatted(email))
+    Response response = ParentSteps.givenHttpRequest().when()
+        .post("auth/requestreset/%s".formatted(email))
         .thenReturn();
     ParentSteps.saveHttpResp(response);
-    var resetUri = ParentSteps.getCachedHttpResp().getBody().jsonPath().getString("resetUri");
-    ParentSteps.putToCache("resetUri", resetUri);
+    var resetUrl = ParentSteps.getCachedHttpResp().getBody().jsonPath().getString("resetUrl");
+    ParentSteps.putToCache("resetUrl", resetUrl);
   }
 
   @And("User logs out \\(by removing saved auth token)")
@@ -53,8 +54,9 @@ public class AuthControllerSteps {
 
   @When("User changes password using last received url to {}")
   public void userChangesPasswordUsingLastReceivedUrlTo(String pass) {
-    var resetUri = ParentSteps.getFromCache("resetUri", String.class);
-    Response response = ParentSteps.givenHttpRequest().body(new NewPasswordRequest(pass)).when().put(resetUri)
+    var resetUrl = ParentSteps.getFromCache("resetUrl", String.class);
+    Response response = ParentSteps.givenHttpRequest().body(new NewPasswordRequest(pass)).when()
+        .put(resetUrl)
         .thenReturn();
     ParentSteps.saveHttpResp(response);
   }

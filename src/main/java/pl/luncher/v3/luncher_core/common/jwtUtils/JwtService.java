@@ -14,9 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.domain.users.User;
-import pl.luncher.v3.luncher_core.common.model.dto.JwtToken;
 import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 @Component
 @Slf4j
@@ -51,7 +50,7 @@ public class JwtService {
     }
   }
 
-  public JwtToken generateJwtTokenForUser(User user) {
+  public JwtTokenDto generateJwtTokenForUser(User user) {
     Date expiration = new Date(System.currentTimeMillis() + accessTokenLifetimeMinutes * 60000L);
     String token = Jwts.builder().setClaims(new HashMap<>() {{
           put("role", user.getRole());
@@ -59,7 +58,7 @@ public class JwtService {
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(expiration)
         .signWith(SignatureAlgorithm.HS256, signingKey).compact();
-    return new JwtToken(token, expiration);
+    return new JwtTokenDto(token, expiration);
   }
 
 
@@ -83,7 +82,7 @@ public class JwtService {
     String roleClaim = claims.get("role", String.class);
     try {
       AppRole appRole = AppRole.valueOf(roleClaim);
-      return List.of(appRole.authorityObj());
+      return List.of(appRole.getAuthorityObj());
     } catch (Exception ignored) {
       return new ArrayList<>();
     }

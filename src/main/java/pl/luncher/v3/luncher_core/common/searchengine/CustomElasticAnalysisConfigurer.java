@@ -27,7 +27,8 @@ public class CustomElasticAnalysisConfigurer implements ElasticsearchAnalysisCon
         .param("preserve_original", true)
         .param("patterns", "^([^@]+)", "(\\d+)"); //, "(\\p{L}+)"
 
-    context.tokenizer("edge_ngram_pl").type("edge_ngram").param("min_ngram", 3).param("max_ngram", 10)
+    context.tokenizer("edge_ngram_pl").type("edge_ngram").param("min_ngram", 3)
+        .param("max_ngram", 10)
         .param("token_chars", "letter");
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -39,10 +40,14 @@ public class CustomElasticAnalysisConfigurer implements ElasticsearchAnalysisCon
           String.valueOf(reader.lines().collect(Collectors.joining(System.lineSeparator()))),
           List.class);
     }
-    context.tokenFilter("pl_stopwords").type("stop").param("stopwords", stopwords.toArray(String[]::new));
+    context.tokenFilter("pl_stopwords").type("stop")
+        .param("stopwords", stopwords.toArray(String[]::new));
 
     context.analyzer("morfologik_polish").custom()
         .tokenizer(/*"/*edge_ngram_pl"*/"whitespace"/* or standard tokenizer*/)
         .tokenFilters("lowercase", "morfologik_stem", "pl_stopwords");
+
+    context.analyzer("names_analyzer").custom().tokenizer("standard")
+        .tokenFilters("lowercase", "asciifolding");
   }
 }
