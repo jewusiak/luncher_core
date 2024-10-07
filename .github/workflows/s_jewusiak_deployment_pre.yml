@@ -254,7 +254,7 @@ jobs:
           "
           
           
-  setup_swap:
+  setup_swag:
     needs: [deploy_main_app]
     permissions:
       contents: 'read'
@@ -286,7 +286,9 @@ jobs:
           sed -i -e 's!PRXYPASS1!http://${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:8080!g' src/main/resources/api_pre_s.subdomain.conf
       
       - name: Insert proxy config
-        run: 'scp src/main/resources/api_pre_s.subdomain.conf github_uploads@s.jewusiak.pl:${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}/nginx/proxy-confs/'
+        run: |
+          ssh github_uploads@s.jewusiak.pl "mkdir -p ${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}/nginx/proxy-confs"
+          scp src/main/resources/api_pre_s.subdomain.conf github_uploads@s.jewusiak.pl:${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}/nginx/proxy-confs/
       
       - name: Restart Swag
         run: 'ssh github_uploads@s.jewusiak.pl "docker restart ${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}"'
