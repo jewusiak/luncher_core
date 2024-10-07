@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.searchengine;
+package pl.luncher.v3.luncher_core.configuration.searchengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;

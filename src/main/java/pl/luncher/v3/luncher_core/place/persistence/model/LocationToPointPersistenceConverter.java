@@ -1,12 +1,11 @@
-package pl.luncher.v3.luncher_core.common.persistence;
+package pl.luncher.v3.luncher_core.place.persistence.model;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.locationtech.jts.geom.Point;
-import pl.luncher.v3.luncher_core.place.persistence.model.LocationDb;
 
 @Converter
-public class LocationToPointPersistenceConverter implements AttributeConverter<LocationDb, Point> {
+class LocationToPointPersistenceConverter implements AttributeConverter<LocationDb, Point> {
 
   @Override
   public Point convertToDatabaseColumn(LocationDb attribute) {

@@ -9,5 +9,5 @@ public interface AssetPersistenceService {
 
   Asset getById(UUID id);
 
-  void deleteById(UUID id);
+  void delete(Asset asset);
 }

@@ -34,8 +34,9 @@ class JpaAssetPersistenceService implements AssetPersistenceService {
     return assetDbMapper.toDomain(assetRepository.findById(id).orElseThrow());
   }
 
-  @Override
-  public void deleteById(UUID id) {
-    assetRepository.deleteById(id);
+  public void delete(Asset asset) {
+    var assetDb = assetRepository.findById(asset.getId()).orElseThrow();
+    assetDb.getPlace().getImages().remove(assetDb);
+    assetRepository.save(assetDb);
   }
 }

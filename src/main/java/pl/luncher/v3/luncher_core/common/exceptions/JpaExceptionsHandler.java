@@ -1,10 +1,9 @@
-package pl.luncher.v3.luncher_core.common.persistence;
+package pl.luncher.v3.luncher_core.common.exceptions;
 
 
 import jakarta.persistence.PersistenceException;
 import java.util.function.Function;
 import org.springframework.dao.DataIntegrityViolationException;
-import pl.luncher.v3.luncher_core.common.exceptions.DuplicateEntityException;
 
 public class JpaExceptionsHandler {
 

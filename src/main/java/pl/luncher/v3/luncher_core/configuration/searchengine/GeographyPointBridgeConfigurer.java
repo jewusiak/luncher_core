@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.searchengine;
+package pl.luncher.v3.luncher_core.configuration.searchengine;
 
 import org.hibernate.search.engine.spatial.GeoPoint;
 import org.hibernate.search.mapper.pojo.bridge.ValueBridge;

@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.common.persistence.JpaExceptionsHandler;
+import pl.luncher.v3.luncher_core.common.exceptions.JpaExceptionsHandler;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.User;
 import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;

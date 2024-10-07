@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.jwtUtils;
+package pl.luncher.v3.luncher_core.configuration.jwtUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

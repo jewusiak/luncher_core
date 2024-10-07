@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPermissionsChecker;
 
 /**

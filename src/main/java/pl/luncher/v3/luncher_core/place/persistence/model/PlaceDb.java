@@ -29,7 +29,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
-import pl.luncher.v3.luncher_core.common.persistence.LocationToPointPersistenceConverter;
 import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
 import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
 
@@ -89,8 +88,7 @@ public class PlaceDb {
   @ManyToOne
   private UserDb owner;
 
-  @OneToMany(cascade = {
-      CascadeType.ALL}, orphanRemoval = true, mappedBy = "place", fetch = FetchType.EAGER)
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place", fetch = FetchType.EAGER)
   private List<AssetDb> images;
 
 }

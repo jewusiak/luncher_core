@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.persistence.enums;
+package pl.luncher.v3.luncher_core.user.model;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

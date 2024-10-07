@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.jwtUtils;
+package pl.luncher.v3.luncher_core.configuration.jwtUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Component

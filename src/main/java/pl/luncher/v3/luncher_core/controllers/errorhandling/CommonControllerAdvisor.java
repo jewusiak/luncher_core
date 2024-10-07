@@ -18,7 +18,7 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
   @ExceptionHandler({DuplicateEntityException.class})
   @ResponseStatus(HttpStatus.CONFLICT)
   protected ErrorResponse handleDuplicateEntityException(DuplicateEntityException ex) {
-    return ex.toResponse();
+    return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").build();
   }
 
   @ExceptionHandler({NoSuchElementException.class})
