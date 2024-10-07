@@ -272,7 +272,7 @@ jobs:
         run: 'ssh github_uploads@s.jewusiak.pl "docker stop ${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }} || true"'
         
       - name: Remove swag config if exists
-        run:  'ssh github_uploads@s.jewusiak.pl "rm -rf `pwd`/${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}/nginx/proxy-confs/api_pre_s.subdomain.conf || true"'
+        run:  'ssh github_uploads@s.jewusiak.pl "rm -f `pwd`/${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}/nginx/proxy-confs/api_pre_s.subdomain.conf || true"'
         
       - name: Setup Swag
         run: 'ssh github_uploads@s.jewusiak.pl "docker run --rm -d --name ${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }} -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC -e URL=s.jewusiak.pl -e EXTRA_DOMAINS=api.pre.luncher.pl -e VALIDATION=http -p "443:443" -p "80:80" -v `pwd`/${{ env.APP_NAME }}_swag${{ env.ENV_SUFFIX }}:/config --net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net linuxserver/swag"'
