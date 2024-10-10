@@ -9,21 +9,17 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.requests.CreateAssetRequest;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.PlaceRepositoryHelper;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
-import pl.luncher.v3.luncher_core.place.persistence.model.AssetDb;
-import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
 
 @RequiredArgsConstructor
 public class AssetSteps {
 
-  private final PlaceRepository placeRepository;
+  private final PlaceRepositoryHelper placeRepositoryHelper;
 
   @When("User requests creation of a new asset for Place ID {} at ID {}:")
   public void userRequestsCreationOfANewAssetForTheLatestCreatedPlace(String placeIdx,
@@ -41,20 +37,7 @@ public class AssetSteps {
   @And("Place ID {} has {int} asset(s):")
   public void lastCreatedPlaceHasAsset(String placeIdx, int assetCount,
       List<Map<String, String>> assetData) {
-    placeRepository.findById(UUID.fromString(getIdFromCache(placeIdx, EntityIdType.PLACE)))
-        .ifPresentOrElse(place -> {
-
-              var expectedAssets = assetData.stream().map(map -> castMap(map, AssetDb.class))
-                  .toList();
-              Assertions.assertThat(place.getImages().size()).isEqualTo(assetCount);
-              Assertions.assertThat(place.getImages()).usingRecursiveComparison()
-                  .ignoringCollectionOrder()
-                  .comparingOnlyFields("name", "description").isEqualTo(expectedAssets);
-
-            },
-            () -> {
-              throw new EntityNotFoundException();
-            });
+    placeRepositoryHelper.assertAssetsCount(placeIdx, assetCount, assetData);
   }
 
   @When("User deletes Asset ID {}")

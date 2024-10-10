@@ -5,7 +5,6 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.getIdFromCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenHttpRequest;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putIdToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
-import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.xNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
@@ -14,7 +13,6 @@ import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -23,18 +21,14 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceOwnerUpda
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.PlaceRepositoryHelper;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
-import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.placetype.persistence.model.PlaceTypeDb;
-import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
 
 @Slf4j
 @RequiredArgsConstructor
 public class PlaceSteps {
 
-  private final ObjectMapper objectMapper;
-  private final PlaceTypeRepository placeTypeRepository;
-  private final PlaceRepository placeRepository;
+  private final PlaceRepositoryHelper placeRepositoryHelper;
 
   @When("User creates a place as below ID {}:")
   public void userCreatesAPlaceAsBelow(Integer idx, List<Map<String, String>> data) {
@@ -70,8 +64,7 @@ public class PlaceSteps {
 
   @And("place types exist:")
   public void placeTypesExist(List<Map<String, String>> data) {
-    var l = data.stream().map(item -> castMap(item, PlaceTypeDb.class)).toList();
-    placeTypeRepository.saveAll(l);
+    placeRepositoryHelper.savePlaceTypes(data);
   }
 
   @And("Place ID {} is as below:")
@@ -79,11 +72,7 @@ public class PlaceSteps {
     var columns = data.get(0);
     String id = getIdFromCache(idx, EntityIdType.PLACE);
 
-    var place = placeRepository.findById(UUID.fromString(id)).orElseThrow();
-
-    Assertions.assertThat(place.getOwner()).isNotNull();
-    Assertions.assertThat(place.getOwner())
-        .hasFieldOrPropertyWithValue("email", xNull(columns.get("owner.email"), String.class));
+    placeRepositoryHelper.assertPlaceOwner(id, columns);
   }
 
   @And("Updates Place with ID {} with data below:")

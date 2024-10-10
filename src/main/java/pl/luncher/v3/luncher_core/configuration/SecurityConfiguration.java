@@ -110,9 +110,4 @@ public class SecurityConfiguration {
     handler.setRoleHierarchy(roleHierarchy());
     return handler;
   }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 }

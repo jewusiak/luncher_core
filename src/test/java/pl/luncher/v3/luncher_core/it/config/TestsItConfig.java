@@ -12,20 +12,15 @@ import java.net.Socket;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.JpaRepositoriesHelper;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
-import pl.luncher.v3.luncher_core.place.persistence.repositories.PlaceRepository;
-import pl.luncher.v3.luncher_core.placetype.persistence.repositories.PlaceTypeRepository;
-import pl.luncher.v3.luncher_core.user.persistence.repositories.ForgottenPasswordIntentRepository;
-import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @CucumberContextConfiguration
@@ -44,15 +39,11 @@ public class TestsItConfig {
   private static GenericContainer<?> postgresContainer;
   private static boolean elasticsearchStarted;
   private static boolean postgresStarted;
-  private final Environment environment;
-  private final UserRepository userRepository;
-  private final PlaceRepository placeRepository;
-  private final PlaceTypeRepository placeTypeRepository;
+
+  private final JpaRepositoriesHelper jpaRepositoriesHelper;
+
   @LocalServerPort
   private int port;
-  @Autowired
-  private ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
-
   @BeforeAll
   public static void beforeAll() throws InterruptedException {
     log.info("BEFORE ALL >>");
@@ -168,10 +159,7 @@ public class TestsItConfig {
   public void after() {
     log.info("AFTER EACH >>");
     if (shouldDeleteAll) {
-      placeRepository.deleteAll();
-      forgottenPasswordIntentRepository.deleteAll();
-      userRepository.deleteAll();
-      placeTypeRepository.deleteAll();
+      jpaRepositoriesHelper.deleteAll();
     }
   }
 }

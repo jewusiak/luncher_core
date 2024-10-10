@@ -11,9 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPermissionsChecker;
 
-/**
- * DTO for {@link pl.luncher.v3.luncher_core.user.persistence.model.UserDb}
- */
+
 @Data
 @Slf4j
 public class User implements UserDetails {
