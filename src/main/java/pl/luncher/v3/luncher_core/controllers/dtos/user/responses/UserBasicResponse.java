@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.user.model.User}

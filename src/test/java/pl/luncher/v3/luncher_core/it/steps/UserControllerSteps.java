@@ -15,12 +15,9 @@ import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicResponse;
-import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
 
 @RequiredArgsConstructor
 public class UserControllerSteps {
-
-  private final UserRepository userRepository;
 
   @When("User is created as below with ID {int}:")
   public void userIsCreatedAsBelowWithID(int arg0, List<Map<String, String>> data) {

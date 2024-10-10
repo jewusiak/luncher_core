@@ -3,31 +3,17 @@ package pl.luncher.v3.luncher_core.it.steps;
 import io.cucumber.java.en.Given;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
-import pl.luncher.v3.luncher_core.user.persistence.model.UserDb;
-import pl.luncher.v3.luncher_core.user.persistence.repositories.UserRepository;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.UserRepositoryHelper;
 
 @RequiredArgsConstructor
 public class UserDataSteps {
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
+  private final UserRepositoryHelper userRepositoryHelper;
 
   @Given("User(s) exist(s):")
   public void userExists(List<Map<String, String>> data) {
-    var users = data.stream().map(this::fromMap).toList();
-
-    userRepository.saveAll(users);
+    userRepositoryHelper.saveUsersFromMap(data);
   }
 
-  private UserDb fromMap(Map<String, String> um) {
-    return UserDb.builder().uuid(UUID.fromString(um.get("uuid"))).email(um.get("email"))
-        .passwordHash(passwordEncoder.encode(um.get("password")))
-        .enabled(true).role(AppRole.valueOf(um.get("role"))).firstName(um.get("name"))
-        .surname(um.get("surname"))
-        .build();
-  }
 }

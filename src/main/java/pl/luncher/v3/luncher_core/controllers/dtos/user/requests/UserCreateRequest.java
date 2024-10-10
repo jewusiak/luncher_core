@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 
 @Data
 public class UserCreateRequest {

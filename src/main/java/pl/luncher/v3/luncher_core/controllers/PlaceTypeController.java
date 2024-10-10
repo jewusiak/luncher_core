@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.common.persistence.enums.AppRole.hasRole;
+import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers.PlaceTypeDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.PlaceTypeRequest;
 import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;

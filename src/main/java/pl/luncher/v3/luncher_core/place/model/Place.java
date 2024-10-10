@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePermissionsChecker;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePermissionsCheckerImpl;
-import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
 
-/**
- * DTO for {@link PlaceDb}
- */
+
 @Slf4j
 @Data
 @AllArgsConstructor

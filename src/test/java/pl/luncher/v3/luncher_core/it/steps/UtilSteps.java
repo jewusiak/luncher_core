@@ -1,19 +1,16 @@
 package pl.luncher.v3.luncher_core.it.steps;
 
 import io.cucumber.java.en.And;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.search.mapper.orm.Search;
-import pl.luncher.v3.luncher_core.place.persistence.model.PlaceDb;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.HibernateSearchHelper;
 
 @RequiredArgsConstructor
 public class UtilSteps {
 
-  private final EntityManager entityManager;
+  private final HibernateSearchHelper hibernateSearchHelper;
 
   @And("Refresh Hibernate Search indexes")
-  public void refreshIndexes() throws InterruptedException {
-    Search.mapping(entityManager.getEntityManagerFactory()).scope(PlaceDb.class).workspace()
-        .refresh();
+  public void refreshIndexes() {
+    hibernateSearchHelper.refreshIndexes();
   }
 }
