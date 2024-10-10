@@ -9,11 +9,13 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
 
 @Configuration
 @SecurityScheme(
@@ -23,17 +25,17 @@ import org.springframework.context.annotation.Profile;
     bearerFormat = "JWT",
     type = SecuritySchemeType.HTTP
 )
+@RequiredArgsConstructor
 public class SwaggerConfiguration {
 
-  @Value("${pl.luncher.swagger.apiCallBaseUrl}")
-  private String apiCallBaseUrl;
+  private final LuncherCommonProperties luncherCommonProperties;
 
   @Bean
   public OpenAPI apiOpenApi() {
     OpenAPI api = new OpenAPI();
     api.setInfo(new Info().title("Luncher Core API").version("1.0.0"));
     List<Server> serverList = new ArrayList<>();
-    serverList.add(new Server().url(apiCallBaseUrl).description("predefined address - see config"));
+    serverList.add(new Server().url(luncherCommonProperties.getBaseApiUrl()).description("predefined address - see config"));
     api.setServers(serverList);
     api.setSecurity(List.of(new SecurityRequirement().addList("Authorization")));
     return api;
