@@ -68,7 +68,7 @@ class PlaceDb {
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
   @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
-  private List<OpeningWindowDb> openingWindows;
+  private List<WeekDayTimeRangeDb> openingWindows;
 //todo: not mvp
 //  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
 //  private List<PlaceOpeningException> openingExceptions;
@@ -89,4 +89,7 @@ class PlaceDb {
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place", fetch = FetchType.EAGER)
   private List<AssetDb> images;
 
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
+  @IndexedEmbedded
+  private List<MenuOfferDb> menuOffers;
 }

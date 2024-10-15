@@ -3,6 +3,7 @@ package pl.luncher.v3.luncher_core.controllers.dtos.place.requests;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,8 @@ public class PlaceSearchRequest {
 
   @Valid
   private LocationWithRadiusDto location;
+
+  LocalDateTime hasLunchServedAt;
 
   @NotNull
   @PositiveOrZero

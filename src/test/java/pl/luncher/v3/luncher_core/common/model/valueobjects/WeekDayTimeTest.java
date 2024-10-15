@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import pl.luncher.v3.luncher_core.place.model.WeekDayTime;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
 
 class WeekDayTimeTest {
 

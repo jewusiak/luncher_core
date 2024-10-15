@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AddressDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.LocationDto;
-import pl.luncher.v3.luncher_core.controllers.dtos.common.OpeningWindowDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.UserDto;
+import pl.luncher.v3.luncher_core.controllers.dtos.common.WeekDayTimeRangeDto;
+import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.MenuOfferDto;
 
 
 @Data
@@ -29,9 +30,10 @@ public class PlaceFullResponse implements Serializable {
   private String phoneNumber;
   private AddressDto address;
   private String googleMapsReference;
-  private List<OpeningWindowDto> openingWindows;
+  private List<WeekDayTimeRangeDto> openingWindows;
   private PlaceTypeDto placeType;
   private LocationDto location;
   private UserDto owner;
   private List<AssetDto> images;
+  private List<MenuOfferDto> menuOffers;
 }

@@ -3,8 +3,10 @@ package pl.luncher.v3.luncher_core.it.steps;
 import io.cucumber.java.en.And;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 
+@Slf4j
 public class ResponseAssertionsSteps {
 
   @And("HTTP Response has a list of size {int} in path {}")
@@ -20,7 +22,9 @@ public class ResponseAssertionsSteps {
     var resp = ParentSteps.getCachedHttpResp().jsonPath();
     for (String key : expected.get(0).keySet()) {
       String expectedAfterIdReplacement = ParentSteps.replaceIds(expected.get(0).get(key));
-      Assertions.assertThat(resp.getString(key)).isEqualTo(expectedAfterIdReplacement);
+      String actual = resp.getString(key);
+      log.trace("Checking path {}\nexpected: {}\nactual: {}", key, expectedAfterIdReplacement, actual);
+      Assertions.assertThat(actual).isEqualTo(expectedAfterIdReplacement);
     }
   }
 

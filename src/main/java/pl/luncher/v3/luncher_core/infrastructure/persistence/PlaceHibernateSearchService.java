@@ -9,6 +9,7 @@ import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
 import org.hibernate.search.engine.search.predicate.SearchPredicate;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Service;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 
@@ -41,18 +42,18 @@ class PlaceHibernateSearchService implements PlaceSearchService {
       if (searchRequest.getOpenAt() != null) {
         // porządnie przetestować
 
-        SearchPredicate baseTimePredicate = f.and(f.nested("openingWindows")
+        SearchPredicate baseTimePredicate = f.nested("openingWindows")
                 .add(f.range().field("openingWindows.startTime")
                     .atMost(searchRequest.getOpenAt().toIntTime()))
                 .add(f.range().field("openingWindows.endTime")
-                    .greaterThan(searchRequest.getOpenAt().toIntTime())))
+                    .greaterThan(searchRequest.getOpenAt().toIntTime()))
             .toPredicate();
 
-        SearchPredicate incrementedTimePredicate = f.and(f.nested("openingWindows")
+        SearchPredicate incrementedTimePredicate = f.nested("openingWindows")
             .add(f.range().field("openingWindows.startTime")
                 .atMost(searchRequest.getOpenAt().toIncrementedIntTime()))
             .add(f.range().field("openingWindows.endTime")
-                .greaterThan(searchRequest.getOpenAt().toIncrementedIntTime()))).toPredicate();
+                .greaterThan(searchRequest.getOpenAt().toIncrementedIntTime())).toPredicate();
 
         root.add(f.or(baseTimePredicate, incrementedTimePredicate));
       }
@@ -64,6 +65,35 @@ class PlaceHibernateSearchService implements PlaceSearchService {
                 searchRequest.getLocation().getRadius()));
       }
 
+      if (searchRequest.getHasLunchServedAt() != null) {
+
+        // recurring predicate for base int time
+        WeekDayTime lunchtime = WeekDayTime.of(searchRequest.getHasLunchServedAt());
+        SearchPredicate baseTimePredicate = f.nested("menuOffers.recurringServingRanges")
+            .add(f.range().field("menuOffers.recurringServingRanges.startTime")
+                .atMost(lunchtime.toIntTime()))
+            .add(f.range().field("menuOffers.recurringServingRanges.endTime")
+                .greaterThan(lunchtime.toIntTime()))
+            .toPredicate();
+
+        // recurring predicate for incremented int time
+        SearchPredicate incrementedTimePredicate = f.nested("menuOffers.recurringServingRanges")
+            .add(f.range().field("menuOffers.recurringServingRanges.startTime")
+                .atMost(lunchtime.toIncrementedIntTime()))
+            .add(f.range().field("menuOffers.recurringServingRanges.endTime")
+                .greaterThan(lunchtime.toIncrementedIntTime())).toPredicate();
+
+        // one time time predicate
+        SearchPredicate onetimePredicate = f.nested("menuOffers.oneTimeServingRanges")
+            .add(f.range().field("menuOffers.oneTimeServingRanges.startTime")
+                .atMost(searchRequest.getHasLunchServedAt()))
+            .add(f.range().field("menuOffers.oneTimeServingRanges.endTime")
+                .greaterThan(searchRequest.getHasLunchServedAt())).toPredicate();
+
+        f.or(baseTimePredicate, incrementedTimePredicate, onetimePredicate);
+
+      }
+
     });
 
     List<PlaceDb> hits = query.fetch(searchRequest.getPage() * searchRequest.getSize(),
@@ -71,7 +101,7 @@ class PlaceHibernateSearchService implements PlaceSearchService {
     List<Place> list = hits.stream().map(placeDbMapper::toDomain).toList();
 
     for (var element : hits) {
-      log.info("Place: {}, \nexplanation: \n{}\nplace: \n{}", element.getName(),
+      log.debug("Place: {}, \nexplanation: \n{}\nplace: \n{}", element.getName(),
           query.toQuery().extension(ElasticsearchExtension.get()).explain(element.getId()),
           element);
     }

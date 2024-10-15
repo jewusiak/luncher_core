@@ -6,7 +6,6 @@ import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.givenHttpRequest;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.putIdToCache;
 import static pl.luncher.v3.luncher_core.it.steps.ParentSteps.saveHttpResp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

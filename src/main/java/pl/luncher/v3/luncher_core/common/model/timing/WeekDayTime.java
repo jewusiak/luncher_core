@@ -1,9 +1,10 @@
-package pl.luncher.v3.luncher_core.place.model;
+package pl.luncher.v3.luncher_core.common.model.timing;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;
 
@@ -26,6 +27,10 @@ public class WeekDayTime implements Comparable<WeekDayTime> {
 
   public static WeekDayTime of(@Min(1) @Max(7) int day, LocalTime time) {
     return new WeekDayTime(time, DayOfWeek.of(day));
+  }
+
+  public static WeekDayTime of(LocalDateTime time) {
+    return new WeekDayTime(LocalTime.from(time), time.getDayOfWeek());
   }
 
   public static WeekDayTime of(Integer time) {

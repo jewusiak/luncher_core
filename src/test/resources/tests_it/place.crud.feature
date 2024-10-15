@@ -163,4 +163,67 @@ Feature: CRUD - Place
       | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
     And response code is 200
 
-    #todo: create/delete/edit opening times
+    When Send PUT request to /place/[ID:PLACE:1] with body as below:
+    """
+    {
+        "openingWindows": [
+            {
+                "startTime": {
+                    "day": "MONDAY",
+                    "time": "10:00"
+                },
+                "endTime": {
+                    "day": "MONDAY",
+                    "time": "22:00"
+                }
+            }
+        ]
+    }
+    """
+
+    Then response code is 200
+    And Send GET request to /place/[ID:PLACE:1] without body
+    And HTTP Response has a list of size 1 in path openingWindows
+    And HTTP Response is:
+      | openingWindows[0].startTime.day | openingWindows[0].startTime.time | openingWindows[0].endTime.day | openingWindows[0].endTime.time |
+      | MONDAY                          | 10:00:00                         | MONDAY                        | 22:00:00                       |
+
+
+    When Send PUT request to /place/[ID:PLACE:1] with body as below:
+    """
+    {
+    "openingWindows" : [
+      {
+         "startTime": {
+            "day": "TUESDAY",
+            "time": "11:00"
+         },
+         "endTime": {
+            "day": "WEDNESDAY",
+            "time": "21:00"
+         }
+      }
+    ]
+    }
+    """
+
+    Then response code is 200
+    And Send GET request to /place/[ID:PLACE:1] without body
+    And HTTP Response has a list of size 1 in path openingWindows
+    And HTTP Response is:
+      | openingWindows[0].startTime.day | openingWindows[0].startTime.time | openingWindows[0].endTime.day | openingWindows[0].endTime.time |
+      | TUESDAY                         | 11:00:00                         | WEDNESDAY                     | 21:00:00                       |
+
+
+    When Send PUT request to /place/[ID:PLACE:1] with body as below:
+    """
+    {
+    "openingWindows" : [
+    ]
+    }
+    """
+
+    Then response code is 200
+    And Send GET request to /place/[ID:PLACE:1] without body
+    And HTTP Response has a list of size 0 in path openingWindows
+

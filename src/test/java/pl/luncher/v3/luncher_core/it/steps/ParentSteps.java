@@ -196,13 +196,22 @@ public class ParentSteps {
       String idx = colonSplitted[2].split("]")[0];
       return getIdFromCache(idx, entityType);
     });
+
+    replacedText = Pattern.compile("\\[VAR:\\w+]").matcher(replacedText).replaceAll((result) -> {
+      var gr = result.group();
+      // [ID:PLACE:109]
+      //
+      String[] colonSplitted = gr.split(":");
+      String varName = colonSplitted[1].split("]")[0];
+      return getFromCache(varName, String.class);
+    });
     return replacedText;
   }
 
   @RequiredArgsConstructor
   @Getter
   public enum EntityIdType {
-    PLACE(0), ASSET(1), USER(2);
+    PLACE(0), ASSET(1), USER(2), MENU_OFFER(3);
 
     private final int index;
   }

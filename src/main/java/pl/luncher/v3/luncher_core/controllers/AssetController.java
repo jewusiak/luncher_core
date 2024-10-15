@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetFactory;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetPersistenceService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
-import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.requests.CreateAssetRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.CreateAssetResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.UserDto;
+import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Tag(name = "asset", description = "Assets")
@@ -51,7 +51,7 @@ public class AssetController {
       User requestingUser) {
     var place = placePersistenceService.getById(UUID.fromString(request.getPlaceId()));
 
-    place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).edit().throwIfNotPermitted();
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
     var asset = AssetFactory.newFilesystemPersistent(request.getDescription(), place.getId());
 
@@ -62,11 +62,6 @@ public class AssetController {
         new CreateAssetResponse(saved.getId(), saved.getPlaceId(), saved.getAccessUrl(),
             saved.getUploadStatus().name()));
 
-  }
-
-  private UserDto mapUserToDtoWorkaround(User requestingUser) {
-    return new UserDto(requestingUser.getUuid(), requestingUser.getEmail(),
-        requestingUser.getRole());
   }
 
   @DeleteMapping("/{uuid}")

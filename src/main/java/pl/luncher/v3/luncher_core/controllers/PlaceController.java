@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
@@ -27,7 +26,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceSearchRe
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.place.model.UserDto;
+import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Tag(name = "place", description = "Places CRUD")
@@ -39,11 +38,6 @@ public class PlaceController {
   private final PlaceDtoMapper placeDtoMapper;
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
-
-  private static UserDto mapUserToDtoWorkaround(User requestingUser) {
-    return new UserDto(requestingUser.getUuid(), requestingUser.getEmail(),
-        requestingUser.getRole());
-  }
 
   //FIXME
   @GetMapping("/{uuid}")
@@ -72,10 +66,10 @@ public class PlaceController {
 
     Place place = placePersistenceService.getById(placeUuid);
 
-    place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).edit().throwIfNotPermitted();
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
     if (placeUpdateRequest.getOwner() != null) {
-      place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).changeOwner()
+      place.permissions().byUser(requestingUser).changeOwner()
           .throwIfNotPermitted();
     }
 
@@ -92,7 +86,7 @@ public class PlaceController {
 
     Place place = placePersistenceService.getById(placeUuid);
 
-    place.permissions().byUser(mapUserToDtoWorkaround(requestingUser)).delete()
+    place.permissions().byUser(requestingUser).delete()
         .throwIfNotPermitted();
 
     placePersistenceService.deleteById(place.getId());
@@ -113,6 +107,7 @@ public class PlaceController {
   public ResponseEntity<PlaceSearchResponse> searchQuery(
       @RequestBody @Valid PlaceSearchRequest request, User user) {
 
+    //todo: implement showing only places, that user should be shown
     var searchRequest = placeDtoMapper.toSearchRequest(request);
 
     List<Place> searchResponse = placeSearchService.search(searchRequest);

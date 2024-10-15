@@ -4,14 +4,15 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 
 /**
- * DTO for {@link pl.luncher.v3.luncher_core.place.model.OpeningWindow}
+ * DTO for {@link WeekDayTimeRange}
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OpeningWindowDto implements Serializable {
+public class WeekDayTimeRangeDto implements Serializable {
 
   private WeekDayTimeDto startTime;
   private WeekDayTimeDto endTime;

@@ -8,7 +8,7 @@ import pl.luncher.v3.luncher_core.assets.model.Asset;
 
 @RequiredArgsConstructor
 @Service
-class JpaAssetPersistenceService implements AssetPersistenceService {
+class AssetJpaPersistenceService implements AssetPersistenceService {
 
   private final AssetRepository assetRepository;
   private final AssetDbMapper assetDbMapper;
@@ -32,7 +32,9 @@ class JpaAssetPersistenceService implements AssetPersistenceService {
 
   public void delete(Asset asset) {
     var assetDb = assetRepository.findById(asset.getId()).orElseThrow();
-    assetDb.getPlace().getImages().remove(assetDb);
+    if (assetDb.getPlace() != null) {
+      assetDb.getPlace().getImages().remove(assetDb);
+    }
     assetRepository.save(assetDb);
   }
 }

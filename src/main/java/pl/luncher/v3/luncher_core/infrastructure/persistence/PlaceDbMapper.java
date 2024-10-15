@@ -12,28 +12,26 @@ import org.mapstruct.ReportingPolicy;
 import pl.luncher.v3.luncher_core.place.model.Place;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
-    OpeningWindowMapper.class}, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+    WeekDayTimeRangeMapper.class, PlaceTypeDbMapper.class, AssetDbMapper.class,
+    MenuOfferDbMapper.class}, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 interface PlaceDbMapper {
 
   @Mapping(target = "name", source = "place.name")
   @Mapping(target = "owner", source = "owner")
   @Mapping(target = "placeType", source = "placeType")
-  PlaceDb toDbEntity(Place place, UserDb owner, PlaceTypeDb placeType);
+  PlaceDb toDb(Place place, UserDb owner, PlaceTypeDb placeType);
 
   @AfterMapping
-  default void linkImages(@MappingTarget PlaceDb placeDb) {
-    if (placeDb.getImages() == null) {
-      return;
+  default void linkChildEntities(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getImages() != null) {
+      placeDb.getImages().forEach(image -> image.setPlace(placeDb));
     }
-    placeDb.getImages().forEach(image -> image.setPlace(placeDb));
-  }
-
-  @AfterMapping
-  default void linkOpeningWindows(@MappingTarget PlaceDb placeDb) {
-    if (placeDb.getOpeningWindows() == null) {
-      return;
+    if (placeDb.getOpeningWindows() != null) {
+      placeDb.getOpeningWindows().forEach(window -> window.setPlace(placeDb));
     }
-    placeDb.getOpeningWindows().forEach(window -> window.setPlace(placeDb));
+    if (placeDb.getMenuOffers() != null) {
+      placeDb.getMenuOffers().forEach(menuOfferDb -> menuOfferDb.setPlace(placeDb));
+    }
   }
 
   Place toDomain(PlaceDb placeDb);

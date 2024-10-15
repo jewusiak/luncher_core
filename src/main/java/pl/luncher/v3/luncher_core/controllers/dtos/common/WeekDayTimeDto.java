@@ -7,9 +7,10 @@ import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
 
 /**
- * DTO for {@link pl.luncher.v3.luncher_core.place.model.WeekDayTime}
+ * DTO for {@link WeekDayTime}
  */
 @Data
 @AllArgsConstructor

@@ -2,13 +2,14 @@ package pl.luncher.v3.luncher_core.place.domainservices;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
 import pl.luncher.v3.luncher_core.place.model.LocationWithRadius;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.place.model.WeekDayTime;
 
 public interface PlaceSearchService {
 
@@ -24,6 +25,8 @@ public interface PlaceSearchService {
     WeekDayTime openAt;
     @Valid
     LocationWithRadius location;
+
+    LocalDateTime hasLunchServedAt;
 
     @NotNull
     Integer page;

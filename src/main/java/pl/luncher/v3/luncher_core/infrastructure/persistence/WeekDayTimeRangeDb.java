@@ -24,7 +24,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 @Getter
 @Setter
 @ToString(exclude = "place")
-class OpeningWindowDb {
+class WeekDayTimeRangeDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -44,6 +44,9 @@ class OpeningWindowDb {
   @GenericField
   private int endTime;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   private PlaceDb place;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private MenuOfferDb menuOffer;
 }

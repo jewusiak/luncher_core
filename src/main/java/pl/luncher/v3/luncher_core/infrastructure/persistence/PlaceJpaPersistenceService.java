@@ -9,12 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.place.model.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.place.model.UserDto;
+import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
 
 @Service
 @RequiredArgsConstructor
-class JpaPlacePersistenceService implements PlacePersistenceService {
+class PlaceJpaPersistenceService implements PlacePersistenceService {
 
   private final PlaceDbMapper placeDbMapper;
 
@@ -27,13 +27,13 @@ class JpaPlacePersistenceService implements PlacePersistenceService {
   public Place save(Place place) {
 
     PlaceTypeDb placeType = Optional.ofNullable(place.getPlaceType())
-        .map(PlaceTypeDto::getIdentifier).map(id -> placeTypeRepository.findById(id).orElseThrow())
+        .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findById(id).orElseThrow())
         .orElse(null);
 
     UserDb owner = Optional.ofNullable(place.getOwner()).map(UserDto::getEmail)
         .map(email -> userRepository.findUserByEmail(email).orElseThrow()).orElse(null);
 
-    PlaceDb placeDb = placeDbMapper.toDbEntity(place, owner, placeType);
+    PlaceDb placeDb = placeDbMapper.toDb(place, owner, placeType);
 
     placeDb.setPlaceType(placeType);
     placeDb.setOwner(owner);

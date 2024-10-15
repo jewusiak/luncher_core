@@ -9,7 +9,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
-import pl.luncher.v3.luncher_core.controllers.dtos.common.mappers.OpeningWindowDtoMapper;
+import pl.luncher.v3.luncher_core.controllers.dtos.common.mappers.WeekDayTimeRangeDtoMapper;
+import pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers.MenuOfferDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
@@ -20,7 +21,8 @@ import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
-    OpeningWindowDtoMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+    WeekDayTimeRangeDtoMapper.class,
+    MenuOfferDtoMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface PlaceDtoMapper {
 
   // Requests
