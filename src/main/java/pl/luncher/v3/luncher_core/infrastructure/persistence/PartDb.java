@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "menu_parts", schema = "luncher_core")
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Builder(access = AccessLevel.PACKAGE)
 @Getter
 @Setter
+@ToString(exclude = {"parentOffer"})
 class PartDb {
 
   @Id

@@ -90,6 +90,6 @@ class PlaceDb {
   private List<AssetDb> images;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
-  @IndexedEmbedded
+  @IndexedEmbedded(structure = ObjectStructure.NESTED)
   private List<MenuOfferDb> menuOffers;
 }

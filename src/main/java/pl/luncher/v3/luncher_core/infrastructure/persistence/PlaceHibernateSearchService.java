@@ -90,7 +90,7 @@ class PlaceHibernateSearchService implements PlaceSearchService {
             .add(f.range().field("menuOffers.oneTimeServingRanges.endTime")
                 .greaterThan(searchRequest.getHasLunchServedAt())).toPredicate();
 
-        f.or(baseTimePredicate, incrementedTimePredicate, onetimePredicate);
+        root.add(f.or(baseTimePredicate, incrementedTimePredicate, onetimePredicate));
 
       }
 

@@ -8,10 +8,12 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 @Entity
 @Data
+@ToString(exclude = "menuOffer")
 class LocalDateTimeRangeDb {
 
   @Id

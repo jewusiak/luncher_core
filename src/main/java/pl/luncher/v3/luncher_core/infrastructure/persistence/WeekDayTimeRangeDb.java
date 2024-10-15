@@ -23,7 +23,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 @Builder
 @Getter
 @Setter
-@ToString(exclude = "place")
+@ToString(exclude = {"place", "menuOffer"})
 class WeekDayTimeRangeDb {
 
   @Id

@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.search.engine.backend.types.ObjectStructure;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 @Entity
@@ -27,6 +29,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 @Builder(access = AccessLevel.PACKAGE)
 @Getter
 @Setter
+@ToString(exclude = {"place"})
 class MenuOfferDb {
 
   @Id
@@ -41,11 +44,11 @@ class MenuOfferDb {
   @OneToMany(mappedBy = "parentOffer", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<PartDb> parts;
 
-  @IndexedEmbedded
+  @IndexedEmbedded(structure = ObjectStructure.NESTED)
   @OneToMany(mappedBy = "menuOffer", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<WeekDayTimeRangeDb> recurringServingRanges;
 
-  @IndexedEmbedded
+  @IndexedEmbedded(structure = ObjectStructure.NESTED)
   @OneToMany(mappedBy = "menuOffer", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<LocalDateTimeRangeDb> oneTimeServingRanges;
 
