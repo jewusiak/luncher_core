@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -40,7 +41,7 @@ public class PlaceMenuOffersController {
   private final MenuOfferDtoMapper menuOfferDtoMapper;
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<?> getById(@PathVariable UUID placeUuid, @PathVariable UUID uuid, User requestingUser) {
+  public ResponseEntity<?> getById(@PathVariable UUID placeUuid, @PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -51,7 +52,7 @@ public class PlaceMenuOffersController {
   }
 
   @GetMapping
-  public ResponseEntity<?> getAll(@PathVariable UUID placeUuid, User requestingUser) {
+  public ResponseEntity<?> getAll(@PathVariable UUID placeUuid, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -65,7 +66,7 @@ public class PlaceMenuOffersController {
   // ensure cascade of parts&options
   @PostMapping
   public ResponseEntity<PlaceFullResponse> addNewOffer(@PathVariable UUID placeUuid,
-      @RequestBody @Valid MenuOfferRequest request, User requestingUser) {
+      @RequestBody @Valid MenuOfferRequest request, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -81,7 +82,7 @@ public class PlaceMenuOffersController {
   // PUT update offer w/ parts&options cascade
   @PutMapping("/{menuOptionUuid}")
   public ResponseEntity<PlaceFullResponse> updateMenuOffer(@PathVariable UUID placeUuid,
-      @PathVariable UUID menuOptionUuid, @RequestBody @Valid MenuOfferRequest request, User requestingUser) {
+      @PathVariable UUID menuOptionUuid, @RequestBody @Valid MenuOfferRequest request, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -98,7 +99,7 @@ public class PlaceMenuOffersController {
 
   @DeleteMapping("/{menuOptionUuid}")
   public ResponseEntity<PlaceFullResponse> deleteMenuOffer(@PathVariable UUID placeUuid,
-      @PathVariable UUID menuOptionUuid, User requestingUser) {
+      @PathVariable UUID menuOptionUuid, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 

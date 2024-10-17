@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -62,7 +63,7 @@ public class PlaceController {
   @PreAuthorize(hasRole.REST_MANAGER)
   @PutMapping("/{placeUuid}")
   public ResponseEntity<?> updatePlace(@PathVariable UUID placeUuid,
-      @RequestBody PlaceUpdateRequest placeUpdateRequest, User requestingUser) {
+      @RequestBody PlaceUpdateRequest placeUpdateRequest, @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
 
@@ -82,7 +83,7 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @DeleteMapping("/{placeUuid}")
-  public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid, User requestingUser) {
+  public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid, @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
 
@@ -105,7 +106,7 @@ public class PlaceController {
 
   @PostMapping("/search")
   public ResponseEntity<PlaceSearchResponse> searchQuery(
-      @RequestBody @Valid PlaceSearchRequest request, User user) {
+      @RequestBody @Valid PlaceSearchRequest request, @Parameter(hidden = true) User requestingUser) {
 
     //todo: implement showing only places, that user should be shown
     var searchRequest = placeDtoMapper.toSearchRequest(request);

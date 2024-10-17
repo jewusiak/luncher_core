@@ -1,3 +1,4 @@
 /secrets/
 .idea
 target
+/db_files

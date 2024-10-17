@@ -7,14 +7,19 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
 
 @Configuration
@@ -26,14 +31,16 @@ import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
     type = SecuritySchemeType.HTTP
 )
 @RequiredArgsConstructor
+@Slf4j
 public class SwaggerConfiguration {
 
   private final LuncherCommonProperties luncherCommonProperties;
+  private final ConfigurableApplicationContext context;
 
   @Bean
   public OpenAPI apiOpenApi() {
     OpenAPI api = new OpenAPI();
-    api.setInfo(new Info().title("Luncher Core API").version("1.0.0"));
+    api.setInfo(new Info().title("Luncher Core API").version("1.1.0"));
     List<Server> serverList = new ArrayList<>();
     serverList.add(new Server().url(luncherCommonProperties.getBaseApiUrl()).description("predefined address - see config"));
     api.setServers(serverList);
@@ -41,41 +48,48 @@ public class SwaggerConfiguration {
     return api;
   }
 
+
+  public void setUpGroupedOpenApis() {
+    log.info("Loading OpenApis...");
+    ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+    BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+    context.getBean(RequestMappingHandlerMapping.class).getHandlerMethods().forEach((key, value) -> {
+      if (!value.getBeanType().getPackageName().contains("pl.luncher")) {
+        return;
+      }
+
+      String httpMethod = key.getMethodsCondition().getMethods().iterator().next().name();
+      String urlPath = key.getPathPatternsCondition().getPatterns().iterator().next().getPatternString();
+      String pckg = value.getBeanType().getPackageName();
+      Method controllerMethod = value.getMethod();
+
+      injectGroupedApiBean(httpMethod, urlPath, pckg, controllerMethod, registry);
+    });
+
+  }
+
+
+  public void injectGroupedApiBean(String httpMethod, String urlPath, String pckg, Method controllerMethod,
+      BeanDefinitionRegistry registry) {
+    String urlSafePath = urlPath.replace("/", "__").replace("{", "").replace("}", "");
+
+    String docsGroupName = "%s____%s".formatted(httpMethod, urlSafePath);
+    String groupDisplayName = "%s %s".formatted(httpMethod, urlPath);
+
+    var builder = GroupedOpenApi.builder().group(docsGroupName)
+        .displayName(groupDisplayName).packagesToScan(pckg)
+        .pathsToMatch(urlPath)
+        .addOpenApiMethodFilter(controllerMethod::equals);
+
+    registry.registerBeanDefinition(docsGroupName,
+        BeanDefinitionBuilder.genericBeanDefinition(GroupedOpenApi.class).addConstructorArgValue(builder)
+            .getBeanDefinition());
+  }
+
   @Bean
   public GroupedOpenApi authApi() {
-    return GroupedOpenApi.builder().group("common").displayName("Common API")
-        .packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
-  }
-
-  @Bean
-  public GroupedOpenApi adminPlacesApi() {
-    return GroupedOpenApi.builder().group("admin-places").displayName("Admin (Places) API")
-        .pathsToMatch("/admin/places/**", "/admin/places")
-        .packagesToScan("pl.luncher.v3.luncher_core.admin.controllers").build();
-  }
-
-  @Bean
-  public GroupedOpenApi adminUsersApi() {
-    return GroupedOpenApi.builder().group("admin-users").displayName("Admin (Users) API")
-        .pathsToMatch("/admin/users/**", "/admin/users")
-        .packagesToScan("pl.luncher.v3.luncher_core.admin.controllers").build();
-  }
-
-  @Bean
-  public GroupedOpenApi placesExplorationApi() {
-    return GroupedOpenApi.builder().group("places-exploration")
-        .displayName("Places exploration (end-users) API")
-        .pathsToMatch("/places/exploration/**", "/places/exploration")
-        .packagesToScan("pl.luncher.v3.luncher_core.common.controllers").build();
-  }
-
-  @Bean
-  @Profile({"local_dev", "local_test"})
-  public GroupedOpenApi test() {
-    return GroupedOpenApi.builder().group("test")
-        .displayName("test")
-        .pathsToMatch("/**")
-        .packagesToScan("pl.luncher.v3.luncher_core").build();
+    setUpGroupedOpenApis();
+    return GroupedOpenApi.builder().group("dummy").displayName("dummy").pathsToMatch("/nonexistent/path").build();
   }
 
 }

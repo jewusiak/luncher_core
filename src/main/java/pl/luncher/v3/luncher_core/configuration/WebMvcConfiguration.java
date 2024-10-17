@@ -24,7 +24,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
   }
 
   @Override
-  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+  public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+    converters.forEach((converter) -> {
+      if (converter instanceof MappingJackson2HttpMessageConverter) {
+        ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper);
+      }
+    });
   }
 }

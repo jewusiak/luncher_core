@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -98,7 +99,7 @@ public class UsersController {
   })
   @PutMapping("{userId}")
   public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request,
-      @PathVariable UUID userId, User requestingUser) {
+      @PathVariable UUID userId, @Parameter(hidden = true) User requestingUser) {
     var user = userPersistenceService.getById(userId);
     userDtoMapper.updateDomain(user, request,
         request.getPassword() == null ? null : passwordEncoder.encode(request.getPassword()));
@@ -117,7 +118,7 @@ public class UsersController {
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
   })
   @DeleteMapping("{uuid}")
-  public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid, User requestingUser) {
+  public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
     var user = userPersistenceService.getById(uuid);
 
     user.permissions().byUser(requestingUser).delete().throwIfNotPermitted();
