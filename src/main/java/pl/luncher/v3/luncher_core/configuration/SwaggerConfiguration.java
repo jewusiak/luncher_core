@@ -72,7 +72,6 @@ public class SwaggerConfiguration {
 
   }
 
-
   public void injectGroupedApiBean(String httpMethod, String urlPath, String pckg, Method controllerMethod,
       BeanDefinitionRegistry registry) {
     String urlSafePath = urlPath.replace("/", "_").replace("{", "").replace("}", "");
