@@ -58,15 +58,14 @@ public class SwaggerOutputFilter implements Filter {
       var newData = objectMapper.writeValueAsString(map);
 
       response.setContentLength(newData.length());
-      response.getWriter().write(newData);
-      response.getWriter().flush();
-      response.getWriter().close();
+      response.getOutputStream().write(newData.getBytes(StandardCharsets.UTF_8));
+      response.getOutputStream().flush();
+      response.getOutputStream().close();
     } catch (RuntimeException e) {
       log.error("Could not process Swagger response body", e);
-      response.setContentLength(originalDataAsString.length());
-      response.getWriter().write(originalDataAsString);
-      response.getWriter().flush();
-      response.getWriter().close();
+      response.setContentLength(responseWrapper.getContentSize());
+      response.getOutputStream().write(responseWrapper.getContentAsByteArray());
+      response.flushBuffer();
 
     }
 
