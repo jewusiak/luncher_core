@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,7 +100,9 @@ public class SwaggerConfiguration {
   public FilterRegistrationBean<SwaggerOutputFilter> swaggerOutputRegistrationBean() {
     FilterRegistrationBean<SwaggerOutputFilter> bean = new FilterRegistrationBean<>();
     bean.setFilter(swaggerOutputFilter);
-    bean.addUrlPatterns("/v3/api-docs/*");
+
+    bean.addUrlPatterns(Arrays.stream(SwaggerOutputFilter.supportedMethods).map(("/v3/api-docs/%s*"::formatted))
+        .toArray(String[]::new));
     return bean;
   }
 

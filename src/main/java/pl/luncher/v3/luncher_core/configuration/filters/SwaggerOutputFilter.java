@@ -25,6 +25,8 @@ public class SwaggerOutputFilter implements Filter {
 
   private final ObjectMapper objectMapper;
 
+  public static final String[] supportedMethods = {"GET", "POST", "PUT", "PATCH", "DELETE"};
+
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
