@@ -51,7 +51,7 @@ public class PlaceController {
   @PreAuthorize(hasRole.REST_MANAGER)
   @PostMapping
   public ResponseEntity<?> createPlace(@RequestBody PlaceCreateRequest request,
-      User requestingUser) {
+      @Parameter(hidden = true) User requestingUser) {
     Place place = placeDtoMapper.toDomain(request, requestingUser);
 
     place.validate();

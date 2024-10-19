@@ -82,7 +82,7 @@ public class UsersController {
   })
   @PostMapping("")
   public ResponseEntity<?> createUser(@RequestBody @Valid UserCreateRequest request,
-      User requestingUser) {
+      @Parameter(hidden = true) User requestingUser) {
     var user = userDtoMapper.toDomain(request, passwordEncoder.encode(request.getPassword()));
 
     user.permissions().byUser(requestingUser).createThisUser().throwIfNotPermitted();
