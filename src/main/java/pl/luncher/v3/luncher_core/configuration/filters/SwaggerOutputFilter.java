@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,16 +26,24 @@ public class SwaggerOutputFilter implements Filter {
 
   private final ObjectMapper objectMapper;
 
-  public static final String[] supportedMethods = {"GET", "POST", "PUT", "PATCH", "DELETE"};
+  private static final List<String> SUPPORTED_PREFIXES = List.of("GET_", "POST_", "PUT_", "PATCH_", "DELETE_");
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
 
+    var urlPaths = ((HttpServletRequest) request).getServletPath().split("/");
+    var lastPathPart = urlPaths[urlPaths.length - 1];
+
+
+    if (SUPPORTED_PREFIXES.stream().noneMatch(method -> lastPathPart.indexOf(method) == 0)) {
+      chain.doFilter(request, response);
+      return;
+    }
+
+
     ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
-    var urlPaths = ((HttpServletRequest) request).getServletPath().split("/");
-    var newName = urlPaths[urlPaths.length - 1];
 
     chain.doFilter(request, responseWrapper);
     String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
@@ -42,7 +51,7 @@ public class SwaggerOutputFilter implements Filter {
     try {
       var map = objectMapper.readValue(originalDataAsString, new TypeReference<HashMap<String, Object>>() {
       });
-      var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), newName);
+      var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), lastPathPart);
 
       ((Map<String, Object>) map.get("info")).put("title", newTitle);
 

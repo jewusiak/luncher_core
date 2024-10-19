@@ -100,9 +100,7 @@ public class SwaggerConfiguration {
   public FilterRegistrationBean<SwaggerOutputFilter> swaggerOutputRegistrationBean() {
     FilterRegistrationBean<SwaggerOutputFilter> bean = new FilterRegistrationBean<>();
     bean.setFilter(swaggerOutputFilter);
-
-    bean.addUrlPatterns(Arrays.stream(SwaggerOutputFilter.supportedMethods).map(("/v3/api-docs/%s*"::formatted))
-        .toArray(String[]::new));
+    bean.addUrlPatterns("/v3/api-docs/*");
     return bean;
   }
 
