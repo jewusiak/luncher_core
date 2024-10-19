@@ -65,7 +65,7 @@ public class AuthController {
       @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)})
   @PostMapping("/login")
   public ResponseEntity<?> login(
-      @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody LoginRequest request,
+      @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true) LoginRequest request,
       HttpServletResponse response) {
     try {
       var a = authenticationManager.authenticate(
