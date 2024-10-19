@@ -1,0 +1,135 @@
+name: (fast-forward) Deploy to s.jewusiak.pl
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ff
+
+env:
+  APP_NAME: "luncher-core"
+  POSTGRES_NAME: "postgres-luncher-core"
+  ELASTICSEARCH_NAME: "elasticsearch-luncher-core"
+  SWAG_NAME: "swag-luncher-core-common"
+  ENV_SUFFIX: "-pre"
+  BASE_DOMAIN: "api.pre.luncher.pl"
+  
+  # ssh host config
+  SSH_HOST: "s.jewusiak.pl"
+  SSH_USER: "github_uploads"
+
+  VERSION: 3.0.1
+
+
+jobs:
+  build_app:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Copy App GCP credentials
+        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-s_pre .'
+
+      - name: Save Docker image
+        run: 'docker save --output /tmp/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}'
+
+      - name: Upload Docker image to remote server
+        run: 'scp /tmp/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:images/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar'
+
+      - name: Load image
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker load --input images/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar"'
+
+  stop_old_apps:
+    needs: [ build_app ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Stop old app
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker stop ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} || true"'
+
+  deploy_main_app:
+    needs: [ stop_old_apps ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Run Docker application
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+
+      - name: Wait for application to start
+        run: |
+          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "
+          echo \"sleep begin\"
+          sleep 5
+          bash monitor.sh ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}
+          "
+          
+
+  cleanup_docker_imgs:
+    needs: [ setup-swag ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Remove dangling Docker images
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker image prune -f || true"'
+
+  cleanup_imgs_upload_dir:
+    needs: [ elasticsearch_build, postgres_build, build_app ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Remove dangling Docker images
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "rm -rf ~/images/* || true"'
