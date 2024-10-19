@@ -16,11 +16,13 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
+import pl.luncher.v3.luncher_core.configuration.filters.SwaggerOutputFilter;
 
 @Configuration
 @SecurityScheme(
@@ -36,6 +38,7 @@ public class SwaggerConfiguration {
 
   private final LuncherCommonProperties luncherCommonProperties;
   private final ConfigurableApplicationContext context;
+  private final SwaggerOutputFilter swaggerOutputFilter;
 
   @Bean
   public OpenAPI apiOpenApi() {
@@ -90,6 +93,14 @@ public class SwaggerConfiguration {
   public GroupedOpenApi authApi() {
     setUpGroupedOpenApis();
     return GroupedOpenApi.builder().group("dummy").displayName("dummy").pathsToMatch("/nonexistent/path").build();
+  }
+
+  @Bean
+  public FilterRegistrationBean<SwaggerOutputFilter> swaggerOutputRegistrationBean() {
+    FilterRegistrationBean<SwaggerOutputFilter> bean = new FilterRegistrationBean<>();
+    bean.setFilter(swaggerOutputFilter);
+    bean.addUrlPatterns("/v3/api-docs/*");
+    return bean;
   }
 
 }

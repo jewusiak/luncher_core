@@ -1,0 +1,53 @@
+package pl.luncher.v3.luncher_core.configuration.filters;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+
+@Component
+@RequiredArgsConstructor
+public class SwaggerOutputFilter implements Filter {
+
+  private final ObjectMapper objectMapper;
+
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+
+    ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+
+    var urlPaths = ((HttpServletRequest) request).getServletPath().split("/");
+    var newName = urlPaths[urlPaths.length - 1];
+
+    chain.doFilter(request, responseWrapper);
+
+    String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
+
+    var map = objectMapper.readValue(originalDataAsString, new TypeReference<HashMap<String, Object>>() {
+    });
+    var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), newName);
+
+    ((Map<String, Object>) map.get("info")).put("title", newTitle);
+
+    var newData = objectMapper.writeValueAsString(map);
+
+    response.setContentLength(newData.length());
+    response.getWriter().write(newData);
+    response.getWriter().flush();
+
+
+  }
+}
