@@ -35,9 +35,9 @@ public class SwaggerOutputFilter implements Filter {
     var newName = urlPaths[urlPaths.length - 1];
 
     chain.doFilter(request, responseWrapper);
-    try {
-      String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
+    String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
 
+    try {
       var map = objectMapper.readValue(originalDataAsString, new TypeReference<HashMap<String, Object>>() {
       });
       var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), newName);
@@ -51,6 +51,9 @@ public class SwaggerOutputFilter implements Filter {
       response.getWriter().flush();
     } catch (RuntimeException e) {
       log.error("Could not process Swagger response body", e);
+      response.setContentLength(originalDataAsString.length());
+      response.getWriter().write(originalDataAsString);
+      response.getWriter().flush();
     }
 
   }
