@@ -14,9 +14,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SwaggerOutputFilter implements Filter {
@@ -33,21 +35,23 @@ public class SwaggerOutputFilter implements Filter {
     var newName = urlPaths[urlPaths.length - 1];
 
     chain.doFilter(request, responseWrapper);
+    try {
+      String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
 
-    String originalDataAsString = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
+      var map = objectMapper.readValue(originalDataAsString, new TypeReference<HashMap<String, Object>>() {
+      });
+      var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), newName);
 
-    var map = objectMapper.readValue(originalDataAsString, new TypeReference<HashMap<String, Object>>() {
-    });
-    var newTitle = "%s (%s)".formatted(((Map<String, Object>) map.get("info")).get("title"), newName);
+      ((Map<String, Object>) map.get("info")).put("title", newTitle);
 
-    ((Map<String, Object>) map.get("info")).put("title", newTitle);
+      var newData = objectMapper.writeValueAsString(map);
 
-    var newData = objectMapper.writeValueAsString(map);
-
-    response.setContentLength(newData.length());
-    response.getWriter().write(newData);
-    response.getWriter().flush();
-
+      response.setContentLength(newData.length());
+      response.getWriter().write(newData);
+      response.getWriter().flush();
+    } catch (RuntimeException e) {
+      log.error("Could not process Swagger response body", e);
+    }
 
   }
 }
