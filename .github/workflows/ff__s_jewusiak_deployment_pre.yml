@@ -101,7 +101,7 @@ jobs:
           
 
   cleanup_docker_imgs:
-    needs: [ setup-swag ]
+    needs: [ deploy_main_app ]
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -118,7 +118,7 @@ jobs:
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker image prune -f || true"'
 
   cleanup_imgs_upload_dir:
-    needs: [ elasticsearch_build, postgres_build, build_app ]
+    needs: [ build_app ]
     permissions:
       contents: 'read'
       id-token: 'write'
