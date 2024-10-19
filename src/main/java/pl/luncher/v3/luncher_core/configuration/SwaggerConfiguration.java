@@ -75,9 +75,9 @@ public class SwaggerConfiguration {
 
   public void injectGroupedApiBean(String httpMethod, String urlPath, String pckg, Method controllerMethod,
       BeanDefinitionRegistry registry) {
-    String urlSafePath = urlPath.replace("/", "__").replace("{", "").replace("}", "");
+    String urlSafePath = urlPath.replace("/", "_").replace("{", "").replace("}", "");
 
-    String docsGroupName = "%s____%s".formatted(httpMethod, urlSafePath);
+    String docsGroupName = "%s__%s".formatted(httpMethod, urlSafePath);
     String groupDisplayName = "%s %s".formatted(httpMethod, urlPath);
 
     var builder = GroupedOpenApi.builder().group(docsGroupName)
