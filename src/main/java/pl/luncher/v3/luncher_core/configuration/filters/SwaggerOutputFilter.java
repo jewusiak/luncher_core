@@ -60,11 +60,14 @@ public class SwaggerOutputFilter implements Filter {
       response.setContentLength(newData.length());
       response.getWriter().write(newData);
       response.getWriter().flush();
+      response.getWriter().close();
     } catch (RuntimeException e) {
       log.error("Could not process Swagger response body", e);
       response.setContentLength(originalDataAsString.length());
       response.getWriter().write(originalDataAsString);
       response.getWriter().flush();
+      response.getWriter().close();
+
     }
 
   }
