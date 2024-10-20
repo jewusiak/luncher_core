@@ -94,9 +94,6 @@ jobs:
       - name: Build test helper services images
         run: 'bash ./build_images_for_testing.sh'
 
-      - name: Copy Test GCP credentials
-        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_TEST }}'' > secrets/gcp_server_key.json'
-
       - name: Set up java
         uses: actions/setup-java@v4
         with:
@@ -122,9 +119,6 @@ jobs:
           echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
-
-      - name: Copy App GCP credentials
-        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
 
       - name: Build docker Image
         id: docker-build
