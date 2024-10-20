@@ -37,6 +37,7 @@ public class Place {
   private UserDto owner;
   private List<Asset> images;
   private List<MenuOffer> menuOffers;
+  private Boolean enabled;
 
   public void validate() {
     log.info("Place is being validated...");

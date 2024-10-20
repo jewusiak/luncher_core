@@ -33,4 +33,5 @@ public class PlaceUpdateRequest implements Serializable {
   private String placeTypeIdentifier;
   private LocationDto location;
   private UserDto owner;
+  private Boolean enabled;
 }

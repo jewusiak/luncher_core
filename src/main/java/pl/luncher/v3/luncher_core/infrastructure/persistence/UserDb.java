@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 
@@ -28,10 +29,11 @@ class UserDb {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @GenericField
   private UUID uuid;
 
-  @FullTextField(name = "email", analyzer = "email")
   @Column(unique = true)
+  @FullTextField(name = "email", analyzer = "email")
   private String email;
 
   @FullTextField(name = "firstname")

@@ -19,4 +19,5 @@ public class PlaceBasicResponse implements Serializable {
   private String name;
   private String longName;
   private PlaceTypeDto placeType;
+  private Boolean enabled;
 }

@@ -19,6 +19,7 @@ interface PlaceDbMapper {
   @Mapping(target = "name", source = "place.name")
   @Mapping(target = "owner", source = "owner")
   @Mapping(target = "placeType", source = "placeType")
+  @Mapping(target = "enabled", source = "place.enabled")
   PlaceDb toDb(Place place, UserDb owner, PlaceTypeDb placeType);
 
   @AfterMapping

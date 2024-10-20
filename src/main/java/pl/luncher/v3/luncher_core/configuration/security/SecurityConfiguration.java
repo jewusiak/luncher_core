@@ -1,8 +1,10 @@
-package pl.luncher.v3.luncher_core.configuration;
+package pl.luncher.v3.luncher_core.configuration.security;
 
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -29,8 +30,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.luncher.v3.luncher_core.configuration.jwtUtils.JwtAuthFilter;
-import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -38,8 +39,10 @@ import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+  private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
   private final JwtAuthFilter jwtAuthFilter;
   private final PasswordEncoder passwordEncoder;
+  private final PermitAllPathsGetter permitAllPathsGetter;
   @Value("${pl.luncher.swagger.accessible}")
   private String swaggerAccessible;
 
@@ -49,6 +52,7 @@ public class SecurityConfiguration {
     http.authorizeHttpRequests(matcher -> {
       matcher.requestMatchers("/auth/**", "/error").permitAll();
       allowSwaggerConditionally(matcher);
+      allowPermitAllAnnotatedMappings(matcher);
       matcher.anyRequest().authenticated();
     });
 
@@ -70,6 +74,15 @@ public class SecurityConfiguration {
       config.configurationSource(source);
     });
     return http.build();
+  }
+
+  private void allowPermitAllAnnotatedMappings(
+      AuthorizeHttpRequestsConfigurer<?>.AuthorizationManagerRequestMatcherRegistry matcher) {
+    permitAllPathsGetter.getAllPaths()
+        .forEach(pair -> {
+          log.trace("Permitting path {} {} via @PermitAll.", pair.getMethod(), pair.getPath());
+          matcher.requestMatchers(pair.getMethod(), pair.getPath()).permitAll();
+        });
   }
 
   private void allowSwaggerConditionally(

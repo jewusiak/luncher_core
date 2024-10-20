@@ -84,7 +84,12 @@ class PlaceDb {
   private LocationDb location;
 
   @ManyToOne
+  @IndexedEmbedded(structure = ObjectStructure.NESTED, includePaths = {"uuid"})
+  @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
   private UserDb owner;
+
+  @GenericField
+  private Boolean enabled;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place", fetch = FetchType.EAGER)
   private List<AssetDb> images;

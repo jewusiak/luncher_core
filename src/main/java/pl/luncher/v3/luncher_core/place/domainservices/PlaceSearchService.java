@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,9 +29,15 @@ public interface PlaceSearchService {
 
     LocalDateTime hasLunchServedAt;
 
+
+    UUID owner;
+
+    Boolean enabled;
+
     @NotNull
     Integer page;
     @NotNull
     Integer size;
+
   }
 }

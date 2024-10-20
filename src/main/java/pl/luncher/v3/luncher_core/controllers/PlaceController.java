@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
@@ -27,6 +28,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceSearchRe
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -40,7 +42,6 @@ public class PlaceController {
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
 
-  //FIXME
   @GetMapping("/{uuid}")
   public ResponseEntity<?> getById(@PathVariable UUID uuid) {
     Place place = placePersistenceService.getById(uuid);
@@ -50,7 +51,7 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PostMapping
-  public ResponseEntity<?> createPlace(@RequestBody PlaceCreateRequest request,
+  public ResponseEntity<?> createPlace(@RequestBody @Valid PlaceCreateRequest request,
       @Parameter(hidden = true) User requestingUser) {
     Place place = placeDtoMapper.toDomain(request, requestingUser);
 
@@ -63,7 +64,8 @@ public class PlaceController {
   @PreAuthorize(hasRole.REST_MANAGER)
   @PutMapping("/{placeUuid}")
   public ResponseEntity<?> updatePlace(@PathVariable UUID placeUuid,
-      @RequestBody PlaceUpdateRequest placeUpdateRequest, @Parameter(hidden = true) User requestingUser) {
+      @RequestBody PlaceUpdateRequest placeUpdateRequest,
+      @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
 
@@ -83,7 +85,8 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @DeleteMapping("/{placeUuid}")
-  public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid,
+      @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
 
@@ -96,6 +99,7 @@ public class PlaceController {
 
   }
 
+  @PreAuthorize(hasRole.SYS_MOD)
   @GetMapping
   public ResponseEntity<?> getAllPlacesPaged(@RequestParam int size, @RequestParam int page) {
     List<PlaceBasicResponse> placesList = placePersistenceService.getAllPaged(size, page).stream()
@@ -105,11 +109,21 @@ public class PlaceController {
   }
 
   @PostMapping("/search")
+  @PermitAll
   public ResponseEntity<PlaceSearchResponse> searchQuery(
-      @RequestBody @Valid PlaceSearchRequest request, @Parameter(hidden = true) User requestingUser) {
+      @RequestBody @Valid PlaceSearchRequest request,
+      @Parameter(hidden = true) User requestingUser) {
 
-    //todo: implement showing only places, that user should be shown
     var searchRequest = placeDtoMapper.toSearchRequest(request);
+
+    // anonymous or default role
+    if (requestingUser == null || requestingUser.getRole() == AppRole.USER) {
+      searchRequest.setEnabled(true);
+      searchRequest.setOwner(null);
+    } else if (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) < 0) {
+      // role less than SYS_MOD can only see their own places
+      searchRequest.setOwner(requestingUser.getUuid());
+    }
 
     List<Place> searchResponse = placeSearchService.search(searchRequest);
 

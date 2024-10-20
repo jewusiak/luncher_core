@@ -94,6 +94,16 @@ class PlaceHibernateSearchService implements PlaceSearchService {
 
       }
 
+      // places owned by sbd
+      if (searchRequest.getOwner() != null) {
+        root.add(f.match().field("owner.uuid").matching(searchRequest.getOwner()));
+      }
+
+      // is place enabled
+      if (searchRequest.getEnabled() != null) {
+        root.add(f.match().field("enabled").matching(searchRequest.getEnabled()));
+      }
+
     });
 
     List<PlaceDb> hits = query.fetch(searchRequest.getPage() * searchRequest.getSize(),
@@ -101,7 +111,7 @@ class PlaceHibernateSearchService implements PlaceSearchService {
     List<Place> list = hits.stream().map(placeDbMapper::toDomain).toList();
 
     for (var element : hits) {
-      log.debug("Place: {}, \nexplanation: \n{}\nplace: \n{}", element.getName(),
+      log.debug("Place: {}, \nexplanation: \n{}\nplace: \n{}\n\n", element.getName(),
           query.toQuery().extension(ElasticsearchExtension.get()).explain(element.getId()),
           element);
     }

@@ -36,4 +36,5 @@ public class PlaceFullResponse implements Serializable {
   private UserDto owner;
   private List<AssetDto> images;
   private List<MenuOfferDto> menuOffers;
+  private Boolean enabled;
 }
