@@ -7,7 +7,6 @@ RUN mvn clean package -Ps_pre -DskipTests
 FROM eclipse-temurin:17
 LABEL authors="Grzegorz Jewusiak"
 COPY --from=build /app/target/*.jar app.jar
-COPY ./secrets/gcp_server_key.json secrets/gcp_server_key.json
 #RUN mkdir "db"
 
 ENTRYPOINT ["java","-jar","/app.jar"]
