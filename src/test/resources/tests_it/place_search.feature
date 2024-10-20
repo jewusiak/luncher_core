@@ -25,18 +25,18 @@ Feature: Place search engine
 
 
     And User creates a place as below ID 1:
-      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
-      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
+      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
     And response code is 200
 
     And User creates a place as below ID 2:
-      | name              | description                                                                                                                        | placeTypeIdentifier | location.latitude | location.longitude |
-      | Restauracja Ceska | Restauracja o swobodnej atmosferze oferująca czeskie klasyki, takie jak smażony ser, dania mięsne i gulasz, a także piwo z beczki. | RESTAURANT          | 52.23165442404853 | 21.011960242452425 |
+      | name              | description                                                                                                                        | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | Restauracja Ceska | Restauracja o swobodnej atmosferze oferująca czeskie klasyki, takie jak smażony ser, dania mięsne i gulasz, a także piwo z beczki. | RESTAURANT          | 52.23165442404853 | 21.011960242452425 | true    |
     And response code is 200
 
     And User creates a place as below ID 3:
-      | name          | description                                                                                         | placeTypeIdentifier | location.latitude  | location.longitude |
-      | BARdzo bardzo | Klub Muzyczny Bardzo Bardzo: Serce Warszawskiej Sceny Muzycznej. Jam Sessions, NY Funky Nights etc. | BAR                 | 52.229357307480846 | 21.017813616696706 |
+      | name          | description                                                                                         | placeTypeIdentifier | location.latitude  | location.longitude | enabled |
+      | BARdzo bardzo | Klub Muzyczny Bardzo Bardzo: Serce Warszawskiej Sceny Muzycznej. Jam Sessions, NY Funky Nights etc. | BAR                 | 52.229357307480846 | 21.017813616696706 | true    |
     And response code is 200
 
 #    And Send PUT request to /place/[ID:PLACE:1] with body as below:
@@ -130,23 +130,23 @@ Feature: Place search engine
 
 
     And User creates a place as below ID 1:
-      | name            | longName                       | description                                                          | placeTypeIdentifier | location.latitude | location.longitude |
-      | The Cool Cat TR | The Cool Cat Teatr Rozmaitości | Restauracja typu asian fusion w centrum Warszawy. Azjatyckie potrawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
+      | name            | longName                       | description                                                          | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | The Cool Cat TR | The Cool Cat Teatr Rozmaitości | Restauracja typu asian fusion w centrum Warszawy. Azjatyckie potrawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
     And response code is 200
 
     And User creates a place as below ID 2:
-      | name  | longName          | description                                                                                                                        | placeTypeIdentifier | location.latitude | location.longitude |
-      | Ceska | Restauracja Ceska | Restauracja o swobodnej atmosferze oferująca czeskie klasyki, takie jak smażony ser, dania mięsne i gulasz, a także piwo z beczki. | RESTAURANT          | 52.23165442404853 | 21.011960242452425 |
+      | name  | longName          | description                                                                                                                        | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | Ceska | Restauracja Ceska | Restauracja o swobodnej atmosferze oferująca czeskie klasyki, takie jak smażony ser, dania mięsne i gulasz, a także piwo z beczki. | RESTAURANT          | 52.23165442404853 | 21.011960242452425 | true    |
     And response code is 200
 
     And User creates a place as below ID 3:
-      | name          | longName                    | description                                                                                       | placeTypeIdentifier | location.latitude  | location.longitude |
-      | BARdzo bardzo | Klub muzyczny BARdzo bardzo | Bardzo Bardzo: Bar będący Sercem Warszawskiej Sceny Muzycznej. Jam Sessions, NY Funky Nights etc. | BAR                 | 52.229357307480846 | 21.017813616696706 |
+      | name          | longName                    | description                                                                                       | placeTypeIdentifier | location.latitude  | location.longitude | enabled |
+      | BARdzo bardzo | Klub muzyczny BARdzo bardzo | Bardzo Bardzo: Bar będący Sercem Warszawskiej Sceny Muzycznej. Jam Sessions, NY Funky Nights etc. | BAR                 | 52.229357307480846 | 21.017813616696706 | true    |
     And response code is 200
 
     And User creates a place as below ID 4:
-      | name          | longName          | description                                                                                                                                                            | placeTypeIdentifier | location.latitude  | location.longitude |
-      | Czeska Baszta | Bar Czeska Baszta | Jedno z nielicznych miejsc w Warszawie gdzie można napić się dobrego czeskiego piwa prosto z kranu np. Litovel’a czy Holby. Lokalne rodzinne browary z Czech w Polsce. | BAR                 | 52.234388948039566 | 21.034098784160808 |
+      | name          | longName          | description                                                                                                                                                            | placeTypeIdentifier | location.latitude  | location.longitude | enabled |
+      | Czeska Baszta | Bar Czeska Baszta | Jedno z nielicznych miejsc w Warszawie gdzie można napić się dobrego czeskiego piwa prosto z kranu np. Litovel’a czy Holby. Lokalne rodzinne browary z Czech w Polsce. | BAR                 | 52.234388948039566 | 21.034098784160808 | true    |
     And response code is 200
 
     And User logs out (by removing saved auth token)

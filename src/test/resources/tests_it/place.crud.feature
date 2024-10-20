@@ -23,8 +23,8 @@ Feature: CRUD - Place
     And User is logged in as rmanager@luncher.corp
 
     When User creates a place as below ID 3:
-      | name | description | placeTypeIdentifier |
-      | name | descr       | RESTAURANT          |
+      | name | description | placeTypeIdentifier | enabled |
+      | name | descr       | RESTAURANT          | true    |
 
     Then response code is 200
 
@@ -40,8 +40,8 @@ Feature: CRUD - Place
     And User is logged in as user@luncher.corp
 
     And User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier |
-      | name | descr       | RESTAURANT          |
+      | name | description | placeTypeIdentifier | enabled |
+      | name | descr       | RESTAURANT          | true    |
 
     And response code is 403
 
@@ -54,8 +54,8 @@ Feature: CRUD - Place
     And User is logged in as rmanager@luncher.corp
 
     And User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier |
-      | name | descr       | RESTAURANT          |
+      | name | description | placeTypeIdentifier | enabled |
+      | name | descr       | RESTAURANT          | true    |
 
     And response code is 200
 
@@ -84,8 +84,8 @@ Feature: CRUD - Place
     And User is logged in as rmanager@luncher.corp
 
     When User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier | facebookPageId | location.latitude | location.longitude |
-      | name | descr       | RESTAURANT          | fbid           | 52.21507395584024 | 21.02108986309555  |
+      | name | description | placeTypeIdentifier | facebookPageId | location.latitude | location.longitude | enabled |
+      | name | descr       | RESTAURANT          | fbid           | 52.21507395584024 | 21.02108986309555  | true    |
 
     Then response code is 200
 
@@ -159,8 +159,8 @@ Feature: CRUD - Place
 
 
     And User creates a place as below ID 1:
-      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
-      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
+      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
     And response code is 200
 
     When Send PUT request to /place/[ID:PLACE:1] with body as below:

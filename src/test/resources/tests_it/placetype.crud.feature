@@ -86,8 +86,8 @@ Feature: Place types management
     And response code is 200
 
     And User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier |
-      | name | descr       | BAR                 |
+      | name | description | placeTypeIdentifier | enabled |
+      | name | descr       | BAR                 | true    |
 
     And response code is 200
 

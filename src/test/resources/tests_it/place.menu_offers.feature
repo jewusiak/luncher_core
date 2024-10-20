@@ -23,8 +23,8 @@ Feature: Menu-offers management in places
     And User is logged in as rmanager@luncher.corp
 
     And User creates a place as below ID 1:
-      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
-      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
+      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
     And response code is 200
 
     When Send GET request to /place/[ID:PLACE:1] without body

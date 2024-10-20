@@ -18,8 +18,8 @@ Feature: Assets controller
 
 
     And User creates a place as below ID -1:
-      | name | description | placeTypeIdentifier |
-      | name | descr       | RESTAURANT          |
+      | name | description | placeTypeIdentifier | enabled |
+      | name | descr       | RESTAURANT          | true    |
 
     And response code is 200
 

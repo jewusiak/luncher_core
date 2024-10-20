@@ -22,8 +22,8 @@ Feature: Place search based on opening times
 
 
     And User creates a place as below ID 1:
-      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude |
-      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  |
+      | name            | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | The Cool Cat TR | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
     And response code is 200
 
     And Send PUT request to /place/[ID:PLACE:1] with body as below:
