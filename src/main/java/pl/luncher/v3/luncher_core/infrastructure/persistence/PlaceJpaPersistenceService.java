@@ -27,11 +27,11 @@ class PlaceJpaPersistenceService implements PlacePersistenceService {
   public Place save(Place place) {
 
     PlaceTypeDb placeType = Optional.ofNullable(place.getPlaceType())
-        .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findById(id).orElseThrow())
+        .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findByIdentifierIgnoreCase(id).orElseThrow())
         .orElse(null);
 
     UserDb owner = Optional.ofNullable(place.getOwner()).map(UserDto::getEmail)
-        .map(email -> userRepository.findUserByEmail(email).orElseThrow()).orElse(null);
+        .map(email -> userRepository.findUserByEmailIgnoreCase(email).orElseThrow()).orElse(null);
 
     PlaceDb placeDb = placeDbMapper.toDb(place, owner, placeType);
 

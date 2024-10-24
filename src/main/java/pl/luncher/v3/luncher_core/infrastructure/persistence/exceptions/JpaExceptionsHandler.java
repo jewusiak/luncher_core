@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.common.exceptions;
+package pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions;
 
 
 import jakarta.persistence.PersistenceException;

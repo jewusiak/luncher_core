@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.common.exceptions.JpaExceptionsHandler;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.JpaExceptionsHandler;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -29,7 +29,7 @@ class UserJpaPersistenceService implements UserPersistenceService {
 
   @Override
   public User getByEmail(String email) {
-    return userRepository.findUserByEmail(email).map(userDbMapper::toDomain).orElseThrow();
+    return userRepository.findUserByEmailIgnoreCase(email).map(userDbMapper::toDomain).orElseThrow();
   }
 
   @Override

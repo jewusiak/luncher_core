@@ -187,5 +187,52 @@ Feature: Place search engine
       | results[0].id | results[1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
+
+  Scenario: Unauthenticated - sees all enabled places (and param owner is ignored)
+
+    Given User logs out (by removing saved auth token)
+
+    When Place Search request is sent as below:
+      | size | page |
+      | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 2 in path results
+    And HTTP Response is:
+      | results[0].id | results[1].id |
+      | [ID:PLACE:1]  | [ID:PLACE:3]  |
+
+    When Place Search request is sent as below:
+      | enabled | size | page |
+      | true    | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 2 in path results
+    And HTTP Response is:
+      | results[0].id | results[1].id |
+      | [ID:PLACE:1]  | [ID:PLACE:3]  |
+
+    When Place Search request is sent as below:
+      | enabled | size | page |
+      | false   | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 2 in path results
+    And HTTP Response is:
+      | results[0].id | results[1].id |
+      | [ID:PLACE:1]  | [ID:PLACE:3]  |
+    
+    # owner param is ignored
+
+    When Place Search request is sent as below:
+      | enabled | owner                                | size | page |
+      | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 2 in path results
+    And HTTP Response is:
+      | results[0].id | results[1].id |
+      | [ID:PLACE:1]  | [ID:PLACE:3]  |
+
     
     
