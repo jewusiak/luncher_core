@@ -28,12 +28,13 @@ class PlaceTypeJpaPersistenceService implements PlaceTypePersistenceService {
   @Override
   public PlaceType save(PlaceType placeType) {
     PlaceTypeDb mapperDbEntity = placeTypeDbMapper.toDbEntity(placeType);
+    mapperDbEntity.setIdentifier(mapperDbEntity.getIdentifier().toUpperCase());
     PlaceTypeDb saved = placeTypeRepository.save(mapperDbEntity);
     return placeTypeDbMapper.toDomain(saved);
   }
 
   @Override
   public void deleteByIdentifier(String identifier) {
-    placeTypeRepository.deleteById(identifier);
+    placeTypeRepository.deleteByIdentifierIgnoreCase(identifier);
   }
 }
