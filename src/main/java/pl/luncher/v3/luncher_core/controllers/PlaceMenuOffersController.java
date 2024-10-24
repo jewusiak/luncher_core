@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.MenuOfferDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers.MenuOfferDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.requests.MenuOfferRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.menus.responses.MenuOfferFullResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
@@ -41,7 +43,8 @@ public class PlaceMenuOffersController {
   private final MenuOfferDtoMapper menuOfferDtoMapper;
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<?> getById(@PathVariable UUID placeUuid, @PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<MenuOfferFullResponse> getById(@PathVariable UUID placeUuid,
+      @PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -52,7 +55,8 @@ public class PlaceMenuOffersController {
   }
 
   @GetMapping
-  public ResponseEntity<?> getAll(@PathVariable UUID placeUuid, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<List<MenuOfferDto>> getAll(@PathVariable UUID placeUuid,
+      @Parameter(hidden = true) User requestingUser) {
     Place place = placePersistenceService.getById(placeUuid);
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
@@ -61,9 +65,6 @@ public class PlaceMenuOffersController {
     return ResponseEntity.ok(menuOffers.stream().map(menuOfferDtoMapper::toDto).collect(Collectors.toList()));
   }
 
-  // 
-
-  // ensure cascade of parts&options
   @PostMapping
   public ResponseEntity<PlaceFullResponse> addNewOffer(@PathVariable UUID placeUuid,
       @RequestBody @Valid MenuOfferRequest request, @Parameter(hidden = true) User requestingUser) {
@@ -79,7 +80,7 @@ public class PlaceMenuOffersController {
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
 
-  // PUT update offer w/ parts&options cascade
+
   @PutMapping("/{menuOptionUuid}")
   public ResponseEntity<PlaceFullResponse> updateMenuOffer(@PathVariable UUID placeUuid,
       @PathVariable UUID menuOptionUuid, @RequestBody @Valid MenuOfferRequest request, @Parameter(hidden = true) User requestingUser) {

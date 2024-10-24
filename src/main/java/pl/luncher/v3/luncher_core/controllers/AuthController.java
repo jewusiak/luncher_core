@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.configuration.jwtUtils.JwtService;
-import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.controllers.dtos.auth.requests.LoginRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.auth.responses.SuccessfulLoginResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.mappers.UserDtoMapper;
@@ -38,6 +37,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.CreatePassword
 import pl.luncher.v3.luncher_core.user.domainservices.ForgottenPasswordIntentFactory;
 import pl.luncher.v3.luncher_core.user.domainservices.ForgottenPasswordIntentPersistenceService;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Tag(name = "authentication", description = "Authentication")
@@ -64,7 +64,7 @@ public class AuthController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessfulLoginResponse.class))}),
       @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)})
   @PostMapping("/login")
-  public ResponseEntity<?> login(
+  public ResponseEntity<SuccessfulLoginResponse> login(
       @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true) LoginRequest request,
       HttpServletResponse response) {
     try {
@@ -97,7 +97,7 @@ public class AuthController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Successfully logged out", content = @Content),})
   @DeleteMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletResponse response) {
+  public ResponseEntity<Void> logout(HttpServletResponse response) {
     response.addCookie(new Cookie("Authorization", null) {{
       setMaxAge(1);
       setDomain(cookieDomain);
@@ -113,7 +113,7 @@ public class AuthController {
       @ApiResponse(responseCode = "204", description = "Successful registration", content = @Content()),
       @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody @Valid UserRegistrationRequest request) {
+  public ResponseEntity<Void> register(@RequestBody @Valid UserRegistrationRequest request) {
     var passwordHash = passwordEncoder.encode(request.getPassword());
     var user = userDtoMapper.toDomain(request, passwordHash);
     user.setEnabled(true);
@@ -130,7 +130,8 @@ public class AuthController {
       @ApiResponse(responseCode = "200", description = "Password reset intent created", content = @Content(schema = @Schema(implementation = CreatePasswordResetIntentResponse.class))),
       @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
   @PostMapping("/requestreset/{email}")
-  public ResponseEntity<?> createPasswordResetIntent(@PathVariable @Email String email) {
+  public ResponseEntity<CreatePasswordResetIntentResponse> createPasswordResetIntent(
+      @PathVariable @Email String email) {
     User user = userPersistenceService.getByEmail(email);
     var passwordIntent = forgottenPasswordIntentFactory.of(user);
 
@@ -147,7 +148,7 @@ public class AuthController {
       @ApiResponse(responseCode = "204", description = "Password reset", content = @Content()),
       @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
   @PutMapping("/resetpassword/{uuid}")
-  public ResponseEntity<?> resetPassword(@PathVariable UUID uuid,
+  public ResponseEntity<Void> resetPassword(@PathVariable UUID uuid,
       @RequestBody @Valid NewPasswordRequest request) {
     var passwordIntent = forgottenPasswordIntentPersistenceService.findById(uuid);
     passwordIntent.throwIfNotValid();

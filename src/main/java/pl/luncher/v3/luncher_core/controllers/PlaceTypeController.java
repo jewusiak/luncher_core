@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
+import pl.luncher.v3.luncher_core.controllers.dtos.placetype.FullPlaceTypeResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers.PlaceTypeDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.PlaceTypeRequest;
 import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
+import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 
 @RequestMapping("/placetype")
 @RestController
@@ -31,7 +32,8 @@ public class PlaceTypeController {
 
   @PostMapping
   @PreAuthorize(hasRole.SYS_MOD)
-  public ResponseEntity<?> createPlaceType(@RequestBody @Valid PlaceTypeRequest request) {
+  public ResponseEntity<FullPlaceTypeResponse> createPlaceType(
+      @RequestBody @Valid PlaceTypeRequest request) {
     PlaceType placeType = placeTypeDtoMapper.toDomain(request);
     placeType.validate();
 
@@ -42,7 +44,7 @@ public class PlaceTypeController {
 
   @PutMapping("/{identifier}")
   @PreAuthorize(hasRole.SYS_MOD)
-  public ResponseEntity<?> updatePlaceType(@PathVariable String identifier,
+  public ResponseEntity<FullPlaceTypeResponse> updatePlaceType(@PathVariable String identifier,
       @RequestBody @Valid PlaceTypeRequest request) {
     PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
 
@@ -56,14 +58,14 @@ public class PlaceTypeController {
 
   @DeleteMapping("/{identifier}")
   @PreAuthorize(hasRole.SYS_MOD)
-  public ResponseEntity<?> deletePlaceType(@PathVariable String identifier) {
+  public ResponseEntity<Void> deletePlaceType(@PathVariable String identifier) {
     placeTypePersistenceService.deleteByIdentifier(identifier);
 
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping
-  public ResponseEntity<?> getAllPlaceTypes() {
+  public ResponseEntity<List<FullPlaceTypeResponse>> getAllPlaceTypes() {
     List<PlaceType> placeTypes = placeTypePersistenceService.getAll();
 
     return ResponseEntity.ok(placeTypes.stream().map(placeTypeDtoMapper::toFullPlaceTypeResponse)
@@ -71,7 +73,7 @@ public class PlaceTypeController {
   }
 
   @GetMapping("/{identifier}")
-  public ResponseEntity<?> getByIdentifier(@PathVariable String identifier) {
+  public ResponseEntity<FullPlaceTypeResponse> getByIdentifier(@PathVariable String identifier) {
     PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(placeType));

@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.user.model.AppRole;
-import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.mappers.UserDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateRequest;
@@ -36,6 +34,8 @@ import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicRespo
 import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.domainservices.UserSearchService;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
+import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Tag(name = "users", description = "User administration")
@@ -70,7 +70,7 @@ public class UsersController {
       @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
   })
   @GetMapping("/{uuid}")
-  public ResponseEntity<?> getUserByUuid(@PathVariable UUID uuid) {
+  public ResponseEntity<UserBasicResponse> getUserByUuid(@PathVariable UUID uuid) {
     User user = userPersistenceService.getById(uuid);
 
     return ResponseEntity.ok(userDtoMapper.toUserBasicResponse(user));
@@ -81,7 +81,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully created user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserBasicResponse.class))),
   })
   @PostMapping("")
-  public ResponseEntity<?> createUser(@RequestBody @Valid UserCreateRequest request,
+  public ResponseEntity<UserBasicResponse> createUser(@RequestBody @Valid UserCreateRequest request,
       @Parameter(hidden = true) User requestingUser) {
     var user = userDtoMapper.toDomain(request, passwordEncoder.encode(request.getPassword()));
 
@@ -98,7 +98,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully updated user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserBasicResponse.class))),
   })
   @PutMapping("{userId}")
-  public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request,
+  public ResponseEntity<UserBasicResponse> updateUser(@RequestBody UserUpdateRequest request,
       @PathVariable UUID userId, @Parameter(hidden = true) User requestingUser) {
     var user = userPersistenceService.getById(userId);
     userDtoMapper.updateDomain(user, request,
@@ -118,7 +118,8 @@ public class UsersController {
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
   })
   @DeleteMapping("{uuid}")
-  public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<Void> deleteUser(@NotNull @PathVariable UUID uuid,
+      @Parameter(hidden = true) User requestingUser) {
     var user = userPersistenceService.getById(uuid);
 
     user.permissions().byUser(requestingUser).delete().throwIfNotPermitted();
@@ -148,7 +149,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved roles", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AvailableRolesResponse.class))),
   })
   @GetMapping("/available_roles")
-  public ResponseEntity<?> getAvailableRoles() {
+  public ResponseEntity<AvailableRolesResponse> getAvailableRoles() {
     var roles = Arrays.stream(AppRole.values()).map(Enum::name).toList();
     return ResponseEntity.ok(new AvailableRolesResponse(roles));
   }
