@@ -14,7 +14,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import pl.luncher.v3.luncher_core.common.exceptions.UserExtractionFromContextFailed;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -43,7 +42,7 @@ public class AuthenticatedUserAttributeResolver implements HandlerMethodArgument
           .orElse(null);
     } catch (Exception e) {
       log.info("Couldn't extract required user because of {}", e.toString());
-      throw new UserExtractionFromContextFailed();
+      throw new UserExtractionFromContextFailedException();
     }
   }
 }

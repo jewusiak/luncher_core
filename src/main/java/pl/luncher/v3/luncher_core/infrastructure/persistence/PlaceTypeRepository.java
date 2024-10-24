@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 interface PlaceTypeRepository extends JpaRepository<PlaceTypeDb, String> {
     Optional<PlaceTypeDb> findByIdentifierIgnoreCase(String identifier);
     void deleteByIdentifierIgnoreCase(String identifier);
+    boolean existsByIdentifierAndPlacesNotEmpty(String identifier);
 }

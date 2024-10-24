@@ -93,8 +93,7 @@ Feature: Place types management
 
 
     When Send DELETE request to /placetype/BAR without body
-    #FIXME: not 500 but 400
-    Then response code is 500
+    Then response code is 400
 
     When Send GET request to /placetype without body
 

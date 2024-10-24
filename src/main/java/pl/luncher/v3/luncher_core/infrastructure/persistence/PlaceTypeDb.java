@@ -2,8 +2,10 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +31,7 @@ class PlaceTypeDb {
   private String iconName;
 
   private String name;
+  
+  @OneToMany(mappedBy = "placeType")
+  private List<PlaceDb> places;
 }

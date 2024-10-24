@@ -41,7 +41,7 @@ public class ForgottenPasswordIntent {
 
   public void throwIfNotValid() {
     if (!isValid()) {
-      throw new ForgottenPasswordIntentInvalidException();
+      throw new ForgottenPasswordIntentInvalidException("Missing exception for this action.");
     }
   }
 

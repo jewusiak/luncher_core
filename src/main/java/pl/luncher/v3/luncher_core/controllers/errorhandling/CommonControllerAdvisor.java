@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.luncher.v3.luncher_core.common.exceptions.DuplicateEntityException;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.common.permissions.MissingPermissionException;
 import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntentInvalidException;
@@ -27,10 +28,10 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
     return ErrorResponse.builder().message("Not found!").messageLocale("en_US").build();
   }
 
-  @ExceptionHandler({ForgottenPasswordIntentInvalidException.class})
+  @ExceptionHandler({ForgottenPasswordIntentInvalidException.class, DeleteReferencedEntityException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   protected ErrorResponse handleUnknownBadRequest(Exception ex) {
-    return ErrorResponse.builder().message("Bad request").messageLocale("en_US").build();
+    return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").build();
   }
 
   @ExceptionHandler({MissingPermissionException.class, AccessDeniedException.class})
