@@ -5,6 +5,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,7 @@ public class AuthenticatedUserAttributeResolver implements HandlerMethodArgument
     try {
       return Optional.ofNullable(SecurityContextHolder.getContext())
           .map(SecurityContext::getAuthentication)
+          .filter(authentication -> !(authentication instanceof AnonymousAuthenticationToken))
           .map(Authentication::getPrincipal)
           .map(UUID.class::cast)
           .map(userPersistenceService::getById)
