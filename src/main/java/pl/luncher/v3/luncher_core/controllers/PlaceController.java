@@ -1,6 +1,8 @@
 package pl.luncher.v3.luncher_core.controllers;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -43,7 +45,7 @@ public class PlaceController {
   private final PlaceSearchService placeSearchService;
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<?> getById(@PathVariable UUID uuid) {
+  public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid) {
     Place place = placePersistenceService.getById(uuid);
 
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(place));
@@ -51,7 +53,8 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PostMapping
-  public ResponseEntity<?> createPlace(@RequestBody @Valid PlaceCreateRequest request,
+  public ResponseEntity<PlaceFullResponse> createPlace(
+      @RequestBody @Valid PlaceCreateRequest request,
       @Parameter(hidden = true) User requestingUser) {
     Place place = placeDtoMapper.toDomain(request, requestingUser);
 
@@ -63,7 +66,7 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @PutMapping("/{placeUuid}")
-  public ResponseEntity<?> updatePlace(@PathVariable UUID placeUuid,
+  public ResponseEntity<PlaceFullResponse> updatePlace(@PathVariable UUID placeUuid,
       @RequestBody PlaceUpdateRequest placeUpdateRequest,
       @Parameter(hidden = true) User requestingUser) {
 
@@ -85,7 +88,11 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.REST_MANAGER)
   @DeleteMapping("/{placeUuid}")
-  public ResponseEntity<?> removePlace(@PathVariable UUID placeUuid,
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Place deleted"),
+      @ApiResponse(responseCode = "404", description = "Not found")
+  })
+  public ResponseEntity<Void> removePlace(@PathVariable UUID placeUuid,
       @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
@@ -101,7 +108,8 @@ public class PlaceController {
 
   @PreAuthorize(hasRole.SYS_MOD)
   @GetMapping
-  public ResponseEntity<?> getAllPlacesPaged(@RequestParam int size, @RequestParam int page) {
+  public ResponseEntity<List<PlaceBasicResponse>> getAllPlacesPaged(@RequestParam int size,
+      @RequestParam int page) {
     List<PlaceBasicResponse> placesList = placePersistenceService.getAllPaged(size, page).stream()
         .map(placeDtoMapper::toBasicResponse).toList();
 

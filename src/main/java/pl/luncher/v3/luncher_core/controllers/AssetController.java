@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.controllers;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +24,7 @@ import pl.luncher.v3.luncher_core.assets.domainservices.AssetPersistenceService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.requests.CreateAssetRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.AssetFullResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.CreateAssetResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
@@ -48,7 +48,8 @@ public class AssetController {
       @ApiResponse(responseCode = "403", description = "User has no permission to edit place"),
       @ApiResponse(responseCode = "404", description = "Place not found")
   })
-  public ResponseEntity<?> create(@Valid @RequestBody CreateAssetRequest request, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<CreateAssetResponse> create(@Valid @RequestBody CreateAssetRequest request,
+      @Parameter(hidden = true) User requestingUser) {
     var place = placePersistenceService.getById(UUID.fromString(request.getPlaceId()));
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
@@ -71,7 +72,8 @@ public class AssetController {
       @ApiResponse(responseCode = "403", description = "User has no permission to delete asset"),
       @ApiResponse(responseCode = "404", description = "Asset not found")
   })
-  public ResponseEntity<?> delete(@PathVariable UUID uuid, @Parameter(hidden = true) User requestingUser) {
+  public ResponseEntity<Void> delete(@PathVariable UUID uuid,
+      @Parameter(hidden = true) User requestingUser) {
 
     Asset asset = assetPersistenceService.getById(uuid);
 
@@ -89,7 +91,7 @@ public class AssetController {
       @ApiResponse(responseCode = "404", description = "Asset not found")
   })
   @PreAuthorize(hasRole.SYS_MOD)
-  public ResponseEntity<?> getById(@PathVariable UUID uuid) {
+  public ResponseEntity<AssetFullResponse> getById(@PathVariable UUID uuid) {
     Asset asset = assetPersistenceService.getById(uuid);
 
     return ResponseEntity.ok(assetDtoMapper.toAssetFullResponse(asset));
