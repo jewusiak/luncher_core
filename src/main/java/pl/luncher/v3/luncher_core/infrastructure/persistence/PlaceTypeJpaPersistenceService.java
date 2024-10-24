@@ -16,7 +16,7 @@ class PlaceTypeJpaPersistenceService implements PlaceTypePersistenceService {
 
   @Override
   public PlaceType getByIdentifier(String identifier) {
-    return placeTypeDbMapper.toDomain(placeTypeRepository.findById(identifier).orElseThrow());
+    return placeTypeDbMapper.toDomain(placeTypeRepository.findByIdentifierIgnoreCase(identifier).orElseThrow());
   }
 
   @Override

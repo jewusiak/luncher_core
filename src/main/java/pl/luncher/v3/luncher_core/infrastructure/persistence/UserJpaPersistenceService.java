@@ -29,7 +29,7 @@ class UserJpaPersistenceService implements UserPersistenceService {
 
   @Override
   public User getByEmail(String email) {
-    return userRepository.findUserByEmail(email).map(userDbMapper::toDomain).orElseThrow();
+    return userRepository.findUserByEmailIgnoreCase(email).map(userDbMapper::toDomain).orElseThrow();
   }
 
   @Override
