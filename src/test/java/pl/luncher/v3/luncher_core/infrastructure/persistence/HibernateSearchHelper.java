@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class HibernateSearchHelper {
 
 
   public void refreshIndexes() {
-    Search.mapping(entityManager.getEntityManagerFactory()).scope(PlaceDb.class).workspace()
+    Search.mapping(entityManager.getEntityManagerFactory()).scope(List.of(PlaceDb.class, UserDb.class)).workspace()
         .refresh();
   }
 }
