@@ -121,6 +121,48 @@ Feature: Place types management
 
     And response code is 200
     And HTTP Response has a list of size 0 in path .
- 
 
-    
+  Scenario: Create, create existing ID, update non-existent ID
+
+    Given User logs in using credentials:
+      | email              | password |
+      | admin@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as admin@luncher.corp
+
+    When Send POST request to /placetype with body as below:
+    """
+    {
+    "identifier":"RESTAURANT",
+    "name": "restaurant",
+    "iconName": "restaurant"
+    }
+    """
+
+    Then response code is 200
+
+    When Send POST request to /placetype with body as below:
+    """
+    {
+    "identifier":"RESTAURANT",
+    "name": "restaurant",
+    "iconName": "restaurant"
+    }
+    """
+
+    Then response code is 409
+
+    When Send PUT request to /placetype/NONEXISTENT with body as below:
+    """
+    {
+    "name": "restaurant",
+    "iconName": "restaurant"
+    }
+    """
+
+    Then response code is 404
+
+    And Send GET request to /placetype without body
+
+    And response code is 200
+    And HTTP Response has a list of size 1 in path .

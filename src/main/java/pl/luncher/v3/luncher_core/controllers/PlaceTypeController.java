@@ -37,7 +37,7 @@ public class PlaceTypeController {
     PlaceType placeType = placeTypeDtoMapper.toDomain(request);
     placeType.validate();
 
-    var saved = placeTypePersistenceService.save(placeType);
+    var saved = placeTypePersistenceService.create(placeType);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(saved));
   }
@@ -51,7 +51,7 @@ public class PlaceTypeController {
     placeTypeDtoMapper.updateDomain(request, placeType);
     placeType.validate();
 
-    var saved = placeTypePersistenceService.save(placeType);
+    var saved = placeTypePersistenceService.update(placeType);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(saved));
   }

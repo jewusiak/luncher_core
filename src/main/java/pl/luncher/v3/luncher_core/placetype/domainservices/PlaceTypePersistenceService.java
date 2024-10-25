@@ -9,7 +9,9 @@ public interface PlaceTypePersistenceService {
 
   List<PlaceType> getAll();
 
-  PlaceType save(PlaceType placeType);
+  PlaceType update(PlaceType placeType);
+
+  PlaceType create(PlaceType placeType);
 
   void deleteByIdentifier(String identifier);
 }
