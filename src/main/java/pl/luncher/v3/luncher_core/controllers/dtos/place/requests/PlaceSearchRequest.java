@@ -34,7 +34,7 @@ public class PlaceSearchRequest {
 
   LocalDateTime hasLunchServedAt;
 
-  private UUID owner;
+  private String ownerEmail;
 
   private Boolean enabled;
 

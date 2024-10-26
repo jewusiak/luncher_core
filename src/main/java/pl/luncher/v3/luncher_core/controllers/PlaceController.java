@@ -29,6 +29,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResp
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
+import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
@@ -42,6 +43,7 @@ public class PlaceController {
   private final PlaceDtoMapper placeDtoMapper;
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
+  private final UserPersistenceService userPersistenceService;
 
   @GetMapping("/{uuid}")
   public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid) {
@@ -121,17 +123,24 @@ public class PlaceController {
       @RequestBody @Valid PlaceSearchRequest request,
       @Parameter(hidden = true) User requestingUser) {
 
-    var searchRequest = placeDtoMapper.toSearchRequest(request);
+    UUID ownerUuid = null;
 
     // anonymous or default role
     if (requestingUser == null || requestingUser.getRole() == AppRole.USER) {
-      searchRequest.setEnabled(true);
-      searchRequest.setOwner(null);
+      request.setEnabled(true);
+      request.setOwnerEmail(null);
     } else if (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) < 0) {
       // role less than SYS_MOD can only see their own places
-      searchRequest.setOwner(requestingUser.getUuid());
+      ownerUuid = requestingUser.getUuid();
     }
+    
+    if (request.getOwnerEmail() != null && ownerUuid == null) {
+      ownerUuid = userPersistenceService.getByEmail(request.getOwnerEmail()).getUuid();
+    }
+    
 
+    var searchRequest = placeDtoMapper.toSearchRequest(request, ownerUuid);
+    
     List<Place> searchResponse = placeSearchService.search(searchRequest);
 
     List<PlaceFullResponse> responseList = searchResponse.stream()

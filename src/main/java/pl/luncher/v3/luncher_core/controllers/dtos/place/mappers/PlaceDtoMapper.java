@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
+import java.util.UUID;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
@@ -46,8 +47,10 @@ public interface PlaceDtoMapper {
 
   PlaceFullResponse toPlaceFullResponse(Place place);
 
-  @Mapping(source = "location", target = "location")
-  SearchRequest toSearchRequest(PlaceSearchRequest request);
+  @Mapping(source = "request", target = ".")
+  @Mapping(source = "request.location", target = "location")
+  @Mapping(source = "ownerUuid", target = "owner")
+  SearchRequest toSearchRequest(PlaceSearchRequest request, UUID ownerUuid);
 
   @AfterMapping
   default void nullifyHavingNullFields(@MappingTarget SearchRequest searchRequest) {

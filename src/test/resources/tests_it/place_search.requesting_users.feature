@@ -89,8 +89,8 @@ Feature: Place search engine
     # owner param is ignored
 
     When Place Search request is sent as below:
-      | enabled | owner                                | size | page |
-      | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
+      | enabled | ownerEmail             | size | page |
+      | false   | rmanager2@luncher.corp | 10   | 0    |
 
     Then response code is 200
     And HTTP Response has a list of size 1 in path .
@@ -178,8 +178,8 @@ Feature: Place search engine
     # owner param is ignored
 
     When Place Search request is sent as below:
-      | enabled | owner                                | size | page |
-      | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
+      | enabled | ownerEmail             | size | page |
+      | false   | rmanager2@luncher.corp | 10   | 0    |
 
     Then response code is 200
     And HTTP Response has a list of size 2 in path .
@@ -225,8 +225,8 @@ Feature: Place search engine
     # owner param is ignored
 
     When Place Search request is sent as below:
-      | enabled | owner                                | size | page |
-      | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
+      | enabled | ownerEmail             | size | page |
+      | false   | rmanager2@luncher.corp | 10   | 0    |
 
     Then response code is 200
     And HTTP Response has a list of size 2 in path .
