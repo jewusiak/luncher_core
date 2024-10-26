@@ -61,9 +61,9 @@ Feature: Place search engine
       | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:2]  |
 
     When Place Search request is sent as below:
@@ -71,9 +71,9 @@ Feature: Place search engine
       | true    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
+      | [0].id |
       | [ID:PLACE:1]  |
 
     When Place Search request is sent as below:
@@ -81,9 +81,9 @@ Feature: Place search engine
       | false   | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
+      | [0].id |
       | [ID:PLACE:2]  |
 
     # owner param is ignored
@@ -93,9 +93,9 @@ Feature: Place search engine
       | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
+      | [0].id |
       | [ID:PLACE:2]  |
 
 
@@ -113,9 +113,9 @@ Feature: Place search engine
       | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
+      | [0].id |
       | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -123,9 +123,9 @@ Feature: Place search engine
       | true    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
+      | [0].id |
       | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -133,7 +133,7 @@ Feature: Place search engine
       | false   | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 0 in path results
+    And HTTP Response has a list of size 0 in path .
 
 
   Scenario: USER - sees all enabled places (and param owner is ignored)
@@ -150,9 +150,9 @@ Feature: Place search engine
       | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -160,9 +160,9 @@ Feature: Place search engine
       | true    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -170,9 +170,9 @@ Feature: Place search engine
       | false   | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
     
     # owner param is ignored
@@ -182,9 +182,9 @@ Feature: Place search engine
       | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
 
@@ -197,9 +197,9 @@ Feature: Place search engine
       | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -207,9 +207,9 @@ Feature: Place search engine
       | true    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
     When Place Search request is sent as below:
@@ -217,9 +217,9 @@ Feature: Place search engine
       | false   | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
     
     # owner param is ignored
@@ -229,9 +229,9 @@ Feature: Place search engine
       | false   | 3e594d22-ae9f-4ded-8c1b-6fcb306b40e4 | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response is:
-      | results[0].id | results[1].id |
+      | [0].id | [1].id |
       | [ID:PLACE:1]  | [ID:PLACE:3]  |
 
     

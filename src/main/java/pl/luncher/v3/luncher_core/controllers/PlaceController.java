@@ -26,7 +26,6 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchReq
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
-import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceSearchResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
@@ -118,7 +117,7 @@ public class PlaceController {
 
   @PostMapping("/search")
   @PermitAll
-  public ResponseEntity<PlaceSearchResponse> searchQuery(
+  public ResponseEntity<List<PlaceFullResponse>> searchQuery(
       @RequestBody @Valid PlaceSearchRequest request,
       @Parameter(hidden = true) User requestingUser) {
 
@@ -138,6 +137,6 @@ public class PlaceController {
     List<PlaceFullResponse> responseList = searchResponse.stream()
         .map(placeDtoMapper::toPlaceFullResponse).toList();
 
-    return ResponseEntity.ok(new PlaceSearchResponse(responseList));
+    return ResponseEntity.ok(responseList);
   }
 }

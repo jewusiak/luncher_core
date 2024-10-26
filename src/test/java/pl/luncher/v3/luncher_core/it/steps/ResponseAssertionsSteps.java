@@ -17,7 +17,7 @@ public class ResponseAssertionsSteps {
   }
 
   @And("HTTP Response is:")
-  public void responseOfClassPlaceSearchResponseInPathResultsIs(
+  public void responseInPathResultsIs(
       List<Map<String, String>> expected) {
     var resp = ParentSteps.getCachedHttpResp().jsonPath();
     for (String key : expected.get(0).keySet()) {
