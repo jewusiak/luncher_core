@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -47,4 +48,17 @@ public interface PlaceDtoMapper {
 
   @Mapping(source = "location", target = "location")
   SearchRequest toSearchRequest(PlaceSearchRequest request);
+
+  @AfterMapping
+  default void nullifyHavingNullFields(@MappingTarget SearchRequest searchRequest) {
+    if (searchRequest.getLocation() != null && searchRequest.getLocation().getLatitude() == null
+        && searchRequest.getLocation().getLongitude() == null
+        && searchRequest.getLocation().getRadius() == null) {
+      searchRequest.setLocation(null);
+    }
+    if (searchRequest.getOpenAt() != null && searchRequest.getOpenAt().getDay() == null
+        && searchRequest.getOpenAt().getTime() == null) {
+      searchRequest.setOpenAt(null);
+    }
+  }
 }
