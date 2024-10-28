@@ -30,16 +30,17 @@ public interface PlaceDtoMapper {
   // Requests
 
   @Mapping(source = "placeCreateRequest.placeTypeIdentifier", target = "placeType.identifier")
-  @Mapping(source = "requestingUser.email", target = "owner.email")
+  @Mapping(source = "requestingUser", target = "owner")
   @Mapping(source = "placeCreateRequest.enabled", target = "enabled")
   Place toDomain(PlaceCreateRequest placeCreateRequest, User requestingUser);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  @Mapping(source = "placeTypeIdentifier", target = "placeType.identifier")
+  @Mapping(source = "placeUpdateRequest.placeTypeIdentifier", target = "placeType.identifier")
   @Mapping(target = "id", ignore = true)
-  @Mapping(source = "enabled", target = "enabled")
+  @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
+  @Mapping(source = "user", target = "owner")
   Place updateDomain(
-      PlaceUpdateRequest placeUpdateRequest, @MappingTarget Place place);
+      PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place);
 
   // Responses
 

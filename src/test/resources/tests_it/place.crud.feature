@@ -124,7 +124,7 @@ Feature: CRUD - Place
     # change owner (BEGIN)
 
     When Updates Place with ID -1 with data below:
-      | owner.email            |
+      | ownerEmail             |
       | rmanager2@luncher.corp |
 
     Then response code is 200
@@ -132,7 +132,7 @@ Feature: CRUD - Place
     # after transferring ownership
 
     When Updates Place with ID -1 with data below:
-      | owner.email            |
+      | ownerEmail             |
       | rmanager1@luncher.corp |
 
     Then response code is 403

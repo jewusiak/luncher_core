@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.requests;
 
+import jakarta.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AddressDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.LocationDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.WeekDayTimeRangeDto;
-import pl.luncher.v3.luncher_core.place.model.UserDto;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.place.model.Place}
@@ -32,6 +32,7 @@ public class PlaceUpdateRequest implements Serializable {
   private List<WeekDayTimeRangeDto> openingWindows;
   private String placeTypeIdentifier;
   private LocationDto location;
-  private UserDto owner;
+  @Email
+  private String ownerEmail;
   private Boolean enabled;
 }

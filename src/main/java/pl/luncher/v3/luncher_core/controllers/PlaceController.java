@@ -75,12 +75,16 @@ public class PlaceController {
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
-    if (placeUpdateRequest.getOwner() != null) {
+    User newOwner = null;
+
+    if (placeUpdateRequest.getOwnerEmail() != null && !placeUpdateRequest.getOwnerEmail()
+        .equalsIgnoreCase(place.getOwner().getEmail())) {
       place.permissions().byUser(requestingUser).changeOwner()
           .throwIfNotPermitted();
+      newOwner = userPersistenceService.getByEmail(placeUpdateRequest.getOwnerEmail());
     }
 
-    place = placeDtoMapper.updateDomain(placeUpdateRequest, place);
+    place = placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
     place.validate();
     Place savedPlace = placePersistenceService.save(place);
 
