@@ -117,7 +117,7 @@ public class PlaceController {
     return ResponseEntity.ok(placesList);
   }
 
-  @PostMapping("/search")
+  @PostMapping(value = "/search", produces = "application/json; charset=UTF-8")
   @PermitAll
   public ResponseEntity<List<PlaceFullResponse>> searchQuery(
       @RequestBody @Valid PlaceSearchRequest request,
