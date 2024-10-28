@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.errorhandling;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -7,10 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.common.permissions.MissingPermissionException;
 import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntentInvalidException;
 
 @RestControllerAdvice(basePackages = "pl.luncher.v3.luncher_core.controllers")
@@ -22,7 +23,7 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
     return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").build();
   }
 
-  @ExceptionHandler({NoSuchElementException.class})
+  @ExceptionHandler({NoSuchElementException.class, EntityNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   protected ErrorResponse handleNotFound(Exception ex) {
     return ErrorResponse.builder().message("Not found!").messageLocale("en_US").build();

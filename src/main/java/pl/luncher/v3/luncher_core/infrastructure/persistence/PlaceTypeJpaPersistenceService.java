@@ -1,11 +1,13 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
 
@@ -27,12 +29,27 @@ class PlaceTypeJpaPersistenceService implements PlaceTypePersistenceService {
         .collect(Collectors.toList());
   }
 
-  @Override
-  public PlaceType save(PlaceType placeType) {
-    PlaceTypeDb mapperDbEntity = placeTypeDbMapper.toDbEntity(placeType);
-    mapperDbEntity.setIdentifier(mapperDbEntity.getIdentifier().toUpperCase());
-    PlaceTypeDb saved = placeTypeRepository.save(mapperDbEntity);
+  private PlaceType save(PlaceType placeType) {
+    PlaceTypeDb mappedDbEntity = placeTypeDbMapper.toDbEntity(placeType);
+    mappedDbEntity.setIdentifier(mappedDbEntity.getIdentifier().toUpperCase());
+    PlaceTypeDb saved = placeTypeRepository.save(mappedDbEntity);
     return placeTypeDbMapper.toDomain(saved);
+  }
+
+  @Override
+  public PlaceType update(PlaceType placeType) {
+    if (!placeTypeRepository.existsById(placeType.getIdentifier().toUpperCase())) {
+      throw new EntityNotFoundException("PlaceType with identifier " + placeType.getIdentifier() + " not found.");
+    }
+    return save(placeType);
+  }
+
+  @Override
+  public PlaceType create(PlaceType placeType) {
+    if (placeTypeRepository.existsById(placeType.getIdentifier().toUpperCase())) {
+      throw new DuplicateEntityException("PlaceType with identifier " + placeType.getIdentifier() + " already exists.");
+    }
+    return save(placeType);
   }
 
   @Transactional
