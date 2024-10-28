@@ -15,6 +15,8 @@ import pl.luncher.v3.luncher_core.place.model.Place;
 public interface PlaceSearchService {
 
   List<Place> search(@Valid SearchRequest searchRequest);
+  
+  void reindexDb() throws InterruptedException;
 
   @Data
   @AllArgsConstructor

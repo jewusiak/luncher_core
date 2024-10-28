@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -14,6 +15,7 @@ import pl.luncher.v3.luncher_core.user.model.User;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 class UserHibernateSearchService implements UserSearchService {
 
   private final UserPersistenceService userPersistenceService;
@@ -37,4 +39,11 @@ class UserHibernateSearchService implements UserSearchService {
     return result.hits().stream().map(userDbMapper::toDomain).collect(Collectors.toList());
   }
 
+
+  @Override
+  public void reindexDb() throws InterruptedException {
+    log.debug("Starting PlaceDb reindexing");
+    Search.session(entityManager).scope(PlaceDb.class).massIndexer().threadsToLoadObjects(4).startAndWait();
+    log.debug("PlaceDb reindexing finished");
+  }
 }
