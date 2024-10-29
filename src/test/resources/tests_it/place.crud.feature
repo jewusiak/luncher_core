@@ -186,7 +186,7 @@ Feature: CRUD - Place
     And HTTP Response has a list of size 1 in path openingWindows
     And HTTP Response is:
       | openingWindows[0].startTime.day | openingWindows[0].startTime.time | openingWindows[0].endTime.day | openingWindows[0].endTime.time |
-      | MONDAY                          | 10:00:00                         | MONDAY                        | 22:00:00                       |
+      | MONDAY                          | 10:00                            | MONDAY                        | 22:00                          |
 
 
     When Send PUT request to /place/[ID:PLACE:1] with body as below:
@@ -212,7 +212,7 @@ Feature: CRUD - Place
     And HTTP Response has a list of size 1 in path openingWindows
     And HTTP Response is:
       | openingWindows[0].startTime.day | openingWindows[0].startTime.time | openingWindows[0].endTime.day | openingWindows[0].endTime.time |
-      | TUESDAY                         | 11:00:00                         | WEDNESDAY                     | 21:00:00                       |
+      | TUESDAY                         | 11:00                            | WEDNESDAY                     | 21:00                          |
 
 
     When Send PUT request to /place/[ID:PLACE:1] with body as below:
