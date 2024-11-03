@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AddressDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.LocationDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.WeekDayTimeRangeDto;
+import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.MenuOfferDto;
 
 
 @Data
@@ -30,6 +31,7 @@ public class PlaceCreateRequest {
   @NotNull
   private String placeTypeIdentifier;
   private LocationDto location;
+  private List<MenuOfferDto> menuOffers;
   @NotNull
   private Boolean enabled;
 

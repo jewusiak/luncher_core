@@ -100,14 +100,8 @@ Feature: Place search based on opening times
             "time": "03:00"
          }
       }
-   ]
-}
-    """
-
-    And Send POST request to /place/[ID:PLACE:1]/menuoffer with body as below:
-    """
-    {
-      "menuOffer": {
+   ],
+   "menuOffers": [{
         "name": "Lunch Monday Special",
         "basePrice": {
           "amount": 39.99,
@@ -245,9 +239,10 @@ Feature: Place search based on opening times
             "endTime": "2024-11-16T22:56:00"
           }
         ]
-      }
-    }
+      }]
+}
     """
+
     Then response code is 200
     And Send GET request to /place/[ID:PLACE:1] without body
     And response code is 200
