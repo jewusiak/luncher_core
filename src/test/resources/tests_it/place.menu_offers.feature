@@ -56,8 +56,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Tripe Soup",
@@ -65,8 +64,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 2.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -84,8 +82,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Pork Schnitzel",
@@ -93,8 +90,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 3,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -112,8 +108,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Cheesecake",
@@ -121,8 +116,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 1.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         }
@@ -148,8 +142,8 @@ Feature: Menu-offers management in places
     And Send GET request to /place/[ID:PLACE:1] without body
     And response code is 200
     And HTTP Response is:
-      | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].required | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[0].options[1].required | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[0].required | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[1].options[1].required | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[0].required | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].parts[2].options[1].required | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
-      | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | false                                      | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | false                                      | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | false                                      | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | false                                      | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | false                                      | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | false                                      | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |
+      | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
+      | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |
 
 
     When Send PUT request to /place/[ID:PLACE:1] with body as below:
@@ -177,8 +171,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Tripe Soup",
@@ -186,8 +179,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 2.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -205,8 +197,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Pork Schnitzel",
@@ -214,8 +205,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 3,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -233,8 +223,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Cheesecake",
@@ -242,8 +231,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 1.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         }
@@ -283,8 +271,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0.00,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Garlic Bread",
@@ -292,8 +279,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 2.00,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -311,8 +297,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 5.00,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Vegetarian Lasagna",
@@ -320,8 +305,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0.00,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -339,8 +323,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0.00,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Chocolate Mousse",
@@ -348,8 +331,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 1.50,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         }
@@ -381,8 +363,8 @@ Feature: Menu-offers management in places
     And response code is 200
     And HTTP Response has a list of size 2 in path menuOffers
     And HTTP Response is:
-      | menuOffers[1].name    | menuOffers[1].basePrice.amount | menuOffers[1].basePrice.currencyCode | menuOffers[1].parts[0].name | menuOffers[1].parts[0].required | menuOffers[1].parts[0].supplement.amount | menuOffers[1].parts[0].supplement.currencyCode | menuOffers[1].parts[0].options[0].name | menuOffers[1].parts[0].options[0].description         | menuOffers[1].parts[0].options[0].supplement.amount | menuOffers[1].parts[0].options[0].supplement.currencyCode | menuOffers[1].parts[0].options[0].required | menuOffers[1].parts[0].options[1].name | menuOffers[1].parts[0].options[1].description | menuOffers[1].parts[0].options[1].supplement.amount | menuOffers[1].parts[0].options[1].supplement.currencyCode | menuOffers[1].parts[0].options[1].required | menuOffers[1].parts[1].name | menuOffers[1].parts[1].required | menuOffers[1].parts[1].supplement.amount | menuOffers[1].parts[1].supplement.currencyCode | menuOffers[1].parts[1].options[0].name | menuOffers[1].parts[1].options[0].description             | menuOffers[1].parts[1].options[0].supplement.amount | menuOffers[1].parts[1].options[0].supplement.currencyCode | menuOffers[1].parts[1].options[0].required | menuOffers[1].parts[1].options[1].name | menuOffers[1].parts[1].options[1].description   | menuOffers[1].parts[1].options[1].supplement.amount | menuOffers[1].parts[1].options[1].supplement.currencyCode | menuOffers[1].parts[1].options[1].required | menuOffers[1].parts[2].name | menuOffers[1].parts[2].required | menuOffers[1].parts[2].supplement.amount | menuOffers[1].parts[2].supplement.currencyCode | menuOffers[1].parts[2].options[0].name | menuOffers[1].parts[2].options[0].description      | menuOffers[1].parts[2].options[0].supplement.amount | menuOffers[1].parts[2].options[0].supplement.currencyCode | menuOffers[1].parts[2].options[0].required | menuOffers[1].parts[2].options[1].name | menuOffers[1].parts[2].options[1].description | menuOffers[1].parts[2].options[1].supplement.amount | menuOffers[1].parts[2].options[1].supplement.currencyCode | menuOffers[1].parts[2].options[1].required | menuOffers[1].recurringServingRanges[0].startTime.time | menuOffers[1].recurringServingRanges[0].startTime.day | menuOffers[1].recurringServingRanges[0].endTime.time | menuOffers[1].recurringServingRanges[0].endTime.day | menuOffers[1].oneTimeServingRanges[0].startTime | menuOffers[1].oneTimeServingRanges[0].endTime | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].required | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[0].options[1].required | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[0].required | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[1].options[1].required | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[0].required | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].parts[2].options[1].required | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
-      | Lunch Tuesday Special | 45.5                           | PLN                                  | Appetizer                   | true                            | 0.0                                      | PLN                                            | Bruschetta                             | Grilled bread topped with tomatoes, garlic, and basil | 0.0                                                 | PLN                                                       | false                                      | Garlic Bread                           | Crispy bread with garlic butter and herbs     | 2.0                                                 | PLN                                                       | false                                      | Main Course                 | true                            | 0.0                                      | PLN                                            | Beef Steak                             | Grilled beef steak served with roasted potatoes and salad | 5.0                                                 | PLN                                                       | false                                      | Vegetarian Lasagna                     | Lasagna with spinach, ricotta, and tomato sauce | 0.0                                                 | PLN                                                       | false                                      | Dessert                     | false                           | 7.0                                      | PLN                                            | Tiramisu                               | Classic Italian dessert with coffee and mascarpone | 0.0                                                 | PLN                                                       | false                                      | Chocolate Mousse                       | Rich chocolate mousse with whipped cream      | 1.5                                                 | PLN                                                       | false                                      | 11:00                                                  | TUESDAY                                               | 14:00                                                | TUESDAY                                             | 2024-10-20T10:00:00                             | 2024-10-20T20:34:00                           | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | false                                      | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | false                                      | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | false                                      | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | false                                      | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | false                                      | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | false                                      | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |
+      | menuOffers[1].name    | menuOffers[1].basePrice.amount | menuOffers[1].basePrice.currencyCode | menuOffers[1].parts[0].name | menuOffers[1].parts[0].required | menuOffers[1].parts[0].supplement.amount | menuOffers[1].parts[0].supplement.currencyCode | menuOffers[1].parts[0].options[0].name | menuOffers[1].parts[0].options[0].description         | menuOffers[1].parts[0].options[0].supplement.amount | menuOffers[1].parts[0].options[0].supplement.currencyCode | menuOffers[1].parts[0].options[1].name | menuOffers[1].parts[0].options[1].description | menuOffers[1].parts[0].options[1].supplement.amount | menuOffers[1].parts[0].options[1].supplement.currencyCode | menuOffers[1].parts[1].name | menuOffers[1].parts[1].required | menuOffers[1].parts[1].supplement.amount | menuOffers[1].parts[1].supplement.currencyCode | menuOffers[1].parts[1].options[0].name | menuOffers[1].parts[1].options[0].description             | menuOffers[1].parts[1].options[0].supplement.amount | menuOffers[1].parts[1].options[0].supplement.currencyCode | menuOffers[1].parts[1].options[1].name | menuOffers[1].parts[1].options[1].description   | menuOffers[1].parts[1].options[1].supplement.amount | menuOffers[1].parts[1].options[1].supplement.currencyCode | menuOffers[1].parts[2].name | menuOffers[1].parts[2].required | menuOffers[1].parts[2].supplement.amount | menuOffers[1].parts[2].supplement.currencyCode | menuOffers[1].parts[2].options[0].name | menuOffers[1].parts[2].options[0].description      | menuOffers[1].parts[2].options[0].supplement.amount | menuOffers[1].parts[2].options[0].supplement.currencyCode | menuOffers[1].parts[2].options[1].name | menuOffers[1].parts[2].options[1].description | menuOffers[1].parts[2].options[1].supplement.amount | menuOffers[1].parts[2].options[1].supplement.currencyCode | menuOffers[1].recurringServingRanges[0].startTime.time | menuOffers[1].recurringServingRanges[0].startTime.day | menuOffers[1].recurringServingRanges[0].endTime.time | menuOffers[1].recurringServingRanges[0].endTime.day | menuOffers[1].oneTimeServingRanges[0].startTime | menuOffers[1].oneTimeServingRanges[0].endTime | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
+      | Lunch Tuesday Special | 45.5                           | PLN                                  | Appetizer                   | true                            | 0.0                                      | PLN                                            | Bruschetta                             | Grilled bread topped with tomatoes, garlic, and basil | 0.0                                                 | PLN                                                       | Garlic Bread                           | Crispy bread with garlic butter and herbs     | 2.0                                                 | PLN                                                       | Main Course                 | true                            | 0.0                                      | PLN                                            | Beef Steak                             | Grilled beef steak served with roasted potatoes and salad | 5.0                                                 | PLN                                                       | Vegetarian Lasagna                     | Lasagna with spinach, ricotta, and tomato sauce | 0.0                                                 | PLN                                                       | Dessert                     | false                           | 7.0                                      | PLN                                            | Tiramisu                               | Classic Italian dessert with coffee and mascarpone | 0.0                                                 | PLN                                                       | Chocolate Mousse                       | Rich chocolate mousse with whipped cream      | 1.5                                                 | PLN                                                       | 11:00                                                  | TUESDAY                                               | 14:00                                                | TUESDAY                                             | 2024-10-20T10:00:00                             | 2024-10-20T20:34:00                           | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |
 
     And Put ID MENU_OFFER idx 0 to cache from HTTP response from path menuOffers[0].id
     And Put ID MENU_OFFER idx 1 to cache from HTTP response from path menuOffers[1].id
@@ -413,8 +395,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Tripe Soup",
@@ -422,8 +403,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 2.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -441,8 +421,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Pork Schnitzel",
@@ -450,8 +429,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 3,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         },
@@ -469,8 +447,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 0,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             },
             {
               "name": "Cheesecake",
@@ -478,8 +455,7 @@ Feature: Menu-offers management in places
               "supplement": {
                 "amount": 1.5,
                 "currencyCode": "PLN"
-              },
-              "required": false
+              }
             }
           ]
         }
@@ -505,5 +481,5 @@ Feature: Menu-offers management in places
     And Send GET request to /place/[ID:PLACE:1] without body
     And response code is 200
     And HTTP Response is:
-      | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].required | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[0].options[1].required | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[0].required | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[1].options[1].required | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[0].required | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].parts[2].options[1].required | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
-      | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | false                                      | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | false                                      | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | false                                      | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | false                                      | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | false                                      | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | false                                      | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |
+      | menuOffers[0].name   | menuOffers[0].basePrice.amount | menuOffers[0].basePrice.currencyCode | menuOffers[0].parts[0].name | menuOffers[0].parts[0].required | menuOffers[0].parts[0].supplement.amount | menuOffers[0].parts[0].supplement.currencyCode | menuOffers[0].parts[0].options[0].name | menuOffers[0].parts[0].options[0].description | menuOffers[0].parts[0].options[0].supplement.amount | menuOffers[0].parts[0].options[0].supplement.currencyCode | menuOffers[0].parts[0].options[1].name | menuOffers[0].parts[0].options[1].description | menuOffers[0].parts[0].options[1].supplement.amount | menuOffers[0].parts[0].options[1].supplement.currencyCode | menuOffers[0].parts[1].name | menuOffers[0].parts[1].required | menuOffers[0].parts[1].supplement.amount | menuOffers[0].parts[1].supplement.currencyCode | menuOffers[0].parts[1].options[0].name | menuOffers[0].parts[1].options[0].description      | menuOffers[0].parts[1].options[0].supplement.amount | menuOffers[0].parts[1].options[0].supplement.currencyCode | menuOffers[0].parts[1].options[1].name | menuOffers[0].parts[1].options[1].description   | menuOffers[0].parts[1].options[1].supplement.amount | menuOffers[0].parts[1].options[1].supplement.currencyCode | menuOffers[0].parts[2].name | menuOffers[0].parts[2].required | menuOffers[0].parts[2].supplement.amount | menuOffers[0].parts[2].supplement.currencyCode | menuOffers[0].parts[2].options[0].name | menuOffers[0].parts[2].options[0].description | menuOffers[0].parts[2].options[0].supplement.amount | menuOffers[0].parts[2].options[0].supplement.currencyCode | menuOffers[0].parts[2].options[1].name | menuOffers[0].parts[2].options[1].description | menuOffers[0].parts[2].options[1].supplement.amount | menuOffers[0].parts[2].options[1].supplement.currencyCode | menuOffers[0].recurringServingRanges[0].startTime.time | menuOffers[0].recurringServingRanges[0].startTime.day | menuOffers[0].recurringServingRanges[0].endTime.time | menuOffers[0].recurringServingRanges[0].endTime.day |
+      | Lunch Monday Special | 39.99                          | PLN                                  | First Course                | true                            | 0.0                                      | PLN                                            | Tomato Soup                            | Classic tomato soup with basil and cream      | 0.0                                                 | PLN                                                       | Tripe Soup                             | Traditional Polish tripe soup                 | 2.5                                                 | PLN                                                       | Main Course                 | true                            | 0.0                                      | PLN                                            | Grilled Chicken Breast                 | Served with mashed potatoes and steamed vegetables | 0.0                                                 | PLN                                                       | Pork Schnitzel                         | Breaded pork cutlet served with fries and salad | 3.0                                                 | PLN                                                       | Dessert                     | false                           | 5.0                                      | PLN                                            | Apple Pie                              | Warm apple pie with vanilla ice cream         | 0.0                                                 | PLN                                                       | Cheesecake                             | Creamy cheesecake with raspberry sauce        | 1.5                                                 | PLN                                                       | 11:00                                                  | MONDAY                                                | 14:00                                                | MONDAY                                              |

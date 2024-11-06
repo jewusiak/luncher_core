@@ -34,7 +34,6 @@ class OptionDb {
   private String description;
   @Embedded
   private MonetaryAmountDb supplement;
-  private boolean required;
 
   @ManyToOne
   private PartDb parentPart;
