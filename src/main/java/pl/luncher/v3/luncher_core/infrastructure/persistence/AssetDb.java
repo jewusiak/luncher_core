@@ -30,6 +30,7 @@ class AssetDb {
   private UUID id;
 
   private String description;
+  private String originalFilename;
   private String storagePath;
   private String accessUrl;
   private MimeContentFileType mimeType;

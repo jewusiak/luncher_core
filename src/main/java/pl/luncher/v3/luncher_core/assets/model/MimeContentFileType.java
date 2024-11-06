@@ -15,7 +15,19 @@ public enum MimeContentFileType {
   private final String mimeType;
   private final Set<String> qualifyingExtensions;
 
+  public static MimeContentFileType fromFilename(String filename) {
+    if (filename == null) {
+      return null;
+    }
+    String[] array = filename.split("\\.");
+    return array.length < 1 ? null : fromExtension(array[array.length - 1]);
+  }
+
   public static MimeContentFileType fromExtension(String extension) {
+    if (extension == null) {
+      return null;
+    }
+    extension = extension.toLowerCase();
     for (MimeContentFileType mimeContentFileType : MimeContentFileType.values()) {
       if (mimeContentFileType.getQualifyingExtensions().contains(extension)) {
         return mimeContentFileType;
@@ -23,5 +35,18 @@ public enum MimeContentFileType {
     }
     throw new IllegalArgumentException("Unknown extension: " + extension);
   }
+
+  public static MimeContentFileType byMimeType(String mimeType) {
+    if (mimeType == null) {
+      return null;
+    }
+    for (MimeContentFileType mimeContentFileType : MimeContentFileType.values()) {
+      if (mimeContentFileType.getMimeType().equalsIgnoreCase(mimeType)) {
+        return mimeContentFileType;
+      }
+    }
+    throw new IllegalArgumentException("Unknown mimeType: " + mimeType);
+  }
+
 
 }

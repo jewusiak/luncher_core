@@ -3,12 +3,12 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetPersistenceService;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 
 @RequiredArgsConstructor
 @Service
-class AssetJpaPersistenceService implements AssetPersistenceService {
+class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   private final AssetRepository assetRepository;
   private final AssetDbMapper assetDbMapper;
@@ -18,8 +18,8 @@ class AssetJpaPersistenceService implements AssetPersistenceService {
   @Override
   public Asset save(Asset asset) {
     PlaceDb placeDb = null;
-    if (asset.getPlaceId() != null) {
-      placeDb = placeRepository.findById(asset.getPlaceId()).orElseThrow();
+    if (asset.getPlace() != null) {
+      placeDb = placeRepository.findById(asset.getPlace().getId()).orElseThrow();
     }
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
     return assetDbMapper.toDomain(assetRepository.save(toBeSaved));

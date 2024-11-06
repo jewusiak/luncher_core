@@ -1,8 +1,11 @@
 package pl.luncher.v3.luncher_core.assets.domainservices;
 
+import java.util.Optional;
 import java.util.UUID;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.common.permissions.PermissionChecker;
+import pl.luncher.v3.luncher_core.place.model.Place;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 public class AssetPermissionsChecker {
 
@@ -19,12 +22,9 @@ public class AssetPermissionsChecker {
   }
 
   public PermissionChecker edit() {
-    return () -> {
-      if (asset.getPlaceOwnerId() == null) {
-        return true;
-      }
-      return asset.getPlaceOwnerId().equals(requestingUserUuid);
-    };
+    return () -> Optional.ofNullable(asset.getPlace()).map(Place::getOwner).map(User::getUuid)
+        .map(uuid -> uuid.equals(requestingUserUuid)).orElse(true);
+
   }
 
   public PermissionChecker delete() {
