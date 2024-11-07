@@ -12,7 +12,7 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   private final AssetRepository assetRepository;
   private final AssetDbMapper assetDbMapper;
-
+  private final PlaceDbMapper placeDbMapper;
   private final PlaceRepository placeRepository;
 
   @Override
@@ -22,12 +22,14 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
       placeDb = placeRepository.findById(asset.getPlace().getId()).orElseThrow();
     }
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
-    return assetDbMapper.toDomain(assetRepository.save(toBeSaved));
+    return assetDbMapper.toDomain(assetRepository.save(toBeSaved), placeDbMapper.toDomain(toBeSaved.getPlace()));
   }
 
   @Override
   public Asset getById(UUID id) {
-    return assetDbMapper.toDomain(assetRepository.findById(id).orElseThrow());
+    AssetDb assetDb = assetRepository.findById(id).orElseThrow();
+    
+    return assetDbMapper.toDomain(assetDb, placeDbMapper.toDomain(assetDb.getPlace()));
   }
 
   public void delete(Asset asset) {

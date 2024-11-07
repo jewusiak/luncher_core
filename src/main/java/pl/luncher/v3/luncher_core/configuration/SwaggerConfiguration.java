@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import pl.luncher.v3.luncher_core.common.properties.LuncherCommonProperties;
 import pl.luncher.v3.luncher_core.configuration.filters.SwaggerOutputFilter;
+import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
 
 @Configuration
 @SecurityScheme(
@@ -37,7 +36,7 @@ import pl.luncher.v3.luncher_core.configuration.filters.SwaggerOutputFilter;
 @Slf4j
 public class SwaggerConfiguration {
 
-  private final LuncherCommonProperties luncherCommonProperties;
+  private final LuncherProperties luncherProperties;
   private final ConfigurableApplicationContext context;
   private final SwaggerOutputFilter swaggerOutputFilter;
 
@@ -46,7 +45,8 @@ public class SwaggerConfiguration {
     OpenAPI api = new OpenAPI();
     api.setInfo(new Info().title("Luncher Core API").version("1.1.0"));
     List<Server> serverList = new ArrayList<>();
-    serverList.add(new Server().url(luncherCommonProperties.getBaseApiUrl()).description("predefined address - see config"));
+    serverList.add(new Server().url(luncherProperties.getBaseApiUrl())
+        .description("predefined address - see config"));
     api.setServers(serverList);
     api.setSecurity(List.of(new SecurityRequirement().addList("Authorization")));
     return api;
