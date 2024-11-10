@@ -22,7 +22,8 @@ public class LuncherProperties implements BaseApiUrlGetter,
 
   @Override
   public String getFilesystemPersistentAssetsBasePathWithTrailingSlash() {
-    return baseApiUrl.endsWith("/") ? baseApiUrl : (baseApiUrl + "/");
+    return filesystemPersistentAssetsBasePath.endsWith("/") ? filesystemPersistentAssetsBasePath
+        : (filesystemPersistentAssetsBasePath + "/");
   }
 
 }

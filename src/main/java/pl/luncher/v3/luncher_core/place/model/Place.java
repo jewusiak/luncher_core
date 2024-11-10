@@ -55,4 +55,11 @@ public class Place {
     }
     menuOffers.add(menuOffer);
   }
+
+  public void addImage(Asset asset) {
+    if (images == null) {
+      images = new ArrayList<>();
+    }
+    images.add(asset);
+  }
 }

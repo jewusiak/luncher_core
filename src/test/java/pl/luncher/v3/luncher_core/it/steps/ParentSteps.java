@@ -208,6 +208,13 @@ public class ParentSteps {
     return replacedText;
   }
 
+  public static Map<String, String> replaceIds(Map<String, String> inputMap) {
+    return inputMap.entrySet().stream().reduce(new HashMap<>(), (acc, entry) -> {
+      acc.put(entry.getKey(), ParentSteps.replaceIds(entry.getValue()));
+      return acc;
+    }, (acc1, acc2) -> acc1);
+  }
+
   @RequiredArgsConstructor
   @Getter
   public enum EntityIdType {

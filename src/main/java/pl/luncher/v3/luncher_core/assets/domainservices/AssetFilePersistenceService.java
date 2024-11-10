@@ -14,4 +14,10 @@ public interface AssetFilePersistenceService {
    */
   void saveFileToStorage(Asset asset, InputStream dataStream) throws IOException;
 
+  /**
+   * Deletes file from persistent storage
+   *
+   * @param asset asset to delete file for
+   */
+  void delete(Asset asset);
 }

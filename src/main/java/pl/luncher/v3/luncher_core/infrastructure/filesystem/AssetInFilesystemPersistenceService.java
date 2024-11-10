@@ -18,10 +18,21 @@ class AssetInFilesystemPersistenceService implements AssetFilePersistenceService
 
   @Override
   public void saveFileToStorage(Asset asset, InputStream dataStream) throws IOException {
-    String filename = asset.getId() + asset.getMimeType().getOutputExtension();
+    String filename = "%s.%s".formatted(asset.getId(), asset.getMimeType().getOutputExtension());
 
     Files.copy(dataStream, Path.of(filesystemPersistentAssetsBasePathGetter.getFilesystemPersistentAssetsBasePathWithTrailingSlash() + filename), StandardCopyOption.REPLACE_EXISTING);
 
     asset.setStoragePath(filename);
+  }
+
+  @Override
+  public void delete(Asset asset) {
+    try {
+      Files.delete(Path.of(
+          filesystemPersistentAssetsBasePathGetter.getFilesystemPersistentAssetsBasePathWithTrailingSlash()
+              + asset.getStoragePath()));
+    } catch (IOException e) {
+      throw new RuntimeException("Could not delete asset file", e);
+    }
   }
 }
