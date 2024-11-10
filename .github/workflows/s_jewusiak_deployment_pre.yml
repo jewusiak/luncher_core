@@ -12,7 +12,7 @@ env:
   SWAG_NAME: "swag-luncher-core-common"
   ENV_SUFFIX: "-pre"
   BASE_DOMAIN: "api.pre.luncher.pl"
-  VOLUMES_DIR: "~/luncher-core-volumes${{ env.ENV_SUFFIX }}"
+  VOLUMES_DIR: "~/luncher-core-volumes-pre"
   
   # ssh host config
   SSH_HOST: "s.jewusiak.pl"
