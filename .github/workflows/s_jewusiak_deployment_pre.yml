@@ -154,7 +154,7 @@ jobs:
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.VOLUMES_DIR }}/{${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }},${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }},${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}}"'
 
   stop_old_apps:
-#    needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
+    needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
     permissions:
       contents: 'read'
       id-token: 'write'
