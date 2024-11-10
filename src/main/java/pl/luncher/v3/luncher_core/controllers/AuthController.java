@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +66,7 @@ public class AuthController {
       @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)})
   @PostMapping("/login")
   public ResponseEntity<SuccessfulLoginResponse> login(
-      @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true) LoginRequest request,
+      @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true) @Valid LoginRequest request,
       HttpServletResponse response) {
     try {
       var a = authenticationManager.authenticate(
@@ -131,7 +132,7 @@ public class AuthController {
       @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
   @PostMapping("/requestreset/{email}")
   public ResponseEntity<CreatePasswordResetIntentResponse> createPasswordResetIntent(
-      @PathVariable @Email String email) {
+      @PathVariable @Email @NotNull String email) {
     User user = userPersistenceService.getByEmail(email);
     var passwordIntent = forgottenPasswordIntentFactory.of(user);
 

@@ -6,9 +6,13 @@ import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +60,14 @@ public class TestsItConfig {
         setUpElasticsearchContainer();
       }
     }
+
+    try {
+      Files.createDirectory(Path.of("uploaded-assets-test"));
+    } catch (IOException e) {
+      log.warn("Error while creating directory for uploaded assets", e);
+    }
+
+
   }
 
   private static boolean elasticsearchNotRunning() {
@@ -92,6 +104,13 @@ public class TestsItConfig {
     if (postgresStarted) {
       tearDownPostgresContainer();
     }
+    try {
+      Files.walk(Path.of("uploaded-assets-test")).sorted(Comparator.reverseOrder())
+          .map(Path::toFile).forEach(File::delete);
+    } catch (IOException e) {
+      log.warn("Error while deleting directory for uploaded assets", e);
+    }
+    
     ParentSteps.resetAll();
   }
 

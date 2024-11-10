@@ -118,4 +118,11 @@ class PlaceHibernateSearchService implements PlaceSearchService {
 
     return list;
   }
+
+  @Override
+  public void reindexDb() throws InterruptedException {
+    log.debug("Starting PlaceDb reindexing");
+    Search.session(entityManager).scope(PlaceDb.class).massIndexer().threadsToLoadObjects(4).startAndWait();
+    log.debug("PlaceDb reindexing finished");
+  }
 }

@@ -1,23 +1,19 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.common;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO for {@link pl.luncher.v3.luncher_core.place.model.AssetDto}
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssetDto implements Serializable {
+public class AssetBasicResponse implements Serializable {
 
-  private UUID uuid;
-  private String name;
+  private UUID id;
   private String description;
-  private OffsetDateTime dateCreated;
-  private String publicUrl;
+  private String accessUrl;
+  private String mimeType;
+  private String uploadStatus;
 }

@@ -3,16 +3,15 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetPersistenceService;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 
 @RequiredArgsConstructor
 @Service
-class AssetJpaPersistenceService implements AssetPersistenceService {
+class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   private final AssetRepository assetRepository;
   private final AssetDbMapper assetDbMapper;
-
   private final PlaceRepository placeRepository;
 
   @Override
@@ -27,7 +26,9 @@ class AssetJpaPersistenceService implements AssetPersistenceService {
 
   @Override
   public Asset getById(UUID id) {
-    return assetDbMapper.toDomain(assetRepository.findById(id).orElseThrow());
+    AssetDb assetDb = assetRepository.findById(id).orElseThrow();
+    
+    return assetDbMapper.toDomain(assetDb);
   }
 
   public void delete(Asset asset) {

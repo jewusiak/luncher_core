@@ -2,3 +2,5 @@
 .idea
 target
 /db_files
+/uploaded-assets/
+/uploaded-assets-test/

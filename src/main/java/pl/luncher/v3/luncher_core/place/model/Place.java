@@ -13,6 +13,7 @@ import pl.luncher.v3.luncher_core.place.domainservices.PlacePermissionsChecker;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePermissionsCheckerImpl;
 import pl.luncher.v3.luncher_core.place.model.menus.MenuOffer;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 
 @Slf4j
@@ -34,7 +35,7 @@ public class Place {
   private List<WeekDayTimeRange> openingWindows;
   private PlaceType placeType;
   private Location location;
-  private UserDto owner;
+  private User owner;
   private List<Asset> images;
   private List<MenuOffer> menuOffers;
   private Boolean enabled;
@@ -53,5 +54,12 @@ public class Place {
       menuOffers = new ArrayList<>();
     }
     menuOffers.add(menuOffer);
+  }
+
+  public void addImage(Asset asset) {
+    if (images == null) {
+      images = new ArrayList<>();
+    }
+    images.add(asset);
   }
 }

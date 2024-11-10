@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.place.model.UserDto;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +30,8 @@ class PlaceJpaPersistenceService implements PlacePersistenceService {
         .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findByIdentifierIgnoreCase(id).orElseThrow())
         .orElse(null);
 
-    UserDb owner = Optional.ofNullable(place.getOwner()).map(UserDto::getEmail)
-        .map(email -> userRepository.findUserByEmailIgnoreCase(email).orElseThrow()).orElse(null);
+    UserDb owner = Optional.ofNullable(place.getOwner()).map(User::getUuid)
+        .map(email -> userRepository.findUserByUuid(email).orElseThrow()).orElse(null);
 
     PlaceDb placeDb = placeDbMapper.toDb(place, owner, placeType);
 

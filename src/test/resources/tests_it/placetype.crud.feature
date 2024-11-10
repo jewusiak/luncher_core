@@ -111,7 +111,9 @@ Feature: Place types management
     When Send POST request to /placetype with body as below:
     """
     {
-    "identifier":"RESTAURANT"
+    "identifier":"BAR",
+    "name":"Bar place",
+    "iconName":"bar"
     }
     """
 

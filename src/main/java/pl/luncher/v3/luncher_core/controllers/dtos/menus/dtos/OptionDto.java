@@ -19,5 +19,4 @@ public class OptionDto implements Serializable {
   private String name;
   private String description;
   private MonetaryAmountDto supplement;
-  private boolean required;
 }

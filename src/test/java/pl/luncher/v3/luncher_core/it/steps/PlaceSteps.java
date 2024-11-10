@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
-import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceOwnerUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
@@ -84,18 +83,6 @@ public class PlaceSteps {
         .thenReturn();
     saveHttpResp(response);
 
-  }
-
-  @When("Request to change owner for Place ID {} is sent:")
-  public void requestToChangeOwnerToRmanagerLuncherCorpForPlaceIDIsSent(String placeIdx,
-      List<Map<String, String>> data) {
-    var placeId = getIdFromCache(placeIdx, EntityIdType.PLACE);
-
-    var req = castMap(data.get(0), PlaceOwnerUpdateRequest.class);
-
-    Response response = givenHttpRequest().body(req).when().put("place/%s/owner".formatted(placeId))
-        .thenReturn();
-    saveHttpResp(response);
   }
 
   @When("Place Search request is sent as below:")

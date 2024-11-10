@@ -98,7 +98,7 @@ public class UsersController {
       @ApiResponse(responseCode = "200", description = "Successfully updated user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserBasicResponse.class))),
   })
   @PutMapping("{userId}")
-  public ResponseEntity<UserBasicResponse> updateUser(@RequestBody UserUpdateRequest request,
+  public ResponseEntity<UserBasicResponse> updateUser(@RequestBody @Valid UserUpdateRequest request,
       @PathVariable UUID userId, @Parameter(hidden = true) User requestingUser) {
     var user = userPersistenceService.getById(userId);
     userDtoMapper.updateDomain(user, request,

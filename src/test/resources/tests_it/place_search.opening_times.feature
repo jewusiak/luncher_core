@@ -123,7 +123,7 @@ Feature: Place search based on opening times
       | <dayOfWeek> | <openAt>    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size <expectedResults> in path results
+    And HTTP Response has a list of size <expectedResults> in path .
 
     Examples:
       | dayOfWeek | openAt | expectedResults |

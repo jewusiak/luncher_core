@@ -77,14 +77,14 @@ Feature: Place search engine
       | 52.22640473227021 | 21.019359661284454 | 340             | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 0 in path results
+    And HTTP Response has a list of size 0 in path .
 
     When Place Search request is sent as below:
       | location.latitude | location.longitude | location.radius | size | page |
       | 52.22640473227021 | 21.019359661284454 | 345             | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response contains:
       | [ID:PLACE:3] |
 
@@ -93,7 +93,7 @@ Feature: Place search engine
       | 52.22640473227021 | 21.019359661284454 | 800             | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response contains:
       | [ID:PLACE:2] |
       | [ID:PLACE:3] |
@@ -103,7 +103,7 @@ Feature: Place search engine
       | 52.22640473227021 | 21.019359661284454 | 1300            | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 3 in path results
+    And HTTP Response has a list of size 3 in path .
     And HTTP Response contains:
       | [ID:PLACE:1] |
       | [ID:PLACE:2] |
@@ -114,7 +114,7 @@ Feature: Place search engine
       | 52.22640473227021 | 21.019359661284454 | 1300            | RESTAURANT          | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response contains:
       | [ID:PLACE:1] |
       | [ID:PLACE:2] |
@@ -166,7 +166,7 @@ Feature: Place search engine
       | bar       | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response contains:
       | [ID:PLACE:3] |
       | [ID:PLACE:4] |
@@ -177,7 +177,7 @@ Feature: Place search engine
       | Restauracja | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response contains:
       | [ID:PLACE:2] |
       | [ID:PLACE:1] |
@@ -188,7 +188,7 @@ Feature: Place search engine
       | Czeska    | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 2 in path results
+    And HTTP Response has a list of size 2 in path .
     And HTTP Response contains:
       | [ID:PLACE:2] |
       | [ID:PLACE:4] |
@@ -199,7 +199,7 @@ Feature: Place search engine
       | Czeska    | BAR                 | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response contains:
       | [ID:PLACE:4] |
 
@@ -209,7 +209,7 @@ Feature: Place search engine
       | Czeska    | RESTAURANT          | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response contains:
       | [ID:PLACE:2] |
 
@@ -219,9 +219,9 @@ Feature: Place search engine
       | kuchnia azjatycka | 10   | 0    |
 
     Then response code is 200
-    And HTTP Response has a list of size 1 in path results
+    And HTTP Response has a list of size 1 in path .
     And HTTP Response is:
-      | results[0].id |
-      | [ID:PLACE:1]  |
+      | [0].id       |
+      | [ID:PLACE:1] |
 
     

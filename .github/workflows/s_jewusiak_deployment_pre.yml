@@ -12,6 +12,7 @@ env:
   SWAG_NAME: "swag-luncher-core-common"
   ENV_SUFFIX: "-pre"
   BASE_DOMAIN: "api.pre.luncher.pl"
+  VOLUMES_DIR: "~/luncher-core-volumes${{ env.ENV_SUFFIX }}"
   
   # ssh host config
   SSH_HOST: "s.jewusiak.pl"
@@ -149,6 +150,9 @@ jobs:
       - name: Create Network
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker network inspect ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net >/dev/null 2>&1 || docker network create --driver bridge ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net"'
 
+      - name: Create volumes dir
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.VOLUMES_DIR }}/{${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }},${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }},${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}}"'
+
   stop_old_apps:
     needs: [ elasticsearch_build, postgres_build, build_app, test_app, environment_setup ]
     permissions:
@@ -190,7 +194,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new postgres
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" -v \"${{env.VOLUMES_DIR}}/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}/data:/var/lib/postgresql/data\" ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for postgres to start
         run: |
@@ -216,7 +220,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new elasticsearch
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" -v \"${{env.VOLUMES_DIR}}/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}/data:/usr/share/elasticsearch/data\" ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for elasticsearch to start
         run: |
@@ -242,7 +246,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run Docker application
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -v \"${{env.VOLUMES_DIR}}/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:/uploaded-assets\" ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for application to start
         run: |
@@ -326,26 +330,3 @@ jobs:
 
       - name: Remove dangling Docker images
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "rm -rf ~/images/* || true"'
-
-#  cleanup:
-#    needs: [ push ]
-#    if: ${{ always() }}
-#
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: geekyeggo/delete-artifact@v5
-#        with:
-#          name: |
-#            *_image.tar
-#            *_image
-
-#  cleanup_if_test_fails:
-#    needs: [ test, build ]
-#    if: ${{ needs.test.result == 'failure' && needs.build.result == 'success' }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: geekyeggo/delete-artifact@v5
-#        with:
-#          name: |
-#            *_image.tar
-#            *_image

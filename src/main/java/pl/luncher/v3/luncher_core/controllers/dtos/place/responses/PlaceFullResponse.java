@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AddressDto;
-import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetDto;
+import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.LocationDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.PlaceTypeDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.UserDto;
@@ -34,7 +34,7 @@ public class PlaceFullResponse implements Serializable {
   private PlaceTypeDto placeType;
   private LocationDto location;
   private UserDto owner;
-  private List<AssetDto> images;
+  private List<AssetBasicResponse> images;
   private List<MenuOfferDto> menuOffers;
   private Boolean enabled;
 }

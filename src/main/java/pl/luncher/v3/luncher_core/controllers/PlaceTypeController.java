@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.controllers;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.FullPlaceTypeResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers.PlaceTypeDtoMapper;
-import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.PlaceTypeRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.CreatePlaceTypeRequest;
+import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.UpdatePlaceTypeRequest;
 import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
@@ -33,7 +35,7 @@ public class PlaceTypeController {
   @PostMapping
   @PreAuthorize(hasRole.SYS_MOD)
   public ResponseEntity<FullPlaceTypeResponse> createPlaceType(
-      @RequestBody @Valid PlaceTypeRequest request) {
+      @RequestBody @Valid CreatePlaceTypeRequest request) {
     PlaceType placeType = placeTypeDtoMapper.toDomain(request);
     placeType.validate();
 
@@ -44,8 +46,8 @@ public class PlaceTypeController {
 
   @PutMapping("/{identifier}")
   @PreAuthorize(hasRole.SYS_MOD)
-  public ResponseEntity<FullPlaceTypeResponse> updatePlaceType(@PathVariable String identifier,
-      @RequestBody @Valid PlaceTypeRequest request) {
+  public ResponseEntity<FullPlaceTypeResponse> updatePlaceType(@PathVariable @NotBlank String identifier,
+      @RequestBody @Valid UpdatePlaceTypeRequest request) {
     PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
 
     placeTypeDtoMapper.updateDomain(request, placeType);

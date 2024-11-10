@@ -16,7 +16,6 @@ public class Option implements Validatable {
   private String name;
   private String description;
   private MonetaryAmount supplement;
-  private boolean required;
 
 
   @Override
