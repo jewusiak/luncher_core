@@ -15,6 +15,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetFactory;
@@ -41,6 +42,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.assets.requests.CreateAssetRe
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.AssetFullResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.CreateAssetResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
+import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -76,23 +78,24 @@ public class AssetController {
     var saved = assetInfoPersistenceService.save(asset);
 
     return ResponseEntity.ok(
-        new CreateAssetResponse(saved.getId(), saved.getPlace().getId(), saved.getAccessUrl(),
+        new CreateAssetResponse(saved.getId(), saved.getPlaceId(), saved.getAccessUrl(),
             saved.getUploadStatus().name()));
 
   }
 
-  @PostMapping("/{uuid}")
+  @PostMapping(value = "/{uuid}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "Upload asset")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Asset uploaded successfully"),
       @ApiResponse(responseCode = "403", description = "User has no permission to upload asset"),
       @ApiResponse(responseCode = "404", description = "Asset not found")
   })
-  public ResponseEntity<AssetFullResponse> upload(@PathVariable UUID uuid, @RequestParam("file")
+  public ResponseEntity<AssetFullResponse> upload(@PathVariable UUID uuid, @RequestPart("file")
   MultipartFile file, @Parameter(hidden = true) User requestingUser) throws IOException {
     Asset asset = assetInfoPersistenceService.getById(uuid);
+    var place = placePersistenceService.getById(asset.getPlaceId());
 
-    asset.permissions().byUser(requestingUser.getUuid()).edit().throwIfNotPermitted();
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
     MimeContentFileType fileType = MimeContentFileType.fromFilename(file.getOriginalFilename());
 
@@ -129,8 +132,9 @@ public class AssetController {
       @Parameter(hidden = true) User requestingUser) {
 
     Asset asset = assetInfoPersistenceService.getById(uuid);
+    Place place = placePersistenceService.getById(asset.getPlaceId());
 
-    asset.permissions().byUser(requestingUser.getUuid()).delete().throwIfNotPermitted();
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
     assetInfoPersistenceService.delete(asset);
 
@@ -153,15 +157,15 @@ public class AssetController {
 
     Path path = Path.of(luncherProperties.getFilesystemPersistentAssetsBasePathWithTrailingSlash()
         + asset.getStoragePath());
-    
+
     Resource resource = new UrlResource(path.toUri());
     if (resource.exists() || resource.isReadable()) {
       return ResponseEntity.ok().body(resource);
     }
-    
+
     throw new AssetUnavailableException("Asset is not found on the server");
   }
-  
+
   @GetMapping("/{uuid}")
   @Operation(summary = "Get Asset contents by id")
   @ApiResponses(value = {

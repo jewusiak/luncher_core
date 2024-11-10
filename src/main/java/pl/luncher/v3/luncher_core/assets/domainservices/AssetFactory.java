@@ -9,7 +9,7 @@ public class AssetFactory {
 
   public static Asset newFilesystemPersistent(String description, Place place) {
     return Asset.builder().description(description).uploadStatus(AssetUploadStatus.AWAITING)
-        .place(place)
+        .placeId(place.getId())
         .build();
   }
 }

@@ -12,11 +12,11 @@ interface AssetDbMapper {
 
   @Mapping(target = "id", source = "asset.id")
   @Mapping(target = "description", source = "asset.description")
+  @Mapping(target = "place", source = "place")
   AssetDb toDbEntity(Asset asset, PlaceDb place);
 
 
-  @Mapping(target = "id", source = "assetDb.id")
-  @Mapping(target = "description", source = "assetDb.description")
-  Asset toDomain(AssetDb assetDb, Place place);
+  @Mapping(target = "placeId", source = "place.id")
+  Asset toDomain(AssetDb assetDb);
 
 }

@@ -12,24 +12,23 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   private final AssetRepository assetRepository;
   private final AssetDbMapper assetDbMapper;
-  private final PlaceDbMapper placeDbMapper;
   private final PlaceRepository placeRepository;
 
   @Override
   public Asset save(Asset asset) {
     PlaceDb placeDb = null;
-    if (asset.getPlace() != null) {
-      placeDb = placeRepository.findById(asset.getPlace().getId()).orElseThrow();
+    if (asset.getPlaceId() != null) {
+      placeDb = placeRepository.findById(asset.getPlaceId()).orElseThrow();
     }
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
-    return assetDbMapper.toDomain(assetRepository.save(toBeSaved), placeDbMapper.toDomain(toBeSaved.getPlace()));
+    return assetDbMapper.toDomain(assetRepository.save(toBeSaved));
   }
 
   @Override
   public Asset getById(UUID id) {
     AssetDb assetDb = assetRepository.findById(id).orElseThrow();
     
-    return assetDbMapper.toDomain(assetDb, placeDbMapper.toDomain(assetDb.getPlace()));
+    return assetDbMapper.toDomain(assetDb);
   }
 
   public void delete(Asset asset) {
