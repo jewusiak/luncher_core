@@ -19,8 +19,7 @@ import pl.luncher.v3.luncher_core.user.model.User;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile({"local_dev", "local_test", "gcp_test"})
-public class DefaultDataGenerator {
+public class DefaultUserGenerator {
 
   private final PasswordEncoder passwordEncoder;
   private final UserPersistenceService userPersistenceService;
@@ -42,27 +41,6 @@ public class DefaultDataGenerator {
     } catch (RuntimeException exception) {
       log.info("Failed to save the user", exception);
     }
-
-    var pt = new PlaceType("BAR", "BAR_ICON", "Bar");
-    try {
-      pt = placeTypePersistenceService.create(pt);
-    } catch (Exception e) {
-      log.error("", e);
-    }
-    PlaceType finalPt = pt;
-    Place place = new Place() {{
-      setName("Nowe miejsce");
-      setEnabled(true);
-      setPlaceType(finalPt);
-    }};
-    try {
-      place = placePersistenceService.save(place);
-      log.info("Created Place: {}", place);
-    } catch (Exception e) {
-      log.error("", e);
-    }
-
-    log.info("Token for {} user:\n{}", root.getEmail(), jwtService.generateJwtTokenForUser(userPersistenceService.getByEmail(root.getEmail())));
 
   }
 }
