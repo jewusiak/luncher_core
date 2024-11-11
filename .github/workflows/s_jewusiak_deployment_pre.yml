@@ -220,7 +220,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new elasticsearch
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" -v ${{env.VOLUMES_DIR}}/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}/data:/usr/share/elasticsearch/data ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --group-add 1000 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" -v ${{env.VOLUMES_DIR}}/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}/data:/usr/share/elasticsearch/data ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for elasticsearch to start
         run: |
