@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import pl.luncher.v3.luncher_core.assets.domainservices.AssetFactory;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetFilePersistenceService;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.CannotEstablishFileTypeException;
+import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
 import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
@@ -102,7 +105,20 @@ public class PlaceController {
       newOwner = userPersistenceService.getByEmail(placeUpdateRequest.getOwnerEmail());
     }
 
-    place = placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
+    if (placeUpdateRequest.getImageIds() != null) {
+      var distinctIds = new HashSet<>(placeUpdateRequest.getImageIds());
+      if (distinctIds.size() != placeUpdateRequest.getImageIds().size()) {
+        throw new IllegalArgumentException("Image ids from request cannot have duplicates!");
+      }
+
+      var placeImagesIds = place.getImages().stream().map(Asset::getId).collect(Collectors.toSet());
+      if (distinctIds.size() != placeImagesIds.size() || !placeImagesIds.equals(distinctIds)) {
+        throw new IllegalArgumentException(
+            "Image ids set has to be the same as set of images in the updated place!");
+      }
+    }
+    
+    placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
     place.validate();
     Place savedPlace = placePersistenceService.save(place);
 

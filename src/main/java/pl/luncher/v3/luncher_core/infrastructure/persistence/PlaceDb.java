@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
@@ -92,6 +93,7 @@ class PlaceDb {
   private Boolean enabled;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place", fetch = FetchType.EAGER)
+  @OrderColumn(name = "place_image_idx")
   private List<AssetDb> images;
 
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")

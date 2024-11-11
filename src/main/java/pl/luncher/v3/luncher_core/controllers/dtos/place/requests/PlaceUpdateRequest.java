@@ -34,6 +34,7 @@ public class PlaceUpdateRequest implements Serializable {
   private String placeTypeIdentifier;
   private LocationDto location;
   private List<MenuOfferDto> menuOffers;
+  private List<UUID> imageIds;
   @Email
   private String ownerEmail;
   private Boolean enabled;

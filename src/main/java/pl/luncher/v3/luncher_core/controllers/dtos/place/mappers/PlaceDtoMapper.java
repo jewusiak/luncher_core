@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
+import java.util.Comparator;
 import java.util.UUID;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
@@ -39,11 +40,22 @@ public interface PlaceDtoMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(source = "placeUpdateRequest.placeTypeIdentifier", target = "placeType.identifier")
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "images", ignore = true)
   @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
   @Mapping(source = "user", target = "owner")
-  Place updateDomain(
+  void updateDomain(
       PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place);
 
+  @AfterMapping
+  default void reorderImages(
+      PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place) {
+    if (placeUpdateRequest.getImageIds() == null) {
+      return;
+    }
+    place.getImages()
+        .sort(Comparator.comparing(e -> placeUpdateRequest.getImageIds().indexOf(e.getId())));
+  }
+  
   // Responses
 
   PlaceBasicResponse toBasicResponse(Place place);

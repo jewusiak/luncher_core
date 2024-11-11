@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,4 +39,7 @@ class AssetDb {
 
   @ManyToOne
   private PlaceDb place;
+  
+  @Column(name = "place_image_idx", nullable = false)
+  private int placeImageIdx;
 }

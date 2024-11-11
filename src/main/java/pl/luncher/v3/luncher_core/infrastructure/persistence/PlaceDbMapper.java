@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import java.util.Comparator;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -9,6 +10,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 import pl.luncher.v3.luncher_core.place.model.Place;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
@@ -32,6 +34,14 @@ interface PlaceDbMapper {
     }
     if (placeDb.getMenuOffers() != null) {
       placeDb.getMenuOffers().forEach(menuOfferDb -> menuOfferDb.setPlace(placeDb));
+    }
+  }
+
+  @AfterMapping
+  default void sortOpeningWindows(@MappingTarget Place place) {
+    if (place.getOpeningWindows() != null) {
+      place.getOpeningWindows()
+          .sort(Comparator.comparing(WeekDayTimeRange::getStartTime));
     }
   }
 
