@@ -39,9 +39,6 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
-      - name: Copy App GCP credentials
-        run: 'mkdir secrets && echo ''${{ secrets.GCP_CREDENTIALS_LUNCHER_CORE_APP_PRE }}'' > secrets/gcp_server_key.json'
-
       - name: Build docker Image
         id: docker-build
         run: 'docker build -t ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-s_pre .'
@@ -55,8 +52,27 @@ jobs:
       - name: Load image
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker load --input images/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar"'
 
+  environment_setup:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.S_JEWUSIAK_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
+
+      - name: Create Network
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker network inspect ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net >/dev/null 2>&1 || docker network create --driver bridge ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net"'
+
+      - name: Create volumes dir
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ${{ env.VOLUMES_DIR }}/{${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }},${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }},${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}}"'
+
   stop_old_apps:
-    needs: [ build_app ]
+    needs: [ build_app, environment_setup ]
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -89,7 +105,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run Docker application
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -v ${{env.VOLUMES_DIR}}/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:/uploaded-assets ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for application to start
         run: |
