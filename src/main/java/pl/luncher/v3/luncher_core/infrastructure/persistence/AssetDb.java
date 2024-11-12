@@ -2,6 +2,8 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +36,9 @@ class AssetDb {
   private String originalFilename;
   private String storagePath;
   private String accessUrl;
+  @Enumerated(EnumType.STRING)
   private MimeContentFileType mimeType;
+  @Enumerated(EnumType.STRING)
   private AssetUploadStatus uploadStatus;
 
   @ManyToOne
@@ -42,4 +46,18 @@ class AssetDb {
   
   @Column(name = "place_image_idx", nullable = false)
   private int placeImageIdx;
+
+  public void insertPlaceListIndexValue() {
+    if (place == null) {
+      return;
+    }
+    if (place.getImages() == null) {
+      return;
+    }
+    if (this.id == null || place.getImages().stream()
+        .noneMatch(img -> img.getId().equals(this.id))) {
+      placeImageIdx = place.getImages().stream().map(AssetDb::getPlaceImageIdx)
+          .max(Integer::compareTo).orElse(-1) + 1;
+    }
+  }
 }

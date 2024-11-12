@@ -12,12 +12,14 @@ public class JpaRepositoriesHelper {
   private final PlaceRepository placeRepository;
   private final PlaceTypeRepository placeTypeRepository;
   private final ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
+  private final AssetRepository assetRepository;
 
 
   public void deleteAll() {
-    placeRepository.deleteAll();
-    forgottenPasswordIntentRepository.deleteAll();
-    userRepository.deleteAll();
-    placeTypeRepository.deleteAll();
+//    assetRepository.deleteAll();
+//    placeRepository.deleteAll();
+//    forgottenPasswordIntentRepository.deleteAll();
+//    userRepository.deleteAll();
+//    placeTypeRepository.deleteAll();
   }
 }

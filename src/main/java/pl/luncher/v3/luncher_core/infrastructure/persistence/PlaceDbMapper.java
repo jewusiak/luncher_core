@@ -38,6 +38,16 @@ interface PlaceDbMapper {
   }
 
   @AfterMapping
+  default void assignAssetsIndexes(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getImages() == null) {
+      return;
+    }
+    for (int i = 0; i < placeDb.getImages().size(); i++) {
+      placeDb.getImages().get(i).setPlaceImageIdx(i);
+    }
+  }
+
+  @AfterMapping
   default void sortOpeningWindows(@MappingTarget Place place) {
     if (place.getOpeningWindows() != null) {
       place.getOpeningWindows()

@@ -10,8 +10,8 @@ import org.springframework.core.io.ClassPathResource;
 @RequiredArgsConstructor
 public class AssetSteps {
 
-  @When("User uploads place image as below ID {}:")
-  public void userUploadsPlaceImageAsBelowID(String placeIdx, List<Map<String, String>> map)
+  @When("User uploads place image as below:")
+  public void userUploadsPlaceImageAsBelowID(List<Map<String, String>> map)
       throws IOException {
     var data = ParentSteps.replaceIds(map.get(0));
 

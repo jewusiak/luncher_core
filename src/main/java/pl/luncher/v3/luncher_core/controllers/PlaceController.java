@@ -187,7 +187,7 @@ public class PlaceController {
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
-    var asset = AssetFactory.newFilesystemPersistent(description, place);
+    var asset = AssetFactory.newFilesystemPersistent(description, place.getId());
 
     asset = assetInfoPersistenceService.save(asset);
 
