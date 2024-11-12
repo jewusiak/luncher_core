@@ -121,8 +121,8 @@ Feature: CRUD of Assets based on Place's images
     """
     {
       "imageIds": [
-        [ID:ASSET:2],
-        [ID:ASSET:1]
+        "[ID:ASSET:2]",
+        "[ID:ASSET:1]"
       ]
     }
     """
@@ -132,15 +132,15 @@ Feature: CRUD of Assets based on Place's images
     And HTTP Response has a list of size 2 in path images
     And HTTP Response is:
       | id            | images[0].id | images[1].id |
-      | [ID:PLACE:-1] | [ID:ASSET:1] | [ID:ASSET:2] |
+      | [ID:PLACE:-1] | [ID:ASSET:2] | [ID:ASSET:1] |
 
-    
+
     When Send PUT request to /place/[ID:PLACE:-1] with body as below:
     """
     {
       "imageIds": [
-        [ID:ASSET:1],
-        [ID:ASSET:2]
+        "[ID:ASSET:1]",
+        "[ID:ASSET:2]"
       ]
     }
     """
@@ -156,4 +156,3 @@ Feature: CRUD of Assets based on Place's images
     Examples:
       | filePath            | expectedMimetype | mimetypeResultingExtension |
       | test-assets/img.png | image/png        | png                        |
-    

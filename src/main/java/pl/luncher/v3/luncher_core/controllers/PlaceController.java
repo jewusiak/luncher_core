@@ -106,18 +106,18 @@ public class PlaceController {
     }
 
     if (placeUpdateRequest.getImageIds() != null) {
-      var distinctIds = new HashSet<>(placeUpdateRequest.getImageIds());
-      if (distinctIds.size() != placeUpdateRequest.getImageIds().size()) {
+      var distinctRequestedIds = new HashSet<>(placeUpdateRequest.getImageIds());
+      if (distinctRequestedIds.size() != placeUpdateRequest.getImageIds().size()) {
         throw new IllegalArgumentException("Image ids from request cannot have duplicates!");
       }
 
       var placeImagesIds = place.getImages().stream().map(Asset::getId).collect(Collectors.toSet());
-      if (distinctIds.size() != placeImagesIds.size() || !placeImagesIds.equals(distinctIds)) {
+      if (!placeImagesIds.containsAll(distinctRequestedIds)) {
         throw new IllegalArgumentException(
-            "Image ids set has to be the same as set of images in the updated place!");
+            "Requested image set has to be a subset of Place's images!");
       }
     }
-    
+
     placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
     place.validate();
     Place savedPlace = placePersistenceService.save(place);
@@ -223,14 +223,13 @@ public class PlaceController {
       // role less than SYS_MOD can only see their own places
       ownerUuid = requestingUser.getUuid();
     }
-    
+
     if (request.getOwnerEmail() != null && ownerUuid == null) {
       ownerUuid = userPersistenceService.getByEmail(request.getOwnerEmail()).getUuid();
     }
-    
 
     var searchRequest = placeDtoMapper.toSearchRequest(request, ownerUuid);
-    
+
     List<Place> searchResponse = placeSearchService.search(searchRequest);
 
     List<PlaceFullResponse> responseList = searchResponse.stream()

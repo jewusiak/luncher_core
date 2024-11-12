@@ -1,7 +1,9 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
-import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
@@ -52,10 +54,14 @@ public interface PlaceDtoMapper {
     if (placeUpdateRequest.getImageIds() == null) {
       return;
     }
-    place.getImages()
-        .sort(Comparator.comparing(e -> placeUpdateRequest.getImageIds().indexOf(e.getId())));
+    place.setImages(
+        Optional.ofNullable(place.getImages())
+            .map(List::stream)
+            .map(s -> s.filter(a -> placeUpdateRequest.getImageIds().contains(a.getId())))
+            .map(Stream::toList)
+            .orElse(null));
   }
-  
+
   // Responses
 
   PlaceBasicResponse toBasicResponse(Place place);
