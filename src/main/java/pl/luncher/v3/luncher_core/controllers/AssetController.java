@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,12 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetFilePersistenceService;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.AssetUnavailableException;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
-import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
-import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
+import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.AssetFullResponse;
@@ -40,10 +36,9 @@ import pl.luncher.v3.luncher_core.user.model.User;
 public class AssetController {
 
   private final AssetInfoPersistenceService assetInfoPersistenceService;
-  private final AssetFilePersistenceService assetFilePersistenceService;
   private final PlacePersistenceService placePersistenceService;
   private final AssetDtoMapper assetDtoMapper;
-  private final LuncherProperties luncherProperties;
+  private final AssetManagementService assetManagementService;
 
 
   @DeleteMapping("/{uuid}")
@@ -59,11 +54,9 @@ public class AssetController {
 
     Asset asset = assetInfoPersistenceService.getById(uuid);
     Place place = placePersistenceService.getById(asset.getPlaceId());
-
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
-    assetFilePersistenceService.delete(asset);
-    assetInfoPersistenceService.delete(asset);
+    assetManagementService.deleteAsset(asset);
 
     return ResponseEntity.noContent().build();
   }
@@ -90,22 +83,12 @@ public class AssetController {
   @PermitAll
   public ResponseEntity<Resource> getContentsById(@PathVariable UUID uuid)
       throws MalformedURLException {
-    Asset asset = assetInfoPersistenceService.getById(uuid);
 
-    if (asset.getUploadStatus() != AssetUploadStatus.UPLOADED) {
-      throw new AssetUnavailableException("Asset is not uploaded yet");
-    }
+    Resource contents = assetManagementService.getAssetContents(uuid);
 
-    Path path = Path.of(luncherProperties.getFilesystemPersistentAssetsBasePathWithTrailingSlash()
-        + asset.getStoragePath());
-
-    Resource resource = new UrlResource(path.toUri());
-    if (resource.exists() || resource.isReadable()) {
-      return ResponseEntity.ok()
-          .contentType(MediaType.parseMediaType(asset.getMimeType().getMimeType())).body(resource);
-    }
-
-    throw new AssetUnavailableException("Asset is not found on the server");
+    return ResponseEntity.ok()
+        .contentType(MediaType.valueOf(
+            MimeContentFileType.fromFilename(contents.getFilename()).getMimeType())).body(
+            contents);
   }
-
 }

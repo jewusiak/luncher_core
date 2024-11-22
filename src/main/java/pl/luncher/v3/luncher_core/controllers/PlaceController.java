@@ -9,10 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetFactory;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetFilePersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.CannotEstablishFileTypeException;
-import pl.luncher.v3.luncher_core.assets.model.Asset;
-import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
-import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
@@ -44,6 +36,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchReq
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
+import pl.luncher.v3.luncher_core.place.domainservices.PlaceManagementService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
@@ -62,9 +55,9 @@ public class PlaceController {
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
   private final UserPersistenceService userPersistenceService;
-  private final AssetInfoPersistenceService assetInfoPersistenceService;
-  private final AssetFilePersistenceService assetFilePersistenceService;
   private final AssetDtoMapper assetDtoMapper;
+  private final AssetManagementService assetManagementService;
+  private final PlaceManagementService placeManagementService;
 
   @GetMapping("/{uuid}")
   public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid) {
@@ -93,10 +86,9 @@ public class PlaceController {
       @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
+    User newOwner = null;
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
-
-    User newOwner = null;
 
     if (placeUpdateRequest.getOwnerEmail() != null && !placeUpdateRequest.getOwnerEmail()
         .equalsIgnoreCase(place.getOwner().getEmail())) {
@@ -105,22 +97,9 @@ public class PlaceController {
       newOwner = userPersistenceService.getByEmail(placeUpdateRequest.getOwnerEmail());
     }
 
-    if (placeUpdateRequest.getImageIds() != null) {
-      var distinctRequestedIds = new HashSet<>(placeUpdateRequest.getImageIds());
-      if (distinctRequestedIds.size() != placeUpdateRequest.getImageIds().size()) {
-        throw new IllegalArgumentException("Image ids from request cannot have duplicates!");
-      }
-
-      var placeImagesIds = place.getImages().stream().map(Asset::getId).collect(Collectors.toSet());
-      if (!placeImagesIds.containsAll(distinctRequestedIds)) {
-        throw new IllegalArgumentException(
-            "Requested image set has to be a subset of Place's images!");
-      }
-    }
-
     placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
-    place.validate();
-    Place savedPlace = placePersistenceService.save(place);
+
+    Place savedPlace = placeManagementService.updatePlace(place, placeUpdateRequest.getImageIds());
 
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
@@ -139,10 +118,7 @@ public class PlaceController {
     place.permissions().byUser(requestingUser).delete()
         .throwIfNotPermitted();
 
-    place.getImages().forEach(asset -> {
-      assetFilePersistenceService.delete(asset);
-      assetInfoPersistenceService.delete(asset);
-    });
+    place.getImages().forEach(assetManagementService::deleteAsset);
 
     placePersistenceService.deleteById(place.getId());
 
@@ -173,36 +149,11 @@ public class PlaceController {
       @RequestPart(value = "file") MultipartFile file,
       @Parameter(hidden = true) User requestingUser) throws IOException {
 
-    MimeContentFileType fileType = MimeContentFileType.fromFilename(file.getOriginalFilename());
-
-    if (fileType == null) {
-      fileType = MimeContentFileType.byMimeType(file.getContentType());
-    }
-
-    if (fileType == null) {
-      throw new CannotEstablishFileTypeException();
-    }
-
     var place = placePersistenceService.getById(placeUuid);
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
-    var asset = AssetFactory.newFilesystemPersistent(description, place.getId());
-
-    asset = assetInfoPersistenceService.save(asset);
-
-    asset.setMimeType(fileType);
-    asset.setOriginalFilename(file.getOriginalFilename());
-
-    asset.validate();
-
-    // set storage path
-    assetFilePersistenceService.saveFileToStorage(asset, file.getInputStream());
-    asset.setAccessUrl("/asset/" + asset.getId());
-
-    asset.setUploadStatus(AssetUploadStatus.UPLOADED);
-
-    asset = assetInfoPersistenceService.save(asset);
+    var asset = assetManagementService.createAsset(description, file, place);
 
     return ResponseEntity.ok(assetDtoMapper.toAssetBasicResponse(asset));
   }

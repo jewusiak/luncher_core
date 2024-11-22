@@ -1,8 +1,5 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
-import jakarta.transaction.Transactional;
-import jakarta.transaction.Transactional.TxType;
-import java.util.ArrayList;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +38,6 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
     if (assetDb.getPlace() != null) {
       assetDb.getPlace().getImages().remove(assetDb);
     }
-    assetRepository.save(assetDb);
+    assetRepository.delete(assetDb);
   }
 }

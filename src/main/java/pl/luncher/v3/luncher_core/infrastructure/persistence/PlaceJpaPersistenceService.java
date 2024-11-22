@@ -35,10 +35,16 @@ class PlaceJpaPersistenceService implements PlacePersistenceService {
 
     PlaceDb placeDb = placeDbMapper.toDb(place, owner, placeType);
 
+    if (placeDb.getImages() != null) {
+      for (int i = 0; i < placeDb.getImages().size(); i++) {
+        placeDb.getImages().get(i).setPlaceImageIdx(i);
+      }
+    }
+
     placeDb.setPlaceType(placeType);
     placeDb.setOwner(owner);
 
-    PlaceDb saved = placeRepository.save(placeDb);
+    PlaceDb saved = placeRepository.saveAndFlush(placeDb);
 
     return placeDbMapper.toDomain(saved);
   }

@@ -114,8 +114,8 @@ Feature: CRUD of Assets based on Place's images
     Then response code is 200
     And HTTP Response has a list of size 2 in path images
     And HTTP Response is:
-      | id            | images[0].id | images[1].id |
-      | [ID:PLACE:-1] | [ID:ASSET:1] | [ID:ASSET:2] |
+      | id            | images[0].id | images[1].id | images[0].accessUrl                      | images[1].accessUrl                      |
+      | [ID:PLACE:-1] | [ID:ASSET:1] | [ID:ASSET:2] | http://localhost:8080/asset/[ID:ASSET:1] | http://localhost:8080/asset/[ID:ASSET:2] |
     
     When Send PUT request to /place/[ID:PLACE:-1] with body as below:
     """
@@ -131,8 +131,8 @@ Feature: CRUD of Assets based on Place's images
     Then response code is 200
     And HTTP Response has a list of size 2 in path images
     And HTTP Response is:
-      | id            | images[0].id | images[1].id |
-      | [ID:PLACE:-1] | [ID:ASSET:2] | [ID:ASSET:1] |
+      | id            | images[0].id | images[1].id | images[0].accessUrl                      | images[1].accessUrl                      |
+      | [ID:PLACE:-1] | [ID:ASSET:2] | [ID:ASSET:1] | http://localhost:8080/asset/[ID:ASSET:2] | http://localhost:8080/asset/[ID:ASSET:1] |
 
 
     When Send PUT request to /place/[ID:PLACE:-1] with body as below:
@@ -149,8 +149,8 @@ Feature: CRUD of Assets based on Place's images
     Then response code is 200
     And HTTP Response has a list of size 2 in path images
     And HTTP Response is:
-      | id            | images[0].id | images[1].id |
-      | [ID:PLACE:-1] | [ID:ASSET:1] | [ID:ASSET:2] |
+      | id            | images[0].id | images[1].id | images[0].accessUrl                      | images[1].accessUrl                      |
+      | [ID:PLACE:-1] | [ID:ASSET:1] | [ID:ASSET:2] | http://localhost:8080/asset/[ID:ASSET:1] | http://localhost:8080/asset/[ID:ASSET:2] |
 
 
     Examples:

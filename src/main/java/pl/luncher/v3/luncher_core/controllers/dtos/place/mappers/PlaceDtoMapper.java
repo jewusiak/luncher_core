@@ -1,9 +1,6 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
@@ -44,23 +41,8 @@ public interface PlaceDtoMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "images", ignore = true)
   @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
-  @Mapping(source = "user", target = "owner")
   void updateDomain(
-      PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place);
-
-  @AfterMapping
-  default void reorderImages(
-      PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place) {
-    if (placeUpdateRequest.getImageIds() == null) {
-      return;
-    }
-    place.setImages(
-        Optional.ofNullable(place.getImages())
-            .map(List::stream)
-            .map(s -> s.filter(a -> placeUpdateRequest.getImageIds().contains(a.getId())))
-            .map(Stream::toList)
-            .orElse(null));
-  }
+      PlaceUpdateRequest placeUpdateRequest, User owner, @MappingTarget Place place);
 
   // Responses
 

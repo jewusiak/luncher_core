@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,7 +34,6 @@ class AssetDb {
   private String description;
   private String originalFilename;
   private String storagePath;
-  private String accessUrl;
   @Enumerated(EnumType.STRING)
   private MimeContentFileType mimeType;
   @Enumerated(EnumType.STRING)
@@ -44,7 +42,6 @@ class AssetDb {
   @ManyToOne
   private PlaceDb place;
   
-  @Column(name = "place_image_idx", nullable = false)
   private int placeImageIdx;
 
   public void insertPlaceListIndexValue() {
