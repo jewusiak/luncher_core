@@ -39,10 +39,10 @@ public interface PlaceDtoMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(source = "placeUpdateRequest.placeTypeIdentifier", target = "placeType.identifier")
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "images", ignore = true)
   @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
-  @Mapping(source = "user", target = "owner")
-  Place updateDomain(
-      PlaceUpdateRequest placeUpdateRequest, User user, @MappingTarget Place place);
+  void updateDomain(
+      PlaceUpdateRequest placeUpdateRequest, User owner, @MappingTarget Place place);
 
   // Responses
 

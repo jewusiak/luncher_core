@@ -26,12 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetFactory;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetFilePersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.CannotEstablishFileTypeException;
-import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
-import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
@@ -41,6 +36,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchReq
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
+import pl.luncher.v3.luncher_core.place.domainservices.PlaceManagementService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
@@ -59,9 +55,9 @@ public class PlaceController {
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
   private final UserPersistenceService userPersistenceService;
-  private final AssetInfoPersistenceService assetInfoPersistenceService;
-  private final AssetFilePersistenceService assetFilePersistenceService;
   private final AssetDtoMapper assetDtoMapper;
+  private final AssetManagementService assetManagementService;
+  private final PlaceManagementService placeManagementService;
 
   @GetMapping("/{uuid}")
   public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid) {
@@ -90,10 +86,9 @@ public class PlaceController {
       @Parameter(hidden = true) User requestingUser) {
 
     Place place = placePersistenceService.getById(placeUuid);
+    User newOwner = null;
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
-
-    User newOwner = null;
 
     if (placeUpdateRequest.getOwnerEmail() != null && !placeUpdateRequest.getOwnerEmail()
         .equalsIgnoreCase(place.getOwner().getEmail())) {
@@ -102,9 +97,9 @@ public class PlaceController {
       newOwner = userPersistenceService.getByEmail(placeUpdateRequest.getOwnerEmail());
     }
 
-    place = placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
-    place.validate();
-    Place savedPlace = placePersistenceService.save(place);
+    placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
+
+    Place savedPlace = placeManagementService.updatePlace(place, placeUpdateRequest.getImageIds());
 
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
@@ -123,10 +118,7 @@ public class PlaceController {
     place.permissions().byUser(requestingUser).delete()
         .throwIfNotPermitted();
 
-    place.getImages().forEach(asset -> {
-      assetFilePersistenceService.delete(asset);
-      assetInfoPersistenceService.delete(asset);
-    });
+    place.getImages().forEach(assetManagementService::deleteAsset);
 
     placePersistenceService.deleteById(place.getId());
 
@@ -157,36 +149,11 @@ public class PlaceController {
       @RequestPart(value = "file") MultipartFile file,
       @Parameter(hidden = true) User requestingUser) throws IOException {
 
-    MimeContentFileType fileType = MimeContentFileType.fromFilename(file.getOriginalFilename());
-
-    if (fileType == null) {
-      fileType = MimeContentFileType.byMimeType(file.getContentType());
-    }
-
-    if (fileType == null) {
-      throw new CannotEstablishFileTypeException();
-    }
-
     var place = placePersistenceService.getById(placeUuid);
 
     place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
 
-    var asset = AssetFactory.newFilesystemPersistent(description, place);
-
-    asset = assetInfoPersistenceService.save(asset);
-
-    asset.setMimeType(fileType);
-    asset.setOriginalFilename(file.getOriginalFilename());
-
-    asset.validate();
-
-    // set storage path
-    assetFilePersistenceService.saveFileToStorage(asset, file.getInputStream());
-    asset.setAccessUrl("/asset/" + asset.getId());
-
-    asset.setUploadStatus(AssetUploadStatus.UPLOADED);
-
-    asset = assetInfoPersistenceService.save(asset);
+    var asset = assetManagementService.createAsset(description, file, place);
 
     return ResponseEntity.ok(assetDtoMapper.toAssetBasicResponse(asset));
   }
@@ -207,14 +174,13 @@ public class PlaceController {
       // role less than SYS_MOD can only see their own places
       ownerUuid = requestingUser.getUuid();
     }
-    
+
     if (request.getOwnerEmail() != null && ownerUuid == null) {
       ownerUuid = userPersistenceService.getByEmail(request.getOwnerEmail()).getUuid();
     }
-    
 
     var searchRequest = placeDtoMapper.toSearchRequest(request, ownerUuid);
-    
+
     List<Place> searchResponse = placeSearchService.search(searchRequest);
 
     List<PlaceFullResponse> responseList = searchResponse.stream()

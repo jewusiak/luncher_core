@@ -21,7 +21,9 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
       placeDb = placeRepository.findById(asset.getPlaceId()).orElseThrow();
     }
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
-    return assetDbMapper.toDomain(assetRepository.save(toBeSaved));
+    toBeSaved.insertPlaceListIndexValue();
+    AssetDb save = assetRepository.save(toBeSaved);
+    return assetDbMapper.toDomain(save);
   }
 
   @Override
@@ -36,6 +38,6 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
     if (assetDb.getPlace() != null) {
       assetDb.getPlace().getImages().remove(assetDb);
     }
-    assetRepository.save(assetDb);
+    assetRepository.delete(assetDb);
   }
 }

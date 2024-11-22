@@ -1,7 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -12,9 +11,11 @@ public class JpaRepositoriesHelper {
   private final PlaceRepository placeRepository;
   private final PlaceTypeRepository placeTypeRepository;
   private final ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
+  private final AssetRepository assetRepository;
 
 
   public void deleteAll() {
+    assetRepository.deleteAll();
     placeRepository.deleteAll();
     forgottenPasswordIntentRepository.deleteAll();
     userRepository.deleteAll();
