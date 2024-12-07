@@ -24,15 +24,26 @@ Feature: CRUD of Assets based on Place's images
     And response code is 200
 
   Scenario Outline: User creates and uploads images, then img is removed
-    When User uploads place image as below:
-      | placeUuid     | description   | filePath   |
-      | [ID:PLACE:-1] | example descr | <filePath> |
+    When User uploads image as below:
+      | description   | filePath   |
+      | example descr | <filePath> |
 
     Then response code is 200
     And Put ID ASSET idx -1 to cache from HTTP response from path id
     And HTTP Response is:
       | id            | description   | mimeType           | uploadStatus |
       | [ID:ASSET:-1] | example descr | <expectedMimetype> | UPLOADED     |
+
+    When Send PUT request to /place/[ID:PLACE:-1] with body as below:
+    """
+    {
+      "imageIds": [
+        "[ID:ASSET:-1]"
+      ]
+    }
+    """
+
+    Then response code is 200
 
     And File uploaded-assets-test/[ID:ASSET:-1].<mimetypeResultingExtension> exists
 
@@ -64,15 +75,26 @@ Feature: CRUD of Assets based on Place's images
       | test-assets/img.jpeg | image/jpeg       | jpeg                       |
 
   Scenario Outline: Cascade place deletion on images
-    When User uploads place image as below:
-      | placeUuid     | description   | filePath   |
-      | [ID:PLACE:-1] | example descr | <filePath> |
+    When User uploads image as below:
+      | description   | filePath   |
+      | example descr | <filePath> |
 
     Then response code is 200
     And Put ID ASSET idx -1 to cache from HTTP response from path id
     And HTTP Response is:
       | id            | description   | mimeType           | uploadStatus |
       | [ID:ASSET:-1] | example descr | <expectedMimetype> | UPLOADED     |
+
+    When Send PUT request to /place/[ID:PLACE:-1] with body as below:
+    """
+    {
+      "imageIds": [
+        "[ID:ASSET:-1]"
+      ]
+    }
+    """
+
+    Then response code is 200
 
     And File uploaded-assets-test/[ID:ASSET:-1].<mimetypeResultingExtension> exists
 
@@ -86,9 +108,9 @@ Feature: CRUD of Assets based on Place's images
       | test-assets/img.png | image/png        | png                        |
 
   Scenario Outline: Reordering images and deletion by removing from list
-    When User uploads place image as below:
-      | placeUuid     | description   | filePath   |
-      | [ID:PLACE:-1] | example descr | <filePath> |
+    When User uploads image as below:
+      | description   | filePath   |
+      | example descr | <filePath> |
 
     Then response code is 200
     And Put ID ASSET idx 1 to cache from HTTP response from path id
@@ -96,17 +118,42 @@ Feature: CRUD of Assets based on Place's images
       | id           | description   | mimeType           | uploadStatus |
       | [ID:ASSET:1] | example descr | <expectedMimetype> | UPLOADED     |
 
+
+    When Send PUT request to /place/[ID:PLACE:-1] with body as below:
+    """
+    {
+      "imageIds": [
+        "[ID:ASSET:1]"
+      ]
+    }
+    """
+
+    Then response code is 200
+
     And File uploaded-assets-test/[ID:ASSET:1].<mimetypeResultingExtension> exists
 
-    When User uploads place image as below:
-      | placeUuid     | description    | filePath   |
-      | [ID:PLACE:-1] | example descr2 | <filePath> |
+    When User uploads image as below:
+      | description    | filePath   |
+      | example descr2 | <filePath> |
 
     Then response code is 200
     And Put ID ASSET idx 2 to cache from HTTP response from path id
     And HTTP Response is:
       | id           | description    | mimeType           | uploadStatus |
       | [ID:ASSET:2] | example descr2 | <expectedMimetype> | UPLOADED     |
+
+
+    When Send PUT request to /place/[ID:PLACE:-1] with body as below:
+    """
+    {
+      "imageIds": [
+        "[ID:ASSET:1]",
+        "[ID:ASSET:2]"
+      ]
+    }
+    """
+
+    Then response code is 200
 
     And File uploaded-assets-test/[ID:ASSET:2].<mimetypeResultingExtension> exists
 
@@ -154,15 +201,29 @@ Feature: CRUD of Assets based on Place's images
 
 
     # uploading 3rd image
-    When User uploads place image as below:
-      | placeUuid     | description    | filePath   |
-      | [ID:PLACE:-1] | example descr3 | <filePath> |
+    When User uploads image as below:
+      | description    | filePath   |
+      | example descr3 | <filePath> |
 
     Then response code is 200
     And Put ID ASSET idx 3 to cache from HTTP response from path id
     And HTTP Response is:
       | id           | description    | mimeType           | uploadStatus |
       | [ID:ASSET:3] | example descr3 | <expectedMimetype> | UPLOADED     |
+
+
+    When Send PUT request to /place/[ID:PLACE:-1] with body as below:
+    """
+    {
+      "imageIds": [
+        "[ID:ASSET:1]",
+        "[ID:ASSET:2]",
+        "[ID:ASSET:3]"
+      ]
+    }
+    """
+
+    Then response code is 200
 
     And File uploaded-assets-test/[ID:ASSET:3].<mimetypeResultingExtension> exists
 

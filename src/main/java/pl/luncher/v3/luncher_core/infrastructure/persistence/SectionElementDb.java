@@ -52,8 +52,8 @@ class SectionElementDb implements Serializable {
   @Transient
   public String getSourceElementId() {
     return Optional.ofNullable(elementType).map(type -> switch (type) {
-      case PLACE -> place.getId();
-      case PLACE_TYPE -> placeType.getIdentifier();
+      case PLACE -> place == null ? null : place.getId();
+      case PLACE_TYPE -> placeType == null ? null : placeType.getIdentifier();
       case OTHER -> null;
     }).map(Object::toString).orElse(null);
   }

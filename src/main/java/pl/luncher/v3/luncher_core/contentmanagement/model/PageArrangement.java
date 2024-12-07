@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class PageArrangement {
 
   private UUID id;
-  private boolean primary;
+  private boolean primaryPage;
   private List<Section> sections;
 
   public void validate() {

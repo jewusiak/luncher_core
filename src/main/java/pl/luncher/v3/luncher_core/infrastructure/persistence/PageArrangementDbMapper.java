@@ -8,7 +8,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
+    AssetDbMapper.class})
 interface PageArrangementDbMapper {
   
   PageArrangement toDomain(PageArrangementDb pageArrangementDb);

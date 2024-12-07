@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 
 @Service
@@ -12,6 +13,7 @@ import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 class ContentArrangementServiceImpl implements ContentArrangementService {
 
   private final ArrangementsPersistenceService arrangementsPersistenceService;
+  private final AssetInfoPersistenceService assetInfoPersistenceService;
 
   @Override
   public PageArrangement getPrimaryArrangement() {
@@ -32,16 +34,27 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
   public PageArrangement updateArrangement(PageArrangement arrangement) {
 
     PageArrangement old = getArrangementById(arrangement.getId());
-    arrangement.setPrimary(old.isPrimary());
+    arrangement.setPrimaryPage(old.isPrimaryPage());
 
-    arrangement.validate();
-    return arrangementsPersistenceService.save(arrangement);
+    return persistPageArrangement(arrangement);
   }
 
   @Override
   public PageArrangement createNewArrangement(PageArrangement arrangement) {
     arrangement.setId(null);
-    arrangement.setPrimary(false);
+    arrangement.setPrimaryPage(false);
+
+    return persistPageArrangement(arrangement);
+  }
+
+  private PageArrangement persistPageArrangement(PageArrangement arrangement) {
+    arrangement.getSections().forEach(section -> {
+      section.getSectionElements().forEach(element -> {
+        element.setThumbnail(assetInfoPersistenceService.getById(element.getThumbnail().getId()));
+      });
+    });
+
+    arrangement.validate();
     return arrangementsPersistenceService.save(arrangement);
   }
 
@@ -50,8 +63,8 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
   public PageArrangement makeArrangementPrimary(UUID uuid) {
     PageArrangement newPrimary = getArrangementById(uuid);
     PageArrangement oldPrimary = getPrimaryArrangement();
-    oldPrimary.setPrimary(false);
-    newPrimary.setPrimary(true);
+    oldPrimary.setPrimaryPage(false);
+    newPrimary.setPrimaryPage(true);
 
     arrangementsPersistenceService.save(oldPrimary);
     newPrimary = arrangementsPersistenceService.save(newPrimary);
@@ -62,7 +75,7 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
   @Override
   public void deleteArrangementById(UUID uuid) {
     var arrangement = arrangementsPersistenceService.getById(uuid);
-    if (arrangement.isPrimary()) {
+    if (arrangement.isPrimaryPage()) {
       throw new IllegalArgumentException(
           "This arrangement is set as primary! Cannot delete a primary arrangement.");
     }

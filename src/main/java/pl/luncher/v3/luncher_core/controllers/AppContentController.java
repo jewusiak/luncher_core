@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.contentmanagement.domainservices.ContentArrangementService;
 import pl.luncher.v3.luncher_core.controllers.dtos.contentmanagement.dtos.PageArrangementDto;
@@ -21,7 +22,8 @@ import pl.luncher.v3.luncher_core.controllers.dtos.contentmanagement.mappers.Pag
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 
 @Tag(name = "CMS")
-@RestController("/content-management/page-arrangements")
+@RestController
+@RequestMapping("/content-management")
 @RequiredArgsConstructor
 public class AppContentController {
 

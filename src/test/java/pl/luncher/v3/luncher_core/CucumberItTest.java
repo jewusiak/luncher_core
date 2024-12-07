@@ -18,4 +18,5 @@ import org.junit.platform.suite.api.Suite;
 @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "src/test/resources/tests_it")
 public class CucumberItTest {
 
+
 }

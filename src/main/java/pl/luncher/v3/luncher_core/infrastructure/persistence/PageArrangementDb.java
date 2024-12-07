@@ -31,7 +31,7 @@ class PageArrangementDb implements Serializable {
   private UUID id;
 
   @NotNull
-  private Boolean primary;
+  private Boolean primaryPage;
 
   @OneToMany(mappedBy = "pageArrangement", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("listIndex")

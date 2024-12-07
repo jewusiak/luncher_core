@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 interface PageArrangementsRepository extends JpaRepository<PageArrangementDb, UUID> {
 
-  List<PageArrangementDb> findAllByPrimaryIsTrue();
+  List<PageArrangementDb> findAllByPrimaryPageIsTrue();
 
-  Optional<PageArrangementDb> findFirstByPrimaryIsTrue();
+  Optional<PageArrangementDb> findFirstByPrimaryPageIsTrue();
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.luncher.v3.luncher_core.assets.model.Asset;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class SectionElement {
   private String heading;
   private String subheading;
   private String uri;
+  private Asset thumbnail;
 
   public void validate() {
     switch (elementType) {

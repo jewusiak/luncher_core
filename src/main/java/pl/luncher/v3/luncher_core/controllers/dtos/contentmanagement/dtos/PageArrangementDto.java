@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class PageArrangementDto implements Serializable {
 
   private UUID id;
-  private boolean primary;
+  private boolean primaryPage;
   private List<SectionDto> sections;
 }

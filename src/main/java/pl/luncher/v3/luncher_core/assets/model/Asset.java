@@ -19,6 +19,7 @@ public class Asset {
   private String storagePath;
   private String accessUrl;
   private UUID placeId;
+  private UUID sectionElementId;
   private MimeContentFileType mimeType;
   private AssetUploadStatus uploadStatus;
 

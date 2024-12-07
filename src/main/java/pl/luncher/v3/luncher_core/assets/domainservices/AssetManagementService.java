@@ -14,7 +14,6 @@ import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.AssetUnavaila
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
 import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
-import pl.luncher.v3.luncher_core.place.model.Place;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +25,9 @@ public class AssetManagementService {
 
 
   @Transactional
-  public Asset createAsset(String description, MultipartFile file, Place place) throws IOException {
-    var asset = AssetFactory.newFilesystemPersistent(description, file.getOriginalFilename(),
-        file.getContentType(), place.getId());
+  public Asset createAsset(String description, MultipartFile file) throws IOException {
+
+    Asset asset = AssetFactory.newFilesystemPersistent(description, file.getOriginalFilename(), file.getContentType());
 
     asset = assetInfoPersistenceService.save(asset);
 
