@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Optional;
@@ -37,7 +36,7 @@ class SectionElementDb implements Serializable {
   private String subheading;
   private String customUri;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = {CascadeType.MERGE})
   private AssetDb thumbnail;
 
   @ManyToOne

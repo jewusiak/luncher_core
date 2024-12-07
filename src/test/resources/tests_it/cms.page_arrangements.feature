@@ -67,7 +67,6 @@ Feature: CMS
     When Send POST request to /content-management/arrangements with body as below:
     """
     {
-  "primaryPage": true,
   "sections": [
     {
       "sectionHeader": "Restaurant Week",
@@ -89,7 +88,7 @@ Feature: CMS
     },
     {
       "sectionHeader": "Restaurant NieWeek",
-      "sectionSubheader": "Restauracje nie biorące udział w programie",
+      "sectionSubheader": "Restauracje nie biorące udziału w programie",
       "sectionElements": [
         {
           "sourceElementId": "[ID:PLACE:2]",
@@ -103,8 +102,191 @@ Feature: CMS
 }
     """
     Then response code is 200
-    And Send GET request to /content-management/primary without body
+    And Put ID ARRANGEMENT idx 1 to cache from HTTP response from path id
+    And Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
     And response code is 200
     And HTTP Response is:
-      |  |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].heading | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[1].heading | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].heading | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
+      | [ID:ARRANGEMENT:1] | false       | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
 
+    When Send GET request to /content-management/arrangements/primary without body
+    Then response code is 404
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1]/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].heading | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[1].heading | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].heading | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+
+    When Send GET request to /content-management/arrangements/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].heading | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[1].heading | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].heading | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1] with body as below:
+    """
+    {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week",
+      "sectionSubheader": "Restauracje biorące udział w programie",
+      "sectionElements": [
+      {
+          "sourceElementId": "[ID:PLACE:3]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R3",
+          "thumbnailId": "[ID:ASSET:3]"
+        },
+        {
+          "sourceElementId": "[ID:PLACE:1]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R1",
+          "thumbnailId": "[ID:ASSET:1]"
+        }
+        
+      ]
+    },
+    {
+      "sectionHeader": "Restaurant NieWeek",
+      "sectionSubheader": "Restauracje nie biorące udziału w programie",
+      "sectionElements": [
+        {
+          "sourceElementId": "[ID:PLACE:2]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R2",
+          "thumbnailId": "[ID:ASSET:2]"
+        }
+      ]
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].heading | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[0].sectionElements[0].heading | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].heading | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+
+
+
+    When User uploads image as below:
+      | description         | filePath            |
+      | example descr R3 -1 | test-assets/img.png |
+
+    Then response code is 200
+    And Put ID ASSET idx 4 to cache from HTTP response from path id
+
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1] with body as below:
+    """
+    {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week",
+      "sectionSubheader": "Restauracje biorące udział w programie",
+      "sectionElements": [
+      {
+          "sourceElementId": "[ID:PLACE:3]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R3",
+          "thumbnailId": "[ID:ASSET:4]"
+        },
+        {
+          "sourceElementId": "[ID:PLACE:1]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R1",
+          "thumbnailId": "[ID:ASSET:1]"
+        }
+        
+      ]
+    },
+    {
+      "sectionHeader": "Restaurant NieWeek",
+      "sectionSubheader": "Restauracje nie biorące udziału w programie",
+      "sectionElements": [
+        {
+          "sourceElementId": "[ID:PLACE:2]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R2",
+          "thumbnailId": "[ID:ASSET:2]"
+        }
+      ]
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].heading | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[0].sectionElements[0].heading | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].heading | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:4]                               | http://localhost:8080/asset/[ID:ASSET:4]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+
+
+
+
+
+    When Send POST request to /content-management/arrangements with body as below:
+    """
+    {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week2",
+      "sectionSubheader": "Restauracje biorące udział w programie2"
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And Put ID ARRANGEMENT idx 2 to cache from HTTP response from path id
+
+
+    When Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:2] without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | false       |
+
+    When Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:1] | true        |
+
+    When Send GET request to /content-management/arrangements/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:1] | true        |
+
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:2]/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | true        |
+
+    When Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:2] without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | true        |
+
+    When Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:1] | false       |
+
+    When Send GET request to /content-management/arrangements/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | true        |
+
+    When User logs out (by removing saved auth token)
+    Then Send GET request to /content-management/arrangements/primary without body
+    And response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | true        |
+    And Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
+    And response code is 401

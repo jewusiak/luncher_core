@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.contentmanagement.domainservices.ArrangementsPersistenceService;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 
@@ -18,8 +17,6 @@ class ArrangementsJpaPersistenceService implements ArrangementsPersistenceServic
   private final PlaceRepository placeRepository;
   private final PlaceTypeRepository placeTypeRepository;
   private final PageArrangementDbMapper pageArrangementDbMapper;
-  private final AssetRepository assetRepository;
-  private final AssetInfoPersistenceService assetInfoPersistenceService;
 
   @Override
   public List<PageArrangement> getAllArrangements() {
@@ -42,27 +39,28 @@ class ArrangementsJpaPersistenceService implements ArrangementsPersistenceServic
   public PageArrangement save(PageArrangement pageArrangement) {
     PageArrangementDb db = pageArrangementDbMapper.toDb(pageArrangement);
 
-    db.getSections()
-        .forEach(section -> {
-          section.getSectionElements().forEach(this::assignElementsSourceItem);
-        });
-
+    if (db.getSections() != null) {
+      db.getSections()
+          .forEach(section -> {
+            if (section.getSectionElements() != null) {
+              section.getSectionElements().forEach(this::assignElementsSourceItem);
+            }
+          });
+    }
     return pageArrangementDbMapper.toDomain(pageArrangementsRepository.save(db));
   }
 
   private void assignElementsSourceItem(SectionElementDb element) {
-    String sourceElementId = element.getSourceElementId();
+    // if place/placetype does not exist - throw error, if null source element - ignore
     switch (element.getElementType()) {
       case PLACE:
-        // if place/placetype does not exist - throw error, if null source element - ignore
-        Optional.ofNullable(sourceElementId).map(UUID::fromString).map(placeRepository::findById)
-            .ifPresent(opt -> opt.ifPresent(element::setPlace));
-        element.setPlace(
-            placeRepository.findById(UUID.fromString()).orElseThrow());
+        Optional.ofNullable(element.getSourceElementId()).map(UUID::fromString)
+            .map(placeRepository::findById)
+            .map(Optional::orElseThrow).ifPresent(element::setPlace);
         break;
       case PLACE_TYPE:
-        element.setPlaceType(
-            placeTypeRepository.findById(element.getSourceElementId()).orElseThrow());
+        Optional.ofNullable(element.getSourceElementId()).map(placeTypeRepository::findById)
+            .map(Optional::orElseThrow).ifPresent(element::setPlaceType);
         break;
       //skip other types
     }

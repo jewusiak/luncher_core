@@ -2,15 +2,16 @@ package pl.luncher.v3.luncher_core.contentmanagement.domainservices;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 
-@Service
+@Component
 @RequiredArgsConstructor
-class ContentArrangementServiceImpl implements ContentArrangementService {
+public class ContentArrangementServiceImpl implements ContentArrangementService {
 
   private final ArrangementsPersistenceService arrangementsPersistenceService;
   private final AssetInfoPersistenceService assetInfoPersistenceService;
@@ -48,12 +49,16 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
   }
 
   private PageArrangement persistPageArrangement(PageArrangement arrangement) {
-    arrangement.getSections().forEach(section -> {
-      section.getSectionElements().forEach(element -> {
-        element.setThumbnail(assetInfoPersistenceService.getById(element.getThumbnail().getId()));
+    if (arrangement.getSections() != null) {
+      arrangement.getSections().forEach(section -> {
+        if (section.getSectionElements() != null) {
+          section.getSectionElements().forEach(element -> {
+            element.setThumbnail(
+                assetInfoPersistenceService.getById(element.getThumbnail().getId()));
+          });
+        }
       });
-    });
-
+    }
     arrangement.validate();
     return arrangementsPersistenceService.save(arrangement);
   }
@@ -62,11 +67,15 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
   @Transactional
   public PageArrangement makeArrangementPrimary(UUID uuid) {
     PageArrangement newPrimary = getArrangementById(uuid);
-    PageArrangement oldPrimary = getPrimaryArrangement();
-    oldPrimary.setPrimaryPage(false);
+    try {
+      PageArrangement oldPrimary = getPrimaryArrangement();
+      oldPrimary.setPrimaryPage(false);
+      arrangementsPersistenceService.save(oldPrimary);
+    } catch (NoSuchElementException ignored) {
+
+    }
     newPrimary.setPrimaryPage(true);
 
-    arrangementsPersistenceService.save(oldPrimary);
     newPrimary = arrangementsPersistenceService.save(newPrimary);
 
     return newPrimary;

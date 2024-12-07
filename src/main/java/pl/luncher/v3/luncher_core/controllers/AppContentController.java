@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.contentmanagement.domainservices.ContentArrangementService;
 import pl.luncher.v3.luncher_core.controllers.dtos.contentmanagement.dtos.PageArrangementDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.contentmanagement.mappers.PageArrangementDtoMapper;
@@ -30,8 +31,9 @@ public class AppContentController {
   private final ContentArrangementService contentArrangementService;
   private final PageArrangementDtoMapper pageArrangementDtoMapper;
 
-  @GetMapping("/primary")
-  private ResponseEntity<PageArrangementDto> getPrimaryArrangementContents() {
+  @GetMapping("/arrangements/primary")
+  @PermitAll
+  public ResponseEntity<PageArrangementDto> getPrimaryArrangementContents() {
     return ResponseEntity.ok(
         pageArrangementDtoMapper.toDto(contentArrangementService.getPrimaryArrangement()));
   }

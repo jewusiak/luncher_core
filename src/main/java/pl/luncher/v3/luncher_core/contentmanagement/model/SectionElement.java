@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.contentmanagement.model;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import pl.luncher.v3.luncher_core.assets.model.Asset;
 @Builder
 public class SectionElement {
 
+  private UUID id;
   private String sourceElementId;
   private ElementType elementType;
   private String heading;

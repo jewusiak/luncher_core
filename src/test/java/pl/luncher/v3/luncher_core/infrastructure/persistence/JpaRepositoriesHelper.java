@@ -12,9 +12,11 @@ public class JpaRepositoriesHelper {
   private final PlaceTypeRepository placeTypeRepository;
   private final ForgottenPasswordIntentRepository forgottenPasswordIntentRepository;
   private final AssetRepository assetRepository;
+  private final PageArrangementsRepository pageArrangementsRepository;
 
 
   public void deleteAll() {
+    pageArrangementsRepository.deleteAll();
     assetRepository.deleteAll();
     placeRepository.deleteAll();
     forgottenPasswordIntentRepository.deleteAll();
