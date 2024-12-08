@@ -13,6 +13,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Transient;
 import pl.luncher.v3.luncher_core.contentmanagement.model.ElementType;
 import pl.luncher.v3.luncher_core.contentmanagement.model.SectionElement;
@@ -25,6 +26,7 @@ import pl.luncher.v3.luncher_core.contentmanagement.model.SectionElement;
 @NoArgsConstructor
 @Entity
 @Table(name = "page_arrangement_section_elements", schema = "luncher_core")
+@ToString(exclude = {"section", "place", "placeType", "thumbnail"})
 class SectionElementDb implements Serializable {
 
   @Id

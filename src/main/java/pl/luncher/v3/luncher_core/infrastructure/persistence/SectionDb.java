@@ -15,6 +15,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.luncher.v3.luncher_core.contentmanagement.model.Section;
 
 /**
@@ -25,6 +26,7 @@ import pl.luncher.v3.luncher_core.contentmanagement.model.Section;
 @NoArgsConstructor
 @Entity
 @Table(name = "page_arrangement_sections", schema = "luncher_core")
+@ToString(exclude = {"sectionElements", "pageArrangement"})
 class SectionDb implements Serializable {
 
   @Id

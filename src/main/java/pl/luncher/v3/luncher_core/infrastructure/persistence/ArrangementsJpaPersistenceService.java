@@ -1,7 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,33 +36,10 @@ class ArrangementsJpaPersistenceService implements ArrangementsPersistenceServic
 
   @Override
   public PageArrangement save(PageArrangement pageArrangement) {
-    PageArrangementDb db = pageArrangementDbMapper.toDb(pageArrangement);
+    PageArrangementDb db = pageArrangementDbMapper.toDb(pageArrangement, placeRepository,
+        placeTypeRepository);
 
-    if (db.getSections() != null) {
-      db.getSections()
-          .forEach(section -> {
-            if (section.getSectionElements() != null) {
-              section.getSectionElements().forEach(this::assignElementsSourceItem);
-            }
-          });
-    }
     return pageArrangementDbMapper.toDomain(pageArrangementsRepository.save(db));
-  }
-
-  private void assignElementsSourceItem(SectionElementDb element) {
-    // if place/placetype does not exist - throw error, if null source element - ignore
-    switch (element.getElementType()) {
-      case PLACE:
-        Optional.ofNullable(element.getSourceElementId()).map(UUID::fromString)
-            .map(placeRepository::findById)
-            .map(Optional::orElseThrow).ifPresent(element::setPlace);
-        break;
-      case PLACE_TYPE:
-        Optional.ofNullable(element.getSourceElementId()).map(placeTypeRepository::findById)
-            .map(Optional::orElseThrow).ifPresent(element::setPlaceType);
-        break;
-      //skip other types
-    }
   }
 
   @Override

@@ -15,6 +15,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * DTO for {@link pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement}
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "page_arrangements", schema = "luncher_core")
+@ToString(exclude = {"sections"})
 class PageArrangementDb implements Serializable {
 
   @Id
