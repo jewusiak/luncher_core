@@ -14,8 +14,7 @@ import pl.luncher.v3.luncher_core.contentmanagement.model.ElementType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SectionElementDto implements Serializable {
-
-  private UUID id;
+  
   private String sourceElementId;
   private ElementType elementType;
   private String header;
