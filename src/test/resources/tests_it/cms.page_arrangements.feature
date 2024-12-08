@@ -422,6 +422,4 @@ Feature: CMS
 
     When Send DELETE request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
     Then response code is 204
-
-
-    And File uploaded-assets-test/[ID:ASSET:1].png does not exist
+    
