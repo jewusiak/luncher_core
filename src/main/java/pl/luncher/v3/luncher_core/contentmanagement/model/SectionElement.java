@@ -16,8 +16,8 @@ public class SectionElement {
   private UUID id;
   private String sourceElementId;
   private ElementType elementType;
-  private String heading;
-  private String subheading;
+  private String header;
+  private String subheader;
   private String uri;
   private Asset thumbnail;
 

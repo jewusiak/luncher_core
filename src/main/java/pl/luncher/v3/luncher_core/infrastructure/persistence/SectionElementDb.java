@@ -32,8 +32,8 @@ class SectionElementDb implements Serializable {
   private UUID id;
   private int listIndex;
   private ElementType elementType;
-  private String heading;
-  private String subheading;
+  private String header;
+  private String subheader;
   private String customUri;
 
   @ManyToOne(cascade = {CascadeType.MERGE})

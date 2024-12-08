@@ -18,8 +18,8 @@ public class SectionElementDto implements Serializable {
   private UUID id;
   private String sourceElementId;
   private ElementType elementType;
-  private String heading;
-  private String subheading;
+  private String header;
+  private String subheader;
   private String uri;
   private String thumbnailAccessUrl;
   private String thumbnailId;
