@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -33,7 +34,6 @@ import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.AssetFullResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
-import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -61,8 +61,9 @@ public class AssetController {
       @Parameter(hidden = true) User requestingUser) {
 
     Asset asset = assetInfoPersistenceService.getById(uuid);
-    Place place = placePersistenceService.getById(asset.getPlaceId());
-    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
+
+    Optional.ofNullable(asset.getPlaceId()).map(placePersistenceService::getById)
+        .ifPresent(p -> p.permissions().byUser(requestingUser).edit().throwIfNotPermitted());
 
     assetManagementService.deleteAsset(asset);
 

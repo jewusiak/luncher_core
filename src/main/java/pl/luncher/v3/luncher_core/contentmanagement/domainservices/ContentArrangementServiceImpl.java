@@ -7,14 +7,17 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
+import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
+import pl.luncher.v3.luncher_core.contentmanagement.domainservices.exceptions.PrimaryArrangementDeletionProhibitedException;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 
 @Component
 @RequiredArgsConstructor
-public class ContentArrangementServiceImpl implements ContentArrangementService {
+class ContentArrangementServiceImpl implements ContentArrangementService {
 
   private final ArrangementsPersistenceService arrangementsPersistenceService;
   private final AssetInfoPersistenceService assetInfoPersistenceService;
+  private final AssetManagementService assetManagementService;
 
   @Override
   public PageArrangement getPrimaryArrangement() {
@@ -85,7 +88,7 @@ public class ContentArrangementServiceImpl implements ContentArrangementService 
   public void deleteArrangementById(UUID uuid) {
     var arrangement = arrangementsPersistenceService.getById(uuid);
     if (arrangement.isPrimaryPage()) {
-      throw new IllegalArgumentException(
+      throw new PrimaryArrangementDeletionProhibitedException(
           "This arrangement is set as primary! Cannot delete a primary arrangement.");
     }
     arrangementsPersistenceService.deleteById(arrangement.getId());

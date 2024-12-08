@@ -1,10 +1,12 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import java.util.Arrays;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
+import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +37,15 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   public void delete(Asset asset) {
     var assetDb = assetRepository.findById(asset.getId()).orElseThrow();
+    if (assetDb.getSectionElements() != null && !assetDb.getSectionElements().isEmpty()) {
+      throw new DeleteReferencedEntityException(
+          "Cannot delete this asset! Is still referenced by %s SectionElements of Arrangements %s.".formatted(
+              Arrays.toString(assetDb.getSectionElements().stream().map(SectionElementDb::getId)
+                  .toArray(UUID[]::new)), Arrays.toString(
+                  assetDb.getSectionElements().stream().map(SectionElementDb::getSection)
+                      .map(SectionDb::getPageArrangement).map(PageArrangementDb::getId)
+                      .toArray(UUID[]::new))));
+    }
     if (assetDb.getPlace() != null) {
       assetDb.getPlace().getImages().remove(assetDb);
     }

@@ -16,28 +16,13 @@ abstract class AssetDbMapper {
   @Mapping(target = "id", source = "asset.id")
   @Mapping(target = "description", source = "asset.description")
   @Mapping(target = "place", source = "place")
+  @Mapping(target = "sectionElements", ignore = true)
   public abstract AssetDb toDbEntity(Asset asset, PlaceDb place);
 
 
   @Mapping(target = "placeId", source = "place.id")
+  @Mapping(target = "sectionElementIds", expression = "java(java.util.Optional.ofNullable(assetDb.getSectionElements()).stream().flatMap(java.util.List::stream).map(SectionElementDb::getId).toList())")
   @Mapping(target = "accessUrl", expression = "java(\"%s/asset/%s\".formatted(luncherProperties.getBaseApiUrl(), assetDb.getId()))")
   public abstract Asset toDomain(AssetDb assetDb);
-//
-//  @AfterMapping
-//  default void ensurePlaceContainsAsset(@MappingTarget AssetDb assetDb) {
-//    if (assetDb.getPlace() == null) {
-//      return;
-//    }
-//    if (assetDb.getPlace().getImages() == null) {
-//      assetDb.getPlace().setImages(new ArrayList<>());
-//    }
-//    if (assetDb.getId() == null) {
-//      // asset hasn't been persisted yet
-//      assetDb.getPlace().getImages().add(assetDb);
-//      return;
-//    }
-//    // else - asset existed before but we ensure its linked to place correctly
-//    assetDb.getPlace().getImages().removeIf(i -> i.getId().equals(assetDb.getId()));
-//    assetDb.getPlace().getImages().add(assetDb);
-//  }
+
 }

@@ -290,3 +290,138 @@ Feature: CMS
       | [ID:ARRANGEMENT:2] | true        |
     And Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
     And response code is 401
+
+  Scenario: Try to remove asset (image/thumbnail) associated with an arrangement
+    And User logs in using credentials:
+      | email              | password |
+      | admin@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as admin@luncher.corp
+
+    And User creates a place as below ID 1:
+      | name | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | R1   | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
+    And response code is 200
+
+
+    When User uploads image as below:
+      | description      | filePath            |
+      | example descr R1 | test-assets/img.png |
+
+    Then response code is 200
+    And Put ID ASSET idx 1 to cache from HTTP response from path id
+
+
+    When Send POST request to /content-management/arrangements with body as below:
+    """
+   {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week",
+      "sectionSubheader": "Restauracje biorące udział w programie",
+      "sectionElements": [
+        {
+          "sourceElementId": "[ID:PLACE:1]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R1",
+          "thumbnailId": "[ID:ASSET:1]"
+        }
+      ]
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And Put ID ARRANGEMENT idx 1 to cache from HTTP response from path id
+
+    When Send DELETE request to /asset/[ID:ASSET:1] without body
+    Then response code is 400
+
+
+  Scenario: Remove a primary arrangement
+    And User logs in using credentials:
+      | email              | password |
+      | admin@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as admin@luncher.corp
+
+    And User creates a place as below ID 1:
+      | name | description                                      | placeTypeIdentifier | location.latitude | location.longitude | enabled |
+      | R1   | Restauracja typu asian fusion w centrum Warszawy | RESTAURANT          | 52.21507395584024 | 21.02108986309555  | true    |
+    And response code is 200
+
+
+    When User uploads image as below:
+      | description      | filePath            |
+      | example descr R1 | test-assets/img.png |
+
+    Then response code is 200
+    And Put ID ASSET idx 1 to cache from HTTP response from path id
+
+
+    When Send POST request to /content-management/arrangements with body as below:
+    """
+   {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week",
+      "sectionSubheader": "Restauracje biorące udział w programie",
+      "sectionElements": [
+        {
+          "sourceElementId": "[ID:PLACE:1]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R1",
+          "thumbnailId": "[ID:ASSET:1]"
+        }
+      ]
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And Put ID ARRANGEMENT idx 1 to cache from HTTP response from path id
+
+
+    When Send POST request to /content-management/arrangements with body as below:
+    """
+   {
+  "sections": [
+    {
+      "sectionHeader": "Restaurant Week",
+      "sectionSubheader": "Restauracje biorące udział w programie",
+      "sectionElements": [
+        {
+          "sourceElementId": "[ID:PLACE:1]",
+          "elementType": "PLACE",
+          "heading": "Restauracja R1",
+          "thumbnailId": "[ID:ASSET:1]"
+        }
+      ]
+    }
+  ]
+}
+    """
+    Then response code is 200
+    And Put ID ARRANGEMENT idx 2 to cache from HTTP response from path id
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1]/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:1] | true        |
+
+    When Send DELETE request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
+    Then response code is 400
+
+
+    When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:2]/primary without body
+    Then response code is 200
+    And HTTP Response is:
+      | id                 | primaryPage |
+      | [ID:ARRANGEMENT:2] | true        |
+
+    When Send DELETE request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
+    Then response code is 204
+
+
+    And File uploaded-assets-test/[ID:ASSET:1].png does not exist
