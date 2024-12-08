@@ -218,7 +218,7 @@ public class ParentSteps {
   @RequiredArgsConstructor
   @Getter
   public enum EntityIdType {
-    PLACE(0), ASSET(1), USER(2), MENU_OFFER(3);
+    PLACE(0), ASSET(1), USER(2), MENU_OFFER(3), ARRANGEMENT(4);
 
     private final int index;
   }

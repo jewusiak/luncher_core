@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,7 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,7 +44,10 @@ class AssetDb {
 
   @ManyToOne
   private PlaceDb place;
-  
+
+  @OneToMany(mappedBy = "thumbnail", cascade = CascadeType.REMOVE)
+  private List<SectionElementDb> sectionElements;
+
   private int placeImageIdx;
 
   public void insertPlaceListIndexValue() {

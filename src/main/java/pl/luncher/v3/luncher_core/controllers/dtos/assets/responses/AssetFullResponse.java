@@ -22,6 +22,7 @@ public class AssetFullResponse implements Serializable {
   private String storagePath;
   private String accessUrl;
   private UUID placeId;
+  private UUID sectionElementId;
   private MimeContentFileType mimeType;
   private AssetUploadStatus uploadStatus;
 }

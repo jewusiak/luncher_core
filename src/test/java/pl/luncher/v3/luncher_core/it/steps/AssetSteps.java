@@ -10,15 +10,15 @@ import org.springframework.core.io.ClassPathResource;
 @RequiredArgsConstructor
 public class AssetSteps {
 
-  @When("User uploads place image as below:")
-  public void userUploadsPlaceImageAsBelowID(List<Map<String, String>> map)
+  @When("User uploads image as below:")
+  public void userUploadsImageAsBelowID(List<Map<String, String>> map)
       throws IOException {
     var data = ParentSteps.replaceIds(map.get(0));
 
     var response = ParentSteps.givenHttpRequest().contentType("multipart/form-data")
         .multiPart("file", new ClassPathResource(data.get("filePath")).getFile())
         .queryParam("description", data.get("description")).when()
-        .post("/place/%s/images".formatted(data.get("placeUuid"))).thenReturn();
+        .post("/asset").thenReturn();
 
     ParentSteps.saveHttpResp(response);
   }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.CannotEstablishFileTypeException;
 import pl.luncher.v3.luncher_core.common.permissions.MissingPermissionException;
+import pl.luncher.v3.luncher_core.contentmanagement.domainservices.exceptions.PrimaryArrangementDeletionProhibitedException;
 import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
 import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
 import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
@@ -31,8 +32,8 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({ForgottenPasswordIntentInvalidException.class,
-      DeleteReferencedEntityException.class,
-      CannotEstablishFileTypeException.class})
+      DeleteReferencedEntityException.class, CannotEstablishFileTypeException.class,
+      PrimaryArrangementDeletionProhibitedException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   protected ErrorResponse handleUnknownBadRequest(Exception ex) {
     return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").build();

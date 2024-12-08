@@ -1,18 +1,13 @@
 package pl.luncher.v3.luncher_core.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,13 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
-import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
@@ -134,28 +126,6 @@ public class PlaceController {
         .map(placeDtoMapper::toBasicResponse).toList();
 
     return ResponseEntity.ok(placesList);
-  }
-
-  @PostMapping(value = "/{placeUuid}/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  @Operation(summary = "Upload image and link to place")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Image created and linked to place", content = @Content(schema = @Schema(implementation = AssetBasicResponse.class))),
-      @ApiResponse(responseCode = "403", description = "User has no permission to edit place"),
-      @ApiResponse(responseCode = "404", description = "Place not found")
-  })
-  @PreAuthorize(hasRole.REST_MANAGER)
-  public ResponseEntity<AssetBasicResponse> addImage(@PathVariable UUID placeUuid,
-      @RequestParam(required = false) String description,
-      @RequestPart(value = "file") MultipartFile file,
-      @Parameter(hidden = true) User requestingUser) throws IOException {
-
-    var place = placePersistenceService.getById(placeUuid);
-
-    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
-
-    var asset = assetManagementService.createAsset(description, file, place);
-
-    return ResponseEntity.ok(assetDtoMapper.toAssetBasicResponse(asset));
   }
 
   @PostMapping(value = "/search", produces = "application/json; charset=UTF-8")

@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.assets.model;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Asset {
   private String storagePath;
   private String accessUrl;
   private UUID placeId;
+  private List<UUID> sectionElementIds;
   private MimeContentFileType mimeType;
   private AssetUploadStatus uploadStatus;
 

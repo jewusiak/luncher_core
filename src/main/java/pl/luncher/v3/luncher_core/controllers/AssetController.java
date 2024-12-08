@@ -2,10 +2,14 @@ package pl.luncher.v3.luncher_core.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -15,8 +19,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
@@ -24,8 +32,8 @@ import pl.luncher.v3.luncher_core.assets.model.MimeContentFileType;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.responses.AssetFullResponse;
+import pl.luncher.v3.luncher_core.controllers.dtos.common.AssetBasicResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
-import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -53,8 +61,9 @@ public class AssetController {
       @Parameter(hidden = true) User requestingUser) {
 
     Asset asset = assetInfoPersistenceService.getById(uuid);
-    Place place = placePersistenceService.getById(asset.getPlaceId());
-    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
+
+    Optional.ofNullable(asset.getPlaceId()).map(placePersistenceService::getById)
+        .ifPresent(p -> p.permissions().byUser(requestingUser).edit().throwIfNotPermitted());
 
     assetManagementService.deleteAsset(asset);
 
@@ -91,4 +100,24 @@ public class AssetController {
             MimeContentFileType.fromFilename(contents.getFilename()).getMimeType())).body(
             contents);
   }
+
+
+  @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  @Operation(summary = "Upload image")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Image created", content = @Content(schema = @Schema(implementation = AssetBasicResponse.class))),
+      @ApiResponse(responseCode = "403", description = "User has no permission"),
+      @ApiResponse(responseCode = "404", description = "Entity not found")
+  })
+  @PreAuthorize(hasRole.REST_MANAGER)
+  public ResponseEntity<AssetBasicResponse> uploadImage(
+      @RequestParam(required = false) String description,
+      @RequestPart(value = "file") MultipartFile file,
+      @Parameter(hidden = true) User requestingUser) throws IOException {
+
+    var asset = assetManagementService.createAsset(description, file);
+
+    return ResponseEntity.ok(assetDtoMapper.toAssetBasicResponse(asset));
+  }
+
 }
