@@ -3,13 +3,15 @@ package pl.luncher.v3.luncher_core.contentmanagement.domainservices;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
-import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
+import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.contentmanagement.domainservices.exceptions.PrimaryArrangementDeletionProhibitedException;
 import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
+import pl.luncher.v3.luncher_core.contentmanagement.model.SectionElement;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +19,6 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
 
   private final ArrangementsPersistenceService arrangementsPersistenceService;
   private final AssetInfoPersistenceService assetInfoPersistenceService;
-  private final AssetManagementService assetManagementService;
 
   @Override
   public PageArrangement getPrimaryArrangement() {
@@ -55,10 +56,10 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
     if (arrangement.getSections() != null) {
       arrangement.getSections().forEach(section -> {
         if (section.getSectionElements() != null) {
-          section.getSectionElements().forEach(element -> {
-            element.setThumbnail(
-                assetInfoPersistenceService.getById(element.getThumbnail().getId()));
-          });
+          section.getSectionElements().forEach(
+              element -> Optional.ofNullable(element).map(SectionElement::getThumbnail)
+                  .map(Asset::getId).map(assetInfoPersistenceService::getById)
+                  .ifPresent(element::setThumbnail));
         }
       });
     }
