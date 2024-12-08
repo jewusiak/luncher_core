@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
-import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.mappers.PlaceDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceCreateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchRequest;
@@ -47,7 +46,6 @@ public class PlaceController {
   private final PlacePersistenceService placePersistenceService;
   private final PlaceSearchService placeSearchService;
   private final UserPersistenceService userPersistenceService;
-  private final AssetDtoMapper assetDtoMapper;
   private final AssetManagementService assetManagementService;
   private final PlaceManagementService placeManagementService;
 
@@ -122,7 +120,7 @@ public class PlaceController {
   @GetMapping
   public ResponseEntity<List<PlaceBasicResponse>> getAllPlacesPaged(@RequestParam int size,
       @RequestParam int page) {
-    List<PlaceBasicResponse> placesList = placePersistenceService.getAllPaged(size, page).stream()
+    List<PlaceBasicResponse> placesList = placePersistenceService.getAllPaged(page, size).stream()
         .map(placeDtoMapper::toBasicResponse).toList();
 
     return ResponseEntity.ok(placesList);
