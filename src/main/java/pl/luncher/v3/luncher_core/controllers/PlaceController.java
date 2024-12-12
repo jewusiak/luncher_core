@@ -32,7 +32,6 @@ import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
-import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -50,10 +49,13 @@ public class PlaceController {
   private final PlaceManagementService placeManagementService;
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid) {
-    Place place = placePersistenceService.getById(uuid);
+  @PermitAll
+  public ResponseEntity<PlaceFullResponse> getById(@PathVariable UUID uuid,
+      @Parameter(hidden = true) User requestingUser) {
+    Place place = placeManagementService.getPlace(uuid, requestingUser);
 
-    return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(place));
+    PlaceFullResponse placeFullResponse = placeDtoMapper.toPlaceFullResponse(place);
+    return ResponseEntity.ok(placeFullResponse);
   }
 
   @PreAuthorize(hasRole.REST_MANAGER)
@@ -132,24 +134,9 @@ public class PlaceController {
       @RequestBody @Valid PlaceSearchRequest request,
       @Parameter(hidden = true) User requestingUser) {
 
-    UUID ownerUuid = null;
+    var searchRequest = placeDtoMapper.toSearchRequest(request, requestingUser);
 
-    // anonymous or default role
-    if (requestingUser == null || requestingUser.getRole() == AppRole.USER) {
-      request.setEnabled(true);
-      request.setOwnerEmail(null);
-    } else if (requestingUser.getRole().compareRoleTo(AppRole.SYS_MOD) < 0) {
-      // role less than SYS_MOD can only see their own places
-      ownerUuid = requestingUser.getUuid();
-    }
-
-    if (request.getOwnerEmail() != null && ownerUuid == null) {
-      ownerUuid = userPersistenceService.getByEmail(request.getOwnerEmail()).getUuid();
-    }
-
-    var searchRequest = placeDtoMapper.toSearchRequest(request, ownerUuid);
-
-    List<Place> searchResponse = placeSearchService.search(searchRequest);
+    List<Place> searchResponse = placeManagementService.searchPlaces(searchRequest);
 
     List<PlaceFullResponse> responseList = searchResponse.stream()
         .map(placeDtoMapper::toPlaceFullResponse).toList();

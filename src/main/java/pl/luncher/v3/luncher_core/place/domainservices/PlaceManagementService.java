@@ -12,6 +12,9 @@ import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceServ
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.place.model.Place;
+import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.model.AppRole;
+import pl.luncher.v3.luncher_core.user.model.User;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,41 @@ public class PlaceManagementService {
   private final PlacePersistenceService placePersistenceService;
   private final AssetManagementService assetManagementService;
   private final AssetInfoPersistenceService assetInfoPersistenceService;
+  private final UserPersistenceService userPersistenceService;
+  private final PlaceSearchService placeSearchService;
+
+  private static void filterPlaceBasedOnUserPermissions(User requestingUser, Place place) {
+    if (requestingUser == null || requestingUser.getRole().compareRoleTo(AppRole.REST_MANAGER) < 0) {
+      place.setOwner(null);
+    }
+  }
+
+  public Place getPlace(UUID uuid, User requestingUser) {
+    Place place = placePersistenceService.getById(uuid);
+
+    filterPlaceBasedOnUserPermissions(requestingUser, place);
+    return place;
+  }
+
+  public List<Place> searchPlaces(PlaceSearchCommand request) {
+    User owner = null;
+
+    if (request.getRequestingUser() == null || request.getRequestingUser().getRole() == AppRole.USER) {
+      // anonymous or default role
+      request.setEnabled(true);
+      request.setOwner(null);
+    } else if (request.getRequestingUser().getRole().compareRoleTo(AppRole.SYS_MOD) < 0) {
+      // role less than SYS_MOD can only see their own places
+      owner = request.getRequestingUser();
+    } else if (request.getOwnerEmail() != null) {
+      // >= SYS_MOD
+      owner = userPersistenceService.getByEmail(request.getOwnerEmail());
+    }
+
+    request.setOwner(owner);
+    return placeSearchService.search(request).stream()
+        .peek(place -> filterPlaceBasedOnUserPermissions(request.getRequestingUser(), place)).toList();
+  }
 
   public Place updatePlace(Place place, List<UUID> imageIds) {
 

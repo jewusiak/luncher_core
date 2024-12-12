@@ -245,3 +245,27 @@ Feature: CRUD - Place
     And Send GET request to /place/[ID:PLACE:1] without body
     And HTTP Response has a list of size 0 in path openingWindows
 
+  Scenario: Getting place data by each users role
+    Given User logs in using credentials:
+      | email                 | password |
+      | rmanager@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as rmanager@luncher.corp
+
+    When User creates a place as below ID -1:
+      | name | description | placeTypeIdentifier | facebookPageId | location.latitude | location.longitude | enabled |
+      | name | descr       | RESTAURANT          | fbid           | 52.21507395584024 | 21.02108986309555  | true    |
+
+    Then response code is 200
+
+    Then GET place with ID -1 is as below:
+      | owner.email           |
+      | rmanager@luncher.corp |
+
+    When User logs out (by removing saved auth token)
+
+    Then GET place with ID -1 is as below:
+      | owner |
+      |       |
+
+
