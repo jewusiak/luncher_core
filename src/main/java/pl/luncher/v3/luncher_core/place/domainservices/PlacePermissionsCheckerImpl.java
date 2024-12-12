@@ -36,6 +36,6 @@ public class PlacePermissionsCheckerImpl implements PlacePermissionsChecker {
 
   @Override
   public PermissionChecker changeOwner() {
-    return edit();
+    return () -> user.getRole().compareRoleTo(AppRole.SYS_MOD) >= 0;
   }
 }

@@ -127,13 +127,31 @@ Feature: CRUD - Place
       | ownerEmail             |
       | rmanager2@luncher.corp |
 
+    Then response code is 403
+
+    Given User logs in using credentials:
+      | email            | password |
+      | mod@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as mod@luncher.corp
+
+    When Updates Place with ID -1 with data below:
+      | ownerEmail             |
+      | rmanager2@luncher.corp |
+
     Then response code is 200
+
+    Given User logs in using credentials:
+      | email                 | password |
+      | rmanager@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as rmanager@luncher.corp
 
     # after transferring ownership
 
     When Updates Place with ID -1 with data below:
-      | ownerEmail             |
-      | rmanager1@luncher.corp |
+      | ownerEmail            |
+      | rmanager@luncher.corp |
 
     Then response code is 403
 
