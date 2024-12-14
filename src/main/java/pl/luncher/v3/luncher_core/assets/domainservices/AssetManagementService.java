@@ -27,12 +27,13 @@ public class AssetManagementService {
   @Transactional
   public Asset createAsset(String description, MultipartFile file) throws IOException {
 
-    Asset asset = AssetFactory.newFilesystemPersistent(description, file.getOriginalFilename(), file.getContentType());
+    Asset asset = AssetFactory.newFilesystemPersistent(description, file.getOriginalFilename(),
+        file.getContentType(), file.getBytes());
 
     asset = assetInfoPersistenceService.save(asset);
 
     // set storage path
-    assetFilePersistenceService.saveFileToStorage(asset, file.getInputStream());
+    assetFilePersistenceService.saveFileToStorage(asset);
     asset.setAccessUrl("/asset/" + asset.getId());
 
     asset.setUploadStatus(AssetUploadStatus.UPLOADED);

@@ -16,4 +16,5 @@ public class AssetBasicResponse implements Serializable {
   private String accessUrl;
   private String mimeType;
   private String uploadStatus;
+  private String blurHash;
 }

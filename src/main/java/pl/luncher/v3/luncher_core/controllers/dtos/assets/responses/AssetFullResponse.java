@@ -25,4 +25,5 @@ public class AssetFullResponse implements Serializable {
   private UUID sectionElementId;
   private MimeContentFileType mimeType;
   private AssetUploadStatus uploadStatus;
+  private String blurHash;
 }

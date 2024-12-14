@@ -50,6 +50,8 @@ class AssetDb {
 
   private int placeImageIdx;
 
+  private String blurHash;
+
   public void insertPlaceListIndexValue() {
     if (place == null) {
       return;

@@ -23,6 +23,8 @@ public class Asset {
   private List<UUID> sectionElementIds;
   private MimeContentFileType mimeType;
   private AssetUploadStatus uploadStatus;
+  private byte[] content;
+  private String blurHash;
 
   public void validate() {
 

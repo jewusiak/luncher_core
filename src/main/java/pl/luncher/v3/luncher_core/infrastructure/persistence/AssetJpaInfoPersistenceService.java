@@ -25,7 +25,9 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
     toBeSaved.insertPlaceListIndexValue();
     AssetDb save = assetRepository.save(toBeSaved);
-    return assetDbMapper.toDomain(save);
+    Asset domain = assetDbMapper.toDomain(save);
+    domain.setContent(asset.getContent());
+    return domain;
   }
 
   @Override

@@ -1,10 +1,9 @@
 package pl.luncher.v3.luncher_core.infrastructure.filesystem;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetFilePersistenceService;
@@ -17,10 +16,12 @@ class AssetInFilesystemPersistenceService implements AssetFilePersistenceService
   private final FilesystemPersistentAssetsBasePathGetter filesystemPersistentAssetsBasePathGetter;
 
   @Override
-  public void saveFileToStorage(Asset asset, InputStream dataStream) throws IOException {
+  public void saveFileToStorage(Asset asset) throws IOException {
     String filename = "%s.%s".formatted(asset.getId(), asset.getMimeType().getOutputExtension());
-
-    Files.copy(dataStream, Path.of(filesystemPersistentAssetsBasePathGetter.getFilesystemPersistentAssetsBasePathWithTrailingSlash() + filename), StandardCopyOption.REPLACE_EXISTING);
+    Files.write(Path.of(
+            filesystemPersistentAssetsBasePathGetter.getFilesystemPersistentAssetsBasePathWithTrailingSlash()
+                + filename), asset.getContent(), StandardOpenOption.TRUNCATE_EXISTING,
+        StandardOpenOption.CREATE);
 
     asset.setStoragePath(filename);
   }
