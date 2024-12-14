@@ -76,13 +76,17 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         },
         {
           "sourceElementId": "[ID:PLACE:3]",
           "elementType": "PLACE",
           "header": "Restauracja R3",
-          "thumbnailId": "[ID:ASSET:3]"
+          "thumbnail": {
+            "id": "[ID:ASSET:3]"
+          }
         }
       ]
     },
@@ -94,7 +98,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:2]",
           "elementType": "PLACE",
           "header": "Restauracja R2",
-          "thumbnailId": "[ID:ASSET:2]"
+          "thumbnail": {
+            "id": "[ID:ASSET:2]"
+          }
         }
       ]
     }
@@ -106,8 +112,8 @@ Feature: CMS
     And Send GET request to /content-management/arrangements/[ID:ARRANGEMENT:1] without body
     And response code is 200
     And HTTP Response is:
-      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[0].sourceElementId | sections[0].sectionElements[0].elementType | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
-      | [ID:ARRANGEMENT:1] | false       | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | [ID:PLACE:1]                                   | PLACE                                      | Restauracja R3                        | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnail.id | sections[0].sectionElements[0].thumbnail.accessUrl | sections[0].sectionElements[0].sourceElementId | sections[0].sectionElements[0].elementType | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnail.id | sections[0].sectionElements[1].thumbnail.accessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnail.id | sections[1].sectionElements[0].thumbnail.accessUrl |
+      | [ID:ARRANGEMENT:1] | false       | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                                | http://localhost:8080/asset/[ID:ASSET:1]           | [ID:PLACE:1]                                   | PLACE                                      | Restauracja R3                        | [ID:ASSET:3]                                | http://localhost:8080/asset/[ID:ASSET:3]           | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                                | http://localhost:8080/asset/[ID:ASSET:2]           |
 
     When Send GET request to /content-management/arrangements/primary without body
     Then response code is 404
@@ -115,14 +121,14 @@ Feature: CMS
     When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1]/primary without body
     Then response code is 200
     And HTTP Response is:
-      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
-      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnail.id | sections[0].sectionElements[0].thumbnail.accessUrl | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnail.id | sections[0].sectionElements[1].thumbnail.accessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnail.id | sections[1].sectionElements[0].thumbnail.accessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                                | http://localhost:8080/asset/[ID:ASSET:1]           | Restauracja R3                        | [ID:ASSET:3]                                | http://localhost:8080/asset/[ID:ASSET:3]           | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                                | http://localhost:8080/asset/[ID:ASSET:2]           |
 
     When Send GET request to /content-management/arrangements/primary without body
     Then response code is 200
     And HTTP Response is:
-      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
-      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnail.id | sections[0].sectionElements[0].thumbnail.accessUrl | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnail.id | sections[0].sectionElements[1].thumbnail.accessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnail.id | sections[1].sectionElements[0].thumbnail.accessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                                | http://localhost:8080/asset/[ID:ASSET:1]           | Restauracja R3                        | [ID:ASSET:3]                                | http://localhost:8080/asset/[ID:ASSET:3]           | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                                | http://localhost:8080/asset/[ID:ASSET:2]           |
 
     When Send PUT request to /content-management/arrangements/[ID:ARRANGEMENT:1] with body as below:
     """
@@ -136,13 +142,17 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:3]",
           "elementType": "PLACE",
           "header": "Restauracja R3",
-          "thumbnailId": "[ID:ASSET:3]"
+          "thumbnail": {
+            "id": "[ID:ASSET:3]"
+          }
         },
         {
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         }
         
       ]
@@ -155,7 +165,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:2]",
           "elementType": "PLACE",
           "header": "Restauracja R2",
-          "thumbnailId": "[ID:ASSET:2]"
+          "thumbnail": {
+            "id": "[ID:ASSET:2]"
+          }
         }
       ]
     }
@@ -164,8 +176,8 @@ Feature: CMS
     """
     Then response code is 200
     And HTTP Response is:
-      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
-      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:3]                               | http://localhost:8080/asset/[ID:ASSET:3]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnail.id | sections[0].sectionElements[1].thumbnail.accessUrl | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnail.id | sections[0].sectionElements[0].thumbnail.accessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnail.id | sections[1].sectionElements[0].thumbnail.accessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                                | http://localhost:8080/asset/[ID:ASSET:1]           | Restauracja R3                        | [ID:ASSET:3]                                | http://localhost:8080/asset/[ID:ASSET:3]           | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                                | http://localhost:8080/asset/[ID:ASSET:2]           |
 
 
 
@@ -189,13 +201,17 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:3]",
           "elementType": "PLACE",
           "header": "Restauracja R3",
-          "thumbnailId": "[ID:ASSET:4]"
+          "thumbnail": {
+            "id": "[ID:ASSET:4]"
+          }
         },
         {
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         }
         
       ]
@@ -208,7 +224,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:2]",
           "elementType": "PLACE",
           "header": "Restauracja R2",
-          "thumbnailId": "[ID:ASSET:2]"
+          "thumbnail": {
+            "id": "[ID:ASSET:2]"
+          }
         }
       ]
     }
@@ -217,8 +235,8 @@ Feature: CMS
     """
     Then response code is 200
     And HTTP Response is:
-      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnailId | sections[0].sectionElements[1].thumbnailAccessUrl | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnailId | sections[0].sectionElements[0].thumbnailAccessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnailId | sections[1].sectionElements[0].thumbnailAccessUrl |
-      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                         | [ID:ASSET:1]                               | http://localhost:8080/asset/[ID:ASSET:1]          | Restauracja R3                         | [ID:ASSET:4]                               | http://localhost:8080/asset/[ID:ASSET:4]          | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                         | [ID:ASSET:2]                               | http://localhost:8080/asset/[ID:ASSET:2]          |
+      | id                 | primaryPage | sections[0].sectionHeader | sections[0].sectionSubheader           | sections[0].sectionElements[1].header | sections[0].sectionElements[1].thumbnail.id | sections[0].sectionElements[1].thumbnail.accessUrl | sections[0].sectionElements[0].header | sections[0].sectionElements[0].thumbnail.id | sections[0].sectionElements[0].thumbnail.accessUrl | sections[1].sectionHeader | sections[1].sectionSubheader                | sections[1].sectionElements[0].header | sections[1].sectionElements[0].thumbnail.id | sections[1].sectionElements[0].thumbnail.accessUrl |
+      | [ID:ARRANGEMENT:1] | true        | Restaurant Week           | Restauracje biorące udział w programie | Restauracja R1                        | [ID:ASSET:1]                                | http://localhost:8080/asset/[ID:ASSET:1]           | Restauracja R3                        | [ID:ASSET:4]                                | http://localhost:8080/asset/[ID:ASSET:4]           | Restaurant NieWeek        | Restauracje nie biorące udziału w programie | Restauracja R2                        | [ID:ASSET:2]                                | http://localhost:8080/asset/[ID:ASSET:2]           |
 
 
 
@@ -324,7 +342,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         }
       ]
     }
@@ -371,7 +391,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         }
       ]
     }
@@ -394,7 +416,9 @@ Feature: CMS
           "sourceElementId": "[ID:PLACE:1]",
           "elementType": "PLACE",
           "header": "Restauracja R1",
-          "thumbnailId": "[ID:ASSET:1]"
+          "thumbnail": {
+            "id": "[ID:ASSET:1]"
+          }
         }
       ]
     }
