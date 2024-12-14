@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.place.mappers;
 
-import java.util.UUID;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
@@ -19,7 +18,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceSearchReq
 import pl.luncher.v3.luncher_core.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
-import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService.SearchRequest;
+import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchCommand;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -52,11 +51,11 @@ public interface PlaceDtoMapper {
 
   @Mapping(source = "request", target = ".")
   @Mapping(source = "request.location", target = "location")
-  @Mapping(source = "ownerUuid", target = "owner")
-  SearchRequest toSearchRequest(PlaceSearchRequest request, UUID ownerUuid);
+  @Mapping(source = "request.enabled", target = "enabled")
+  PlaceSearchCommand toSearchRequest(PlaceSearchRequest request, User requestingUser);
 
   @AfterMapping
-  default void nullifyHavingNullFields(@MappingTarget SearchRequest searchRequest) {
+  default void nullifyHavingNullFields(@MappingTarget PlaceSearchCommand searchRequest) {
     if (searchRequest.getLocation() != null && searchRequest.getLocation().getLatitude() == null
         && searchRequest.getLocation().getLongitude() == null
         && searchRequest.getLocation().getRadius() == null) {

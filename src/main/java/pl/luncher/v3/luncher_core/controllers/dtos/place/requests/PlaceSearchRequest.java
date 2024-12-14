@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +11,6 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.LocationWithRadiusDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.WeekDayTimeDto;
 
-/**
- * DTO for {@link pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService.SearchRequest}
- */
 @Data
 @Builder
 @AllArgsConstructor

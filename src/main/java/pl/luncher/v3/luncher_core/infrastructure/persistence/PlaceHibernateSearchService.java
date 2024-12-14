@@ -10,6 +10,7 @@ import org.hibernate.search.engine.search.predicate.SearchPredicate;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
+import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchCommand;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 
@@ -22,7 +23,7 @@ class PlaceHibernateSearchService implements PlaceSearchService {
   private final EntityManager entityManager;
 
   @Override
-  public List<Place> search(@Valid SearchRequest searchRequest) {
+  public List<Place> search(@Valid PlaceSearchCommand searchRequest) {
 
     var query = Search.session(entityManager).search(PlaceDb.class).where((f, root) -> {
       root.add(f.matchAll());
@@ -96,7 +97,7 @@ class PlaceHibernateSearchService implements PlaceSearchService {
 
       // places owned by sbd
       if (searchRequest.getOwner() != null) {
-        root.add(f.match().field("owner.uuid").matching(searchRequest.getOwner()));
+        root.add(f.match().field("owner.uuid").matching(searchRequest.getOwner().getUuid()));
       }
 
       // is place enabled
