@@ -33,7 +33,7 @@ public enum MimeContentFileType {
         return mimeContentFileType;
       }
     }
-    throw new IllegalArgumentException("Unknown extension: " + extension);
+    return null;
   }
 
   public static MimeContentFileType byMimeType(String mimeType) {
