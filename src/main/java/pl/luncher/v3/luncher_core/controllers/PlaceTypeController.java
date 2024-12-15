@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.luncher.v3.luncher_core.configuration.security.PermitAll;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.FullPlaceTypeResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers.PlaceTypeDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.CreatePlaceTypeRequest;
@@ -67,6 +68,7 @@ public class PlaceTypeController {
   }
 
   @GetMapping
+  @PermitAll
   public ResponseEntity<List<FullPlaceTypeResponse>> getAllPlaceTypes() {
     List<PlaceType> placeTypes = placeTypePersistenceService.getAll();
 
@@ -75,6 +77,7 @@ public class PlaceTypeController {
   }
 
   @GetMapping("/{identifier}")
+  @PermitAll
   public ResponseEntity<FullPlaceTypeResponse> getByIdentifier(@PathVariable String identifier) {
     PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
 

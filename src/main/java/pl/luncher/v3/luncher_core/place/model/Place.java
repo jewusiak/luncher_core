@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.place.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -46,20 +45,5 @@ public class Place {
 
   public PlacePermissionsChecker permissions() {
     return new PlacePermissionsCheckerImpl(this);
-  }
-
-
-  public void addMenuOffer(MenuOffer menuOffer) {
-    if (menuOffers == null) {
-      menuOffers = new ArrayList<>();
-    }
-    menuOffers.add(menuOffer);
-  }
-
-  public void addImage(Asset asset) {
-    if (images == null) {
-      images = new ArrayList<>();
-    }
-    images.add(asset);
   }
 }
