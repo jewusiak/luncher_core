@@ -25,10 +25,10 @@ public class AssetManagementService {
 
 
   @Transactional
-  public Asset createAsset(String description, MultipartFile file) throws IOException {
+  public Asset createAsset(String description, String optionalBlurHash, MultipartFile file) throws IOException {
 
     Asset asset = AssetFactory.newFilesystemPersistent(description, file.getOriginalFilename(),
-        file.getContentType(), file.getBytes());
+        file.getContentType(), optionalBlurHash, file.getBytes());
 
     asset = assetInfoPersistenceService.save(asset);
 

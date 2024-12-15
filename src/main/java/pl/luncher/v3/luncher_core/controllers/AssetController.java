@@ -112,10 +112,11 @@ public class AssetController {
   @PreAuthorize(hasRole.REST_MANAGER)
   public ResponseEntity<AssetBasicResponse> uploadImage(
       @RequestParam(required = false) String description,
+      @RequestParam(required = false) String overrideBlurHash,
       @RequestPart(value = "file") MultipartFile file,
       @Parameter(hidden = true) User requestingUser) throws IOException {
 
-    var asset = assetManagementService.createAsset(description, file);
+    var asset = assetManagementService.createAsset(description, overrideBlurHash, file);
 
     return ResponseEntity.ok(assetDtoMapper.toAssetBasicResponse(asset));
   }
