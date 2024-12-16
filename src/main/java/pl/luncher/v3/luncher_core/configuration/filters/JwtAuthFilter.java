@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.auth.services;
+package pl.luncher.v3.luncher_core.configuration.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.luncher.v3.luncher_core.auth.services.JwtService;
 
 @Component
 @RequiredArgsConstructor

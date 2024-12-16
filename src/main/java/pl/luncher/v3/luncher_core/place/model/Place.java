@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.place.model;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,7 @@ public class Place {
   private List<Asset> images;
   private List<MenuOffer> menuOffers;
   private Boolean enabled;
+  private ZoneId timeZone;
 
   public void validate() {
     log.info("Place is being validated...");

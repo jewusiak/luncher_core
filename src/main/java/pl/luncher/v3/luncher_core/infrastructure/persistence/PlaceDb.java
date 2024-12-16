@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -99,4 +100,6 @@ class PlaceDb {
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
   private List<MenuOfferDb> menuOffers;
+
+  private ZoneId timeZone;
 }
