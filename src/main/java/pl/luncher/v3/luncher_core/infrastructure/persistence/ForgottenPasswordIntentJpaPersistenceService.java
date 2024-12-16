@@ -3,7 +3,7 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.user.domainservices.ForgottenPasswordIntentPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.ForgottenPasswordIntentPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntent;
 
 @RequiredArgsConstructor

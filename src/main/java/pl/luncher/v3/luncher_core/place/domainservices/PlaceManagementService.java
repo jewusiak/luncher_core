@@ -12,7 +12,7 @@ import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceServ
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 

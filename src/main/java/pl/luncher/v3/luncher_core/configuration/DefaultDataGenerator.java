@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.luncher.v3.luncher_core.configuration.jwtUtils.JwtService;
+import pl.luncher.v3.luncher_core.auth.services.JwtService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 

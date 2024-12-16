@@ -21,7 +21,7 @@ import pl.luncher.v3.luncher_core.controllers.dtos.placetype.FullPlaceTypeRespon
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers.PlaceTypeDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.CreatePlaceTypeRequest;
 import pl.luncher.v3.luncher_core.controllers.dtos.placetype.requests.UpdatePlaceTypeRequest;
-import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypePersistenceService;
+import pl.luncher.v3.luncher_core.placetype.domainservices.PlaceTypeManagementService;
 import pl.luncher.v3.luncher_core.placetype.model.PlaceType;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 
@@ -30,7 +30,7 @@ import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 @RequiredArgsConstructor
 public class PlaceTypeController {
 
-  private final PlaceTypePersistenceService placeTypePersistenceService;
+  private final PlaceTypeManagementService placeTypeManagementService;
   private final PlaceTypeDtoMapper placeTypeDtoMapper;
 
   @PostMapping
@@ -38,9 +38,8 @@ public class PlaceTypeController {
   public ResponseEntity<FullPlaceTypeResponse> createPlaceType(
       @RequestBody @Valid CreatePlaceTypeRequest request) {
     PlaceType placeType = placeTypeDtoMapper.toDomain(request);
-    placeType.validate();
 
-    var saved = placeTypePersistenceService.create(placeType);
+    var saved = placeTypeManagementService.createPlaceType(placeType);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(saved));
   }
@@ -49,12 +48,10 @@ public class PlaceTypeController {
   @PreAuthorize(hasRole.SYS_MOD)
   public ResponseEntity<FullPlaceTypeResponse> updatePlaceType(@PathVariable @NotBlank String identifier,
       @RequestBody @Valid UpdatePlaceTypeRequest request) {
-    PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
 
-    placeTypeDtoMapper.updateDomain(request, placeType);
-    placeType.validate();
+    var domainObject = placeTypeDtoMapper.toDomain(request, identifier);
 
-    var saved = placeTypePersistenceService.update(placeType);
+    var saved = placeTypeManagementService.updatePlaceType(domainObject);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(saved));
   }
@@ -62,15 +59,14 @@ public class PlaceTypeController {
   @DeleteMapping("/{identifier}")
   @PreAuthorize(hasRole.SYS_MOD)
   public ResponseEntity<Void> deletePlaceType(@PathVariable String identifier) {
-    placeTypePersistenceService.deleteByIdentifier(identifier);
-
+    placeTypeManagementService.deleteByIdentifier(identifier);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping
   @PermitAll
   public ResponseEntity<List<FullPlaceTypeResponse>> getAllPlaceTypes() {
-    List<PlaceType> placeTypes = placeTypePersistenceService.getAll();
+    List<PlaceType> placeTypes = placeTypeManagementService.getAllPlaceTypes();
 
     return ResponseEntity.ok(placeTypes.stream().map(placeTypeDtoMapper::toFullPlaceTypeResponse)
         .collect(Collectors.toList()));
@@ -79,7 +75,7 @@ public class PlaceTypeController {
   @GetMapping("/{identifier}")
   @PermitAll
   public ResponseEntity<FullPlaceTypeResponse> getByIdentifier(@PathVariable String identifier) {
-    PlaceType placeType = placeTypePersistenceService.getByIdentifier(identifier);
+    PlaceType placeType = placeTypeManagementService.getByIdentifier(identifier);
 
     return ResponseEntity.ok(placeTypeDtoMapper.toFullPlaceTypeResponse(placeType));
   }

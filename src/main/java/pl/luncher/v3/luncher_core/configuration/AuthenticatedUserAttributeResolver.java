@@ -14,7 +14,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Component

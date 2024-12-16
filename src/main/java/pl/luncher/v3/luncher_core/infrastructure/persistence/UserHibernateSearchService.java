@@ -9,8 +9,8 @@ import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
-import pl.luncher.v3.luncher_core.user.domainservices.UserSearchService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserSearchService;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Service

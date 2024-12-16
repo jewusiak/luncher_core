@@ -1,10 +1,10 @@
-package pl.luncher.v3.luncher_core.configuration.jwtUtils;
+package pl.luncher.v3.luncher_core.auth.model;
 
 import java.util.Date;
 import lombok.Value;
 
 @Value
-public class JwtTokenDto {
+public class JwtToken {
 
   String token;
   Date expiryDate;

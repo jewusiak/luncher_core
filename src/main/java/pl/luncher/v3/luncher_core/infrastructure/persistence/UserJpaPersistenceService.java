@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.JpaExceptionsHandler;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.User;
 
 @Service

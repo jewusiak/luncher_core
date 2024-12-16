@@ -1,5 +1,7 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.placetype.mappers;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,9 +18,7 @@ public interface PlaceTypeDtoMapper {
 
   PlaceType toDomain(CreatePlaceTypeRequest createPlaceTypeRequest);
 
-  @Mapping(target = "identifier", ignore = true)
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateDomain(UpdatePlaceTypeRequest request, @MappingTarget PlaceType placeType);
+  PlaceType toDomain(@Valid UpdatePlaceTypeRequest request, @NotBlank String identifier);
 
   FullPlaceTypeResponse toFullPlaceTypeResponse(PlaceType placeType);
 }
