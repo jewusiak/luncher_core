@@ -32,7 +32,8 @@ class PlaceHibernateSearchService implements PlaceSearchService {
 
         root.add(f.or(f.match().fields("description").matching(searchRequest.getTextQuery())
             /*.fuzzy(1)*/,
-            f.match().fields("name", "longName").matching(searchRequest.getTextQuery())));
+            f.match().fields("name", "longName", "address.firstLine", "address.secondLine",
+                "address.city", "address.district").matching(searchRequest.getTextQuery())));
       }
 
       if (searchRequest.getPlaceTypeIdentifier() != null) {

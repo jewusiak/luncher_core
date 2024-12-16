@@ -1,7 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,10 +18,14 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordFie
 @Setter
 class AddressDb {
 
+  @FullTextField
   private String firstLine;
+  @FullTextField
   private String secondLine;
   private String zipCode;
+  @FullTextField
   private String city;
+  @FullTextField
   private String district;
 
   @FullTextField
@@ -31,12 +34,4 @@ class AddressDb {
   @KeywordField
   private String country; //ISO
 
-  @Transient
-  @FullTextField
-  private String addressString() {
-    return """
-        %s
-        %s
-        %s, %s %s""".formatted(firstLine, secondLine, zipCode, city, district);
-  }
 }

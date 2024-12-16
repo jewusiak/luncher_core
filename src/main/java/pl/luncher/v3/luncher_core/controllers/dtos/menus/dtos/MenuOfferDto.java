@@ -24,4 +24,5 @@ public class MenuOfferDto implements Serializable {
   private List<PartDto> parts;
   private List<WeekDayTimeRangeDto> recurringServingRanges;
   private List<LocalDateTimeRangeDto> oneTimeServingRanges;
+  private boolean beingServed;
 }

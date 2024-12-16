@@ -122,6 +122,12 @@ public class TestsItConfig {
     elasticsearchContainer.withEnv("xpack.security.enabled", "false");
     elasticsearchContainer.withExposedPorts(9200, 9300);
     elasticsearchContainer.setPortBindings(List.of("9200:9200", "9300:9300"));
+    elasticsearchContainer.withCreateContainerCmdModifier(
+        cmd -> cmd.getHostConfig().withMemory(2L * 1024L
+            * 1024L
+            * 1024L).withMemorySwap(2L * 1024L
+            * 1024L
+            * 1024L));
     elasticsearchContainer.start();
     elasticsearchStarted = true;
     log.info("BA >> Elasticsearch is up and running");

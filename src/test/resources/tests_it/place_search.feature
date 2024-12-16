@@ -145,8 +145,8 @@ Feature: Place search engine
     And response code is 200
 
     And User creates a place as below ID 4:
-      | name          | longName          | description                                                                                                                                                            | placeTypeIdentifier | location.latitude  | location.longitude | enabled |
-      | Czeska Baszta | Bar Czeska Baszta | Jedno z nielicznych miejsc w Warszawie gdzie można napić się dobrego czeskiego piwa prosto z kranu np. Litovel’a czy Holby. Lokalne rodzinne browary z Czech w Polsce. | BAR                 | 52.234388948039566 | 21.034098784160808 | true    |
+      | name          | longName          | description                                                                                                                                                            | placeTypeIdentifier | location.latitude  | location.longitude | enabled | address.firstLine       | address.district | address.city |
+      | Czeska Baszta | Bar Czeska Baszta | Jedno z nielicznych miejsc w Warszawie gdzie można napić się dobrego czeskiego piwa prosto z kranu np. Litovel’a czy Holby. Lokalne rodzinne browary z Czech w Polsce. | BAR                 | 52.234388948039566 | 21.034098784160808 | true    | Aleje Jerozolimskie 191 | Śródmieście      | Warszawa     |
     And response code is 200
 
     And User logs out (by removing saved auth token)
@@ -223,5 +223,25 @@ Feature: Place search engine
     And HTTP Response is:
       | [0].id       |
       | [ID:PLACE:1] |
+
+    When Place Search request is sent as below:
+      | textQuery     | size | page |
+      | jerozolimskie | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 1 in path .
+    And HTTP Response is:
+      | [0].id       |
+      | [ID:PLACE:4] |
+
+    When Place Search request is sent as below:
+      | textQuery   | size | page |
+      | śródmieście | 10   | 0    |
+
+    Then response code is 200
+    And HTTP Response has a list of size 1 in path .
+    And HTTP Response is:
+      | [0].id       |
+      | [ID:PLACE:4] |
 
     

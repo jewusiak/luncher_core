@@ -62,7 +62,7 @@ class PlaceDb {
   private String phoneNumber;
 
   @Embedded
-  @IndexedEmbedded
+  @IndexedEmbedded(structure = ObjectStructure.NESTED)
   private AddressDb address;
   private String googleMapsReference;
 

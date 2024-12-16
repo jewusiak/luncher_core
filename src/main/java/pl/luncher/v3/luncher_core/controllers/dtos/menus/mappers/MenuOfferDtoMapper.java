@@ -1,9 +1,12 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers;
 
+import java.time.LocalDateTime;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.mappers.MonetaryAmountMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.MenuOfferDto;
@@ -18,6 +21,7 @@ import pl.luncher.v3.luncher_core.place.model.menus.Part;
 public interface MenuOfferDtoMapper {
 
   // response dtos
+  @Mapping(target = "beingServed", qualifiedByName = "mapBeingServed", source = "menuOffer")
   MenuOfferDto toDto(MenuOffer menuOffer);
 
   OptionDto toDto(Option option);
@@ -44,6 +48,11 @@ public interface MenuOfferDtoMapper {
         }
       });
     }
+  }
+
+  @Named("mapBeingServed")
+  default boolean mapBeingServed(MenuOffer menuOffer) {
+    return menuOffer.isBeingServed(LocalDateTime.now());
   }
 
 }
