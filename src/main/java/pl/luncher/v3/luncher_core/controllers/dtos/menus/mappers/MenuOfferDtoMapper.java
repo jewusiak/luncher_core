@@ -56,11 +56,11 @@ public interface MenuOfferDtoMapper {
 
   @AfterMapping
   default void mapBeingServed(@MappingTarget MenuOfferDto dto, MenuOffer menuOffer, @Context Place place) {
-    Logger.getGlobal().info("Mapping being served");
-    Logger.getGlobal().info("Time now is: " + LocalDateTime.now());
-    Logger.getGlobal().info("Default time zone is: " + ZoneId.systemDefault());
+    System.out.println("Mapping being served");
+    System.out.println("Time now is: " + LocalDateTime.now());
+    System.out.println("Default time zone is: " + ZoneId.systemDefault());
     LocalDateTime now = place.getTimeZone() == null ? LocalDateTime.now() : LocalDateTime.now(place.getTimeZone());
-    Logger.getGlobal().info("Time at " + (place.getTimeZone() == null ? "???" : place.getTimeZone()) + " is " + now);
+    System.out.println("Time at " + (place.getTimeZone() == null ? "???" : place.getTimeZone()) + " is " + now);
     dto.setBeingServed(menuOffer.isBeingServed(now));
   }
 

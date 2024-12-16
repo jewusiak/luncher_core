@@ -99,6 +99,8 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
           .forEach(assetManagementService::deleteAsset);
     }
 
+    calculateTimeZone(place);
+
     place.validate();
     return placePersistenceService.save(place);
   }
@@ -112,6 +114,13 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
 
   @Override
   public Place createPlace(Place place) {
+    calculateTimeZone(place);
+
+    place.validate();
+    return placePersistenceService.save(place);
+  }
+
+  private void calculateTimeZone(Place place) {
     ZoneId timeZone = place.getTimeZone();
     if (timeZone == null) {
       if (place.getLocation() == null || place.getLocation().getLongitude() == 0
@@ -123,8 +132,5 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
       }
     }
     place.setTimeZone(timeZone);
-
-    place.validate();
-    return placePersistenceService.save(place);
   }
 }

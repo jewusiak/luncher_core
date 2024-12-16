@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.luncher.v3.luncher_core.controllers.dtos.assets.mappers.AssetDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.mappers.WeekDayTimeRangeDtoMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers.MenuOfferDtoMapper;
@@ -24,38 +25,49 @@ import pl.luncher.v3.luncher_core.user.model.User;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
     WeekDayTimeRangeDtoMapper.class,
-    MenuOfferDtoMapper.class,
     AssetDtoMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface PlaceDtoMapper {
+public abstract class PlaceDtoMapper {
+
+  @Autowired
+  private MenuOfferDtoMapper menuOfferDtoMapper;
 
   // Requests
 
   @Mapping(source = "placeCreateRequest.placeTypeIdentifier", target = "placeType.identifier")
   @Mapping(source = "requestingUser", target = "owner")
   @Mapping(source = "placeCreateRequest.enabled", target = "enabled")
-  Place toDomain(PlaceCreateRequest placeCreateRequest, User requestingUser);
+  public abstract Place toDomain(PlaceCreateRequest placeCreateRequest, User requestingUser);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   @Mapping(source = "placeUpdateRequest.placeTypeIdentifier", target = "placeType.identifier")
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "images", ignore = true)
   @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
-  void updateDomain(
+  public abstract void updateDomain(
       PlaceUpdateRequest placeUpdateRequest, User owner, @MappingTarget Place place);
 
   // Responses
 
-  PlaceBasicResponse toBasicResponse(Place place);
+  public abstract PlaceBasicResponse toBasicResponse(Place place);
 
-  PlaceFullResponse toPlaceFullResponse(Place place);
+  @Mapping(target = "menuOffers", ignore = true)
+  public abstract PlaceFullResponse toPlaceFullResponse(Place place);
 
   @Mapping(source = "request", target = ".")
   @Mapping(source = "request.location", target = "location")
   @Mapping(source = "request.enabled", target = "enabled")
-  PlaceSearchCommand toSearchRequest(PlaceSearchRequest request, User requestingUser);
+  public abstract PlaceSearchCommand toSearchRequest(PlaceSearchRequest request, User requestingUser);
 
   @AfterMapping
-  default void nullifyHavingNullFields(@MappingTarget PlaceSearchCommand searchRequest) {
+  protected void mapMenuOffers(@MappingTarget PlaceFullResponse response, Place place) {
+    if (place.getMenuOffers() == null) {
+      return;
+    }
+    response.setMenuOffers(place.getMenuOffers().stream().map(mo -> menuOfferDtoMapper.toDto(mo, place)).toList());
+  }
+
+  @AfterMapping
+  protected void nullifyHavingNullFields(@MappingTarget PlaceSearchCommand searchRequest) {
     if (searchRequest.getLocation() != null && searchRequest.getLocation().getLatitude() == null
         && searchRequest.getLocation().getLongitude() == null
         && searchRequest.getLocation().getRadius() == null) {
