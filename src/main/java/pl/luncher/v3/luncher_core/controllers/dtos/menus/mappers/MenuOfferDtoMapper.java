@@ -1,6 +1,8 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.logging.Logger;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Context;
@@ -54,7 +56,11 @@ public interface MenuOfferDtoMapper {
 
   @AfterMapping
   default void mapBeingServed(@MappingTarget MenuOfferDto dto, MenuOffer menuOffer, @Context Place place) {
+    Logger.getGlobal().info("Mapping being served");
+    Logger.getGlobal().info("Time now is: " + LocalDateTime.now());
+    Logger.getGlobal().info("Default time zone is: " + ZoneId.systemDefault());
     LocalDateTime now = place.getTimeZone() == null ? LocalDateTime.now() : LocalDateTime.now(place.getTimeZone());
+    Logger.getGlobal().info("Time at " + (place.getTimeZone() == null ? "???" : place.getTimeZone()) + " is " + now);
     dto.setBeingServed(menuOffer.isBeingServed(now));
   }
 
