@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.user.domainservices;
+package pl.luncher.v3.luncher_core.user.domainservices.interfaces;
 
 import java.util.UUID;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntent;

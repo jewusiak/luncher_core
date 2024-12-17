@@ -249,7 +249,11 @@
       <groupId>io.trbl</groupId>
       <version>1.0.0</version>
     </dependency>
-
+    <dependency>
+      <artifactId>timeshape</artifactId>
+      <groupId>net.iakovlev</groupId>
+      <version>2024a.22</version>
+    </dependency>
   </dependencies>
 
   <build>

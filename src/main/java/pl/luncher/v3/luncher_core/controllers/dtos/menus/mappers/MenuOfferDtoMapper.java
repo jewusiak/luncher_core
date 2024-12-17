@@ -1,17 +1,19 @@
 package pl.luncher.v3.luncher_core.controllers.dtos.menus.mappers;
 
 import java.time.LocalDateTime;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import pl.luncher.v3.luncher_core.controllers.dtos.common.mappers.MonetaryAmountMapper;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.MenuOfferDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.OptionDto;
 import pl.luncher.v3.luncher_core.controllers.dtos.menus.dtos.PartDto;
+import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.model.menus.MenuOffer;
 import pl.luncher.v3.luncher_core.place.model.menus.Option;
 import pl.luncher.v3.luncher_core.place.model.menus.Part;
@@ -21,8 +23,8 @@ import pl.luncher.v3.luncher_core.place.model.menus.Part;
 public interface MenuOfferDtoMapper {
 
   // response dtos
-  @Mapping(target = "beingServed", qualifiedByName = "mapBeingServed", source = "menuOffer")
-  MenuOfferDto toDto(MenuOffer menuOffer);
+  @Mapping(target = "beingServed", ignore = true)
+  MenuOfferDto toDto(MenuOffer menuOffer, @Context Place place);
 
   OptionDto toDto(Option option);
 
@@ -50,9 +52,10 @@ public interface MenuOfferDtoMapper {
     }
   }
 
-  @Named("mapBeingServed")
-  default boolean mapBeingServed(MenuOffer menuOffer) {
-    return menuOffer.isBeingServed(LocalDateTime.now());
+  @AfterMapping
+  default void mapBeingServed(@MappingTarget MenuOfferDto dto, MenuOffer menuOffer, @Context Place place) {
+    LocalDateTime now = place.getTimeZone() == null ? LocalDateTime.now() : LocalDateTime.now(place.getTimeZone());
+    dto.setBeingServed(menuOffer.isBeingServed(now));
   }
 
 }

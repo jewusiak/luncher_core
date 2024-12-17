@@ -1,4 +1,4 @@
-package pl.luncher.v3.luncher_core.configuration.jwtUtils;
+package pl.luncher.v3.luncher_core.auth.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import pl.luncher.v3.luncher_core.auth.model.JwtToken;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -26,7 +27,6 @@ public class JwtService {
 
   @Value("${pl.luncher.jwt.access_token_lifetime_minutes:10}")
   private int accessTokenLifetimeMinutes;
-
 
   /**
    * If token is valid, returns user UUID and authorities from JWT token
@@ -50,7 +50,7 @@ public class JwtService {
     }
   }
 
-  public JwtTokenDto generateJwtTokenForUser(User user) {
+  public JwtToken generateJwtTokenForUser(User user) {
     Date expiration = new Date(System.currentTimeMillis() + accessTokenLifetimeMinutes * 60000L);
     String token = Jwts.builder().setClaims(new HashMap<>() {{
           put("role", user.getRole());
@@ -58,7 +58,7 @@ public class JwtService {
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(expiration)
         .signWith(SignatureAlgorithm.HS256, signingKey).compact();
-    return new JwtTokenDto(token, expiration);
+    return new JwtToken(token, expiration);
   }
 
 

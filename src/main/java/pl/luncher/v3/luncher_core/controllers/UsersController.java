@@ -32,8 +32,9 @@ import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateReque
 import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.AvailableRolesResponse;
 import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicResponse;
 import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
-import pl.luncher.v3.luncher_core.user.domainservices.UserSearchService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserManagementService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserSearchService;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
@@ -47,8 +48,7 @@ public class UsersController {
 
   private final UserSearchService userSearchService;
   private final UserDtoMapper userDtoMapper;
-  private final UserPersistenceService userPersistenceService;
-  private final PasswordEncoder passwordEncoder;
+  private final UserManagementService userManagementService;
 
   @Operation(summary = "Get all users")
   @ApiResponses(value = {
@@ -71,7 +71,7 @@ public class UsersController {
   })
   @GetMapping("/{uuid}")
   public ResponseEntity<UserBasicResponse> getUserByUuid(@PathVariable UUID uuid) {
-    User user = userPersistenceService.getById(uuid);
+    User user = userManagementService.getUserByUuid(uuid);
 
     return ResponseEntity.ok(userDtoMapper.toUserBasicResponse(user));
   }
@@ -83,12 +83,9 @@ public class UsersController {
   @PostMapping("")
   public ResponseEntity<UserBasicResponse> createUser(@RequestBody @Valid UserCreateRequest request,
       @Parameter(hidden = true) User requestingUser) {
-    var user = userDtoMapper.toDomain(request, passwordEncoder.encode(request.getPassword()));
+    var userToBeCreated = userDtoMapper.toDomain(request);
 
-    user.permissions().byUser(requestingUser).createThisUser().throwIfNotPermitted();
-
-    user.validate();
-    var saved = userPersistenceService.save(user);
+    var saved = userManagementService.createUser(userToBeCreated, request.getPassword(), requestingUser);
 
     return ResponseEntity.ok(userDtoMapper.toUserBasicResponse(saved));
   }
@@ -100,14 +97,10 @@ public class UsersController {
   @PutMapping("{userId}")
   public ResponseEntity<UserBasicResponse> updateUser(@RequestBody @Valid UserUpdateRequest request,
       @PathVariable UUID userId, @Parameter(hidden = true) User requestingUser) {
-    var user = userPersistenceService.getById(userId);
-    userDtoMapper.updateDomain(user, request,
-        request.getPassword() == null ? null : passwordEncoder.encode(request.getPassword()));
 
-    user.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
+    var changes = userDtoMapper.toDomain(request);
 
-    user.validate();
-    var saved = userPersistenceService.save(user);
+    var saved = userManagementService.updateUser(userId, changes, request.getPassword(), requestingUser);
 
     return ResponseEntity.ok(userDtoMapper.toUserBasicResponse(saved));
   }
@@ -120,11 +113,8 @@ public class UsersController {
   @DeleteMapping("{uuid}")
   public ResponseEntity<Void> deleteUser(@NotNull @PathVariable UUID uuid,
       @Parameter(hidden = true) User requestingUser) {
-    var user = userPersistenceService.getById(uuid);
 
-    user.permissions().byUser(requestingUser).delete().throwIfNotPermitted();
-
-    userPersistenceService.deleteById(uuid);
+    userManagementService.deleteUser(uuid, requestingUser);
 
     return ResponseEntity.noContent().build();
   }

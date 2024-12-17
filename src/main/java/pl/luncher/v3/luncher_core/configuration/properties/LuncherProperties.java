@@ -5,8 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import pl.luncher.v3.luncher_core.infrastructure.filesystem.FilesystemPersistentAssetsBasePathGetter;
-import pl.luncher.v3.luncher_core.user.domainservices.ForgottenPasswordIntentFactory.BaseApiUrlGetter;
-import pl.luncher.v3.luncher_core.user.domainservices.ForgottenPasswordIntentFactory.PasswordRequestIntentValiditySecondsGetter;
+import pl.luncher.v3.luncher_core.user.domainservices.providers.BaseApiUrlGetter;
+import pl.luncher.v3.luncher_core.user.domainservices.providers.PasswordRequestIntentValiditySecondsGetter;
 
 @Configuration
 @ConfigurationProperties("pl.luncher")

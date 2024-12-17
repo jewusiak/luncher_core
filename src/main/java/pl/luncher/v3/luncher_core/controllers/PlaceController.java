@@ -29,9 +29,8 @@ import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceBasicRes
 import pl.luncher.v3.luncher_core.controllers.dtos.place.responses.PlaceFullResponse;
 import pl.luncher.v3.luncher_core.place.domainservices.PlaceManagementService;
 import pl.luncher.v3.luncher_core.place.domainservices.PlacePersistenceService;
-import pl.luncher.v3.luncher_core.place.domainservices.PlaceSearchService;
 import pl.luncher.v3.luncher_core.place.model.Place;
-import pl.luncher.v3.luncher_core.user.domainservices.UserPersistenceService;
+import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole.hasRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
@@ -43,7 +42,6 @@ public class PlaceController {
 
   private final PlaceDtoMapper placeDtoMapper;
   private final PlacePersistenceService placePersistenceService;
-  private final PlaceSearchService placeSearchService;
   private final UserPersistenceService userPersistenceService;
   private final AssetManagementService assetManagementService;
   private final PlaceManagementService placeManagementService;
@@ -65,8 +63,7 @@ public class PlaceController {
       @Parameter(hidden = true) User requestingUser) {
     Place place = placeDtoMapper.toDomain(request, requestingUser);
 
-    place.validate();
-    Place savedPlace = placePersistenceService.save(place);
+    var savedPlace = placeManagementService.createPlace(place);
 
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
