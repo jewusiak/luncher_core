@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
 import org.hibernate.search.engine.search.predicate.SearchPredicate;
 import org.hibernate.search.mapper.orm.Search;
 import org.springframework.stereotype.Service;
@@ -112,11 +111,11 @@ class PlaceHibernateSearchService implements PlaceSearchService {
         searchRequest.getSize()).hits();
     List<Place> list = hits.stream().map(placeDbMapper::toDomain).toList();
 
-    for (var element : hits) {
-      log.debug("Place: {}, \nexplanation: \n{}\nplace: \n{}\n\n", element.getName(),
-          query.toQuery().extension(ElasticsearchExtension.get()).explain(element.getId()),
-          element);
-    }
+//    for (var element : hits) {
+//      log.debug("Place: {}, \nexplanation: \n{}\nplace: \n{}\n\n", element.getName(),
+//          query.toQuery().extension(ElasticsearchExtension.get()).explain(element.getId()),
+//          element);
+//    }
 
     return list;
   }
