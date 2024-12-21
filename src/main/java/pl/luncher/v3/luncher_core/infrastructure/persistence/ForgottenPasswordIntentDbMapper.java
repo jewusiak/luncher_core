@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
+import pl.luncher.v3.luncher_core.application.configuration.properties.LuncherProperties;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntent;
 
 @Mapper(componentModel = ComponentModel.SPRING)

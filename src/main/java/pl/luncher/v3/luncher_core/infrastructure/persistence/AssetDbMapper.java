@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.luncher.v3.luncher_core.application.configuration.properties.LuncherProperties;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
-import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
 
 @Mapper(componentModel = ComponentModel.SPRING, uses = {WeekDayTimeRangeMapper.class})
 abstract class AssetDbMapper {

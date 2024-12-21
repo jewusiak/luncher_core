@@ -10,10 +10,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pl.luncher.v3.luncher_core.application.configuration.properties.LuncherProperties;
 import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.AssetUnavailableException;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 import pl.luncher.v3.luncher_core.assets.model.AssetUploadStatus;
-import pl.luncher.v3.luncher_core.configuration.properties.LuncherProperties;
 
 @Service
 @RequiredArgsConstructor

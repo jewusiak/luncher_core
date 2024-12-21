@@ -17,8 +17,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import pl.luncher.v3.luncher_core.controllers.dtos.auth.responses.SuccessfulLoginResponse;
-import pl.luncher.v3.luncher_core.controllers.errorhandling.model.ErrorResponse;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.auth.responses.SuccessfulLoginResponse;
+import pl.luncher.v3.luncher_core.application.controllers.errorhandling.model.ErrorResponse;
 
 @Slf4j
 @RequiredArgsConstructor

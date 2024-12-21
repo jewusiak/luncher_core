@@ -4,7 +4,7 @@ import io.cucumber.java.en.And;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserProfileResponse;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.user.responses.UserProfileResponse;
 
 public class ProfileControllerSteps {
 

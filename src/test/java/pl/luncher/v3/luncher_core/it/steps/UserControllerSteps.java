@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserCreateRequest;
-import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserUpdateRequest;
-import pl.luncher.v3.luncher_core.controllers.dtos.user.responses.UserBasicResponse;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.user.requests.UserCreateRequest;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.user.requests.UserUpdateRequest;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.user.responses.UserBasicResponse;
 
 @RequiredArgsConstructor
 public class UserControllerSteps {

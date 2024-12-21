@@ -3,7 +3,7 @@ package pl.luncher.v3.luncher_core.it.steps;
 import io.cucumber.java.en.Given;
 import java.util.List;
 import java.util.Map;
-import pl.luncher.v3.luncher_core.controllers.dtos.user.requests.UserRegistrationRequest;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.user.requests.UserRegistrationRequest;
 
 public class AuthControllerTest {
 

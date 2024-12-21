@@ -13,7 +13,8 @@ import pl.luncher.v3.luncher_core.contentmanagement.model.PageArrangement;
 import pl.luncher.v3.luncher_core.contentmanagement.model.SectionElement;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
-    AssetDbMapper.class})
+    AssetDbMapper.class, PlaceDbMapper.class, WeekDayTimeRangeMapper.class, PlaceTypeDbMapper.class,
+    MenuOfferDbMapper.class, PlaceTypeDbMapper.class})
 interface PageArrangementDbMapper {
   
   PageArrangement toDomain(PageArrangementDb pageArrangementDb);
