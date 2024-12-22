@@ -1,10 +1,10 @@
-FROM maven:3-eclipse-temurin-17 as build
+FROM maven:3-eclipse-temurin-21 as build
 RUN mkdir /app/
 COPY ./ /app/
 WORKDIR /app/
 RUN mvn clean package -Pgcp_pre -DskipTests
 
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 LABEL authors="Grzegorz Jewusiak"
 COPY --from=build /app/target/*.jar app.jar
 #RUN mkdir "db"
