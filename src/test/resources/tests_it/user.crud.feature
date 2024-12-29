@@ -132,3 +132,49 @@ Feature: Users
       | user@luncher.corp | 2222gggbbb |
     Then response code is 200
     And User is logged in as user@luncher.corp
+
+
+  Scenario: Password change by admin
+    Given User logs in using credentials:
+      | email              | password |
+      | admin@luncher.corp | 1234     |
+    And response code is 200
+    And User is logged in as admin@luncher.corp
+
+    And User is created as below with ID -1:
+      | email              | password | firstName | surname | role |
+      | user1@luncher.corp | 1234     | Zbigniew  | Json    | USER |
+    And response code is 200
+    And User logs out (by removing saved auth token)
+
+    When User logs in using credentials:
+      | email              | password |
+      | user1@luncher.corp | 1234     |
+    Then response code is 200
+    And User is logged in as user1@luncher.corp
+
+    Given User logs out (by removing saved auth token)
+    And User logs in using credentials:
+      | email              | password |
+      | admin@luncher.corp | 1234     |
+    Then response code is 200
+    And User is logged in as admin@luncher.corp
+
+    When User with ID -1 is edited as below:
+      | password |
+      | 12345    |
+    Then response code is 200
+
+    Given User logs out (by removing saved auth token)
+
+    When User logs in using credentials:
+      | email              | password |
+      | user1@luncher.corp | 1234     |
+    Then response code is 401
+
+    When User logs in using credentials:
+      | email              | password |
+      | user1@luncher.corp | 12345    |
+    Then response code is 200
+    And User is logged in as user1@luncher.corp
+    

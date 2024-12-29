@@ -3,7 +3,6 @@ package pl.luncher.v3.luncher_core.user.model;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,8 @@ public class User implements UserDetails {
   private String surname;
   private String passwordHash;
   private AppRole role;
-  @Getter(AccessLevel.NONE)
-  private boolean enabled;
+  @Getter
+  private Boolean enabled;
 
 
   public void validate() {
@@ -72,7 +71,7 @@ public class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return enabled;
+    return Boolean.TRUE.equals(enabled);
   }
 
   @Override

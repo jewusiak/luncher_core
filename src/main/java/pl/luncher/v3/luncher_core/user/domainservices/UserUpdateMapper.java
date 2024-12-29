@@ -11,6 +11,8 @@ interface UserUpdateMapper {
 
   @Mapping(target = "uuid", ignore = true)
   @Mapping(target = "authorities", ignore = true)
+  @Mapping(target = "passwordHash", source = "passwordHash")
+  @Mapping(target = "enabled", expression = "java(newUser.getEnabled()!=null ? newUser.getEnabled() : oldUser.getEnabled())")
   @BeanMapping(nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
   void updateUser(@MappingTarget User oldUser, User newUser, String passwordHash);
 }
