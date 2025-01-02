@@ -12,7 +12,7 @@ public interface PlaceManagementService {
 
   List<Place> searchPlaces(PlaceSearchCommand request);
 
-  Place updatePlace(Place place, List<UUID> imageIds);
+  Place updatePlace(UUID uuid, Place changes, List<UUID> imageIds, User requestingUser);
 
   List<Asset> fetchNewImages(List<UUID> imageIds, List<Asset> oldImages);
 

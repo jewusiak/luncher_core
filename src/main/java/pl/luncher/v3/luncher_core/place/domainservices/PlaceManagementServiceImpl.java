@@ -29,6 +29,7 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
   private final UserPersistenceService userPersistenceService;
   private final PlaceSearchService placeSearchService;
   private final TimeZoneEngine timeZoneEngine;
+  private final PlaceUpdateMapper placeUpdateMapper;
 
   private static void filterPlaceBasedOnUserPermissions(User requestingUser, Place place) {
     if (requestingUser == null || requestingUser.getRole().compareRoleTo(AppRole.REST_MANAGER) < 0) {
@@ -66,37 +67,21 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
   }
 
   @Override
-  public Place updatePlace(Place place, List<UUID> imageIds) {
+  public Place updatePlace(UUID uuid, Place changes, List<UUID> imageIds, User requestingUser) {
+    Place place = placePersistenceService.getById(uuid);
+
+    fetchOwner(changes);
+    
+    if (changes.getOwner() != null && !changes.getOwner().equals(requestingUser)) {
+      place.permissions().byUser(requestingUser).changeOwner().throwIfNotPermitted();
+    }
+    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
+
+    placeUpdateMapper.updateDomain(place, changes);
+
 
     if (imageIds != null) {
-      var distinctRequestedIds = new HashSet<>(imageIds);
-      if (distinctRequestedIds.size() != imageIds.size()) {
-        throw new IllegalArgumentException("Image ids from request cannot have duplicates!");
-      }
-
-//      var placeImagesIds = place.getImages().stream().map(Asset::getId).collect(Collectors.toSet());
-//      if (!placeImagesIds.containsAll(distinctRequestedIds)) {
-//        throw new IllegalArgumentException(
-//            "Requested image set has to be a subset of Place's images!");
-//      }
-
-      List<Asset> oldImages = place.getImages() == null ? new ArrayList<>() : place.getImages();
-
-      List<Asset> newImagesList = fetchNewImages(imageIds, oldImages);
-      // add old images which should be retained
-      var oldImagesToRetain = oldImages.stream().filter(asset -> imageIds.contains(asset.getId())).toList();
-
-      List<Asset> imagesToSave = new ArrayList<>();
-      imagesToSave.addAll(newImagesList);
-      imagesToSave.addAll(oldImagesToRetain);
-
-      imagesToSave = imagesToSave.stream().sorted(Comparator.comparingInt(item -> imageIds.indexOf(item.getId())))
-          .toList();
-
-      place.setImages(imagesToSave);
-
-      oldImages.stream().filter(asset -> !imageIds.contains(asset.getId()))
-          .forEach(assetManagementService::deleteAsset);
+      updateImages(imageIds, place);
     }
 
     calculateTimeZone(place);
@@ -132,5 +117,45 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
       }
     }
     place.setTimeZone(timeZone);
+  }
+
+  private void updateImages(List<UUID> imageIds, Place place) {
+    var distinctRequestedIds = new HashSet<>(imageIds);
+    if (distinctRequestedIds.size() != imageIds.size()) {
+      throw new IllegalArgumentException("Image ids from request cannot have duplicates!");
+    }
+
+//      var placeImagesIds = place.getImages().stream().map(Asset::getId).collect(Collectors.toSet());
+//      if (!placeImagesIds.containsAll(distinctRequestedIds)) {
+//        throw new IllegalArgumentException(
+//            "Requested image set has to be a subset of Place's images!");
+//      }
+
+    List<Asset> oldImages = place.getImages() == null ? new ArrayList<>() : place.getImages();
+
+    List<Asset> newImagesList = fetchNewImages(imageIds, oldImages);
+    // add old images which should be retained
+    var oldImagesToRetain = oldImages.stream().filter(asset -> imageIds.contains(asset.getId()))
+        .toList();
+
+    List<Asset> imagesToSave = new ArrayList<>();
+    imagesToSave.addAll(newImagesList);
+    imagesToSave.addAll(oldImagesToRetain);
+
+    imagesToSave = imagesToSave.stream()
+        .sorted(Comparator.comparingInt(item -> imageIds.indexOf(item.getId()))).toList();
+
+    place.setImages(imagesToSave);
+
+    oldImages.stream().filter(asset -> !imageIds.contains(asset.getId()))
+        .forEach(assetManagementService::deleteAsset);
+  }
+
+  private void fetchOwner(Place changes) {
+    if (changes.getOwner() != null && changes.getOwner().getEmail() != null) {
+      changes.setOwner(userPersistenceService.getByEmail(changes.getOwner().getEmail()));
+    } else {
+      changes.setOwner(null);
+    }
   }
 }

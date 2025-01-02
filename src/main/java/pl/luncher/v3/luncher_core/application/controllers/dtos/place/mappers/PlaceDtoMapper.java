@@ -1,14 +1,12 @@
 package pl.luncher.v3.luncher_core.application.controllers.dtos.place.mappers;
 
 import org.mapstruct.AfterMapping;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.assets.mappers.AssetDtoMapper;
@@ -38,13 +36,10 @@ public abstract class PlaceDtoMapper {
   @Mapping(source = "placeCreateRequest.enabled", target = "enabled")
   public abstract Place toDomain(PlaceCreateRequest placeCreateRequest, User requestingUser);
 
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  @Mapping(source = "placeUpdateRequest.placeTypeIdentifier", target = "placeType.identifier")
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "images", ignore = true)
-  @Mapping(source = "placeUpdateRequest.enabled", target = "enabled")
-  public abstract void updateDomain(
-      PlaceUpdateRequest placeUpdateRequest, User owner, @MappingTarget Place place);
+  @Mapping(source = "placeTypeIdentifier", target = "placeType.identifier")
+  @Mapping(source = "ownerEmail", target = "owner.email")
+  @Mapping(source = "enabled", target = "enabled")
+  public abstract Place toDomain(PlaceUpdateRequest placeUpdateRequest);
 
   // Responses
 

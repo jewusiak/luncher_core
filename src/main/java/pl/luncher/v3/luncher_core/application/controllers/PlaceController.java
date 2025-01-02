@@ -42,7 +42,6 @@ public class PlaceController {
 
   private final PlaceDtoMapper placeDtoMapper;
   private final PlacePersistenceService placePersistenceService;
-  private final UserPersistenceService userPersistenceService;
   private final AssetManagementService assetManagementService;
   private final PlaceManagementService placeManagementService;
 
@@ -74,21 +73,10 @@ public class PlaceController {
       @RequestBody PlaceUpdateRequest placeUpdateRequest,
       @Parameter(hidden = true) User requestingUser) {
 
-    Place place = placePersistenceService.getById(placeUuid);
-    User newOwner = null;
+    var changes = placeDtoMapper.toDomain(placeUpdateRequest);
 
-    place.permissions().byUser(requestingUser).edit().throwIfNotPermitted();
-
-    if (placeUpdateRequest.getOwnerEmail() != null && !placeUpdateRequest.getOwnerEmail()
-        .equalsIgnoreCase(place.getOwner().getEmail())) {
-      place.permissions().byUser(requestingUser).changeOwner()
-          .throwIfNotPermitted();
-      newOwner = userPersistenceService.getByEmail(placeUpdateRequest.getOwnerEmail());
-    }
-
-    placeDtoMapper.updateDomain(placeUpdateRequest, newOwner, place);
-
-    Place savedPlace = placeManagementService.updatePlace(place, placeUpdateRequest.getImageIds());
+    Place savedPlace = placeManagementService.updatePlace(placeUuid, changes,
+        placeUpdateRequest.getImageIds(), requestingUser);
 
     return ResponseEntity.ok(placeDtoMapper.toPlaceFullResponse(savedPlace));
   }
