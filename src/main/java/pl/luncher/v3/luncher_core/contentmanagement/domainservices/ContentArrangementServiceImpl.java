@@ -37,22 +37,29 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
 
   @Override
   public PageArrangement updateArrangement(PageArrangement arrangement) {
+    fetchThumbnails(arrangement);
 
     PageArrangement old = getArrangementById(arrangement.getId());
     arrangement.setPrimaryPage(old.isPrimaryPage());
 
-    return persistPageArrangement(arrangement);
+    arrangement.validate();
+
+    return arrangementsPersistenceService.save(arrangement);
   }
 
   @Override
   public PageArrangement createNewArrangement(PageArrangement arrangement) {
+    fetchThumbnails(arrangement);
+
     arrangement.setId(null);
     arrangement.setPrimaryPage(false);
 
-    return persistPageArrangement(arrangement);
+    arrangement.validate();
+
+    return arrangementsPersistenceService.save(arrangement);
   }
 
-  private PageArrangement persistPageArrangement(PageArrangement arrangement) {
+  private void fetchThumbnails(PageArrangement arrangement) {
     if (arrangement.getSections() != null) {
       arrangement.getSections().forEach(section -> {
         if (section.getSectionElements() != null) {
@@ -63,8 +70,6 @@ class ContentArrangementServiceImpl implements ContentArrangementService {
         }
       });
     }
-    arrangement.validate();
-    return arrangementsPersistenceService.save(arrangement);
   }
 
   @Override
