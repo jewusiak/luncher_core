@@ -113,6 +113,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with: 
+          repository: 'jewusiak/luncher_core_config'
+          ref: master
+          path: pulled_configs
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy configs
+        run: 'cp pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
+        
+      - name: ls home
+        run: 'ls ./'
+
+      - name: ls pulled
+        run: 'ls pulled_configs'
+      - name: ls pulled
+        run: 'echo ${{ GITHUB_WORKSPACE }}'
+      - name: ls pulled
+        run: 'ls ${{ GITHUB_WORKSPACE }}'
 
       - name: Set up SSH keys
         run: |

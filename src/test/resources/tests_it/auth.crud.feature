@@ -10,7 +10,7 @@ Feature: Authentication controller features
     When User logs in using credentials:
       | email          | password |
       | e@luncher.corp | 1234     |
-    And response code is 200
+    Then response code is 200
     And User is logged in as e@luncher.corp
 
     And GET profile of authenticated user is:
