@@ -118,7 +118,7 @@ jobs:
           ref: master
           token: '${{ secrets.CONFIG_PAT }}'
   
-      - name: Copy config out of the dir
+      - name: Create dir for the config
         run: 'mkdir ../cfg'
           
       - name: Copy config out of the dir
@@ -127,12 +127,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-
       - name: Copy configs
         run: 'cp ../cfg/application-s_pre.properties src/main/resources/application-s_pre.properties'
         
-
-
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
