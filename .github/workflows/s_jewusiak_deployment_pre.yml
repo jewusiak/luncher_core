@@ -117,7 +117,7 @@ jobs:
           repository: 'jewusiak/luncher_core_config'
           ref: master
           path: pulled_configs
-          token: '${{ github.token }}'
+          token: '${{ secrets.CONFIG_PAT }}'
 
       - name: Checkout
         uses: actions/checkout@v2
