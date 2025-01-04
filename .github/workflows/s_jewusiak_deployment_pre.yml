@@ -121,15 +121,14 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        with: 
+          clean: false
 
       - name: ls home
         run: 'ls ./'
 
-      - name: ls pulled
-        run: 'ls /home/runner/work/luncher_core/luncher_core/pulled_configs'
-
       - name: Copy configs
-        run: 'cp /home/runner/work/luncher_core/luncher_core/pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
+        run: 'cp pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
         
 
 
