@@ -116,20 +116,17 @@ jobs:
         with: 
           repository: 'jewusiak/luncher_core_config'
           ref: master
-          path: pulled_configs
           token: '${{ secrets.CONFIG_PAT }}'
-          clean: false
+  
+      - name: Copy config out of the dir
+        run: 'cp application-s_pre.properties /application-s_pre.properties'
 
       - name: Checkout
         uses: actions/checkout@v3
-        with: 
-          clean: false
 
-      - name: ls home
-        run: 'ls ./'
 
       - name: Copy configs
-        run: 'cp pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
+        run: 'cp /application-s_pre.properties src/main/resources/application-s_pre.properties'
         
 
 
