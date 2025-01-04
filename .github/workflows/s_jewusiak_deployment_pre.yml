@@ -122,14 +122,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Copy configs
-        run: 'cp pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
-        
       - name: ls home
         run: 'ls ./'
 
       - name: ls pulled
         run: 'ls pulled_configs'
+
+      - name: Copy configs
+        run: 'cp pulled_configs/application-s_pre.properties src/main/resources/application-s_pre.properties'
+        
+
 
       - name: Set up SSH keys
         run: |
