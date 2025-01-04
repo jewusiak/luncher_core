@@ -118,11 +118,12 @@ jobs:
           ref: master
           path: pulled_configs
           token: '${{ secrets.CONFIG_PAT }}'
+          clean: 'false'
 
       - name: Checkout
         uses: actions/checkout@v2
         with: 
-          clean: false
+          clean: 'false'
 
       - name: ls home
         run: 'ls ./'
