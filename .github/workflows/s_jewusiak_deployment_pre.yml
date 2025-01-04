@@ -112,18 +112,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with: 
           repository: 'jewusiak/luncher_core_config'
           ref: master
           path: pulled_configs
           token: '${{ secrets.CONFIG_PAT }}'
-          clean: 'false'
+          clean: false
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with: 
-          clean: 'false'
+          clean: false
 
       - name: ls home
         run: 'ls ./'
