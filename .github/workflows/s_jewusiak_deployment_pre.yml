@@ -129,10 +129,6 @@ jobs:
 
       - name: ls pulled
         run: 'ls pulled_configs'
-      - name: ls pulled
-        run: 'echo ${{ GITHUB_WORKSPACE }}'
-      - name: ls pulled
-        run: 'ls ${{ GITHUB_WORKSPACE }}'
 
       - name: Set up SSH keys
         run: |
