@@ -9,7 +9,7 @@ env:
   APP_NAME: "luncher-core"
   POSTGRES_NAME: "postgres-luncher-core"
   ELASTICSEARCH_NAME: "elasticsearch-luncher-core"
-  SWAG_NAME: "swag-luncher-core-common"
+  SWAG_NAME: "swag-common"
   ENV_SUFFIX: "-pre"
   BASE_DOMAIN: "api.pre.luncher.pl"
   VOLUMES_DIR: "~/luncher-core-volumes-pre"
@@ -287,15 +287,6 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
         
-      - name: Stop Swag if exists
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker stop ${{ env.SWAG_NAME }} || true"'
-        
-      - name: Remove swag config if exists
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "rm -f ~/${{ env.SWAG_NAME }}/nginx/proxy-confs/api_pre_s.subdomain.conf || true"'
-        
-      - name: Setup Swag
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.SWAG_NAME }} -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC -e URL=s.jewusiak.pl -e EXTRA_DOMAINS=api.pre.luncher.pl,admin.pre.luncher.pl,pre.luncher.pl -e VALIDATION=http -e EMAIL="grzegorz@jewusiak.pl" -e CERTPROVIDER=zerossl -p "443:443" -p "80:80" -v ~/${{ env.SWAG_NAME }}:/config --net ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net linuxserver/swag"'
-
       - name: Checkout
         uses: actions/checkout@v2
         
