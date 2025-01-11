@@ -1,18 +1,18 @@
-name: Deploy to pre.luncher.pl
+name: Deploy to luncher.pl (PRO)
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "development" ]
+    branches: [ "master" ]
 
 env:
   APP_NAME: "luncher-core"
   POSTGRES_NAME: "postgres-luncher-core"
   ELASTICSEARCH_NAME: "elasticsearch-luncher-core"
   SWAG_NAME: "swag-common"
-  ENV_SUFFIX: "-pre"
-  BASE_DOMAIN: "api.pre.luncher.pl"
-  VOLUMES_DIR: "~/luncher-core-volumes-pre"
+  ENV_SUFFIX: "-pro"
+  BASE_DOMAIN: "api.luncher.pl"
+  VOLUMES_DIR: "~/luncher-core-volumes-pro"
   
   # ssh host config
   SSH_HOST: "s.jewusiak.pl"
@@ -122,13 +122,13 @@ jobs:
         run: 'mkdir ../cfg'
           
       - name: Copy config out of the dir
-        run: 'cp application-s_pre.properties ../cfg/application-s_pre.properties'
+        run: 'cp application-s_pro.properties ../cfg/application-s_pro.properties'
 
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Copy configs
-        run: 'cp ../cfg/application-s_pre.properties src/main/resources/application-s_pre.properties'
+        run: 'cp ../cfg/application-s_pro.properties src/main/resources/application-s_pro.properties'
         
       - name: Set up SSH keys
         run: |
@@ -139,7 +139,7 @@ jobs:
 
       - name: Build docker Image
         id: docker-build
-        run: 'docker build -t ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-s_pre .'
+        run: 'docker build -t ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }} --file=Dockerfile-s_pro .'
 
       - name: Save Docker image
         run: 'docker save --output /tmp/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_image.tar ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}'
@@ -210,7 +210,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new postgres
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" -v ${{env.VOLUMES_DIR}}/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}/data:/var/lib/postgresql/data ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run --rm -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pro\" -e \"POSTGRES_USER=luncher_core_pro_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" -v ${{env.VOLUMES_DIR}}/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}/data:/var/lib/postgresql/data ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for postgres to start
         run: |
@@ -292,13 +292,13 @@ jobs:
         
       - name: Replace placeholders in proxy config
         run: |
-          sed -i -e 's!SRVNAME1!${{ env.BASE_DOMAIN }}!g' src/main/resources/api_pre_s.subdomain.conf
-          sed -i -e 's!PRXYPASS1!http://${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:8080!g' src/main/resources/api_pre_s.subdomain.conf
+          sed -i -e 's!SRVNAME1!${{ env.BASE_DOMAIN }}!g' src/main/resources/api_pro_s.subdomain.conf
+          sed -i -e 's!PRXYPASS1!http://${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:8080!g' src/main/resources/api_pro_s.subdomain.conf
       
       - name: Insert proxy config
         run: |
           ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "mkdir -p ~/${{ env.SWAG_NAME }}/nginx/proxy-confs"
-          scp src/main/resources/api_pre_s.subdomain.conf ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:~/${{ env.SWAG_NAME }}/nginx/proxy-confs/
+          scp src/main/resources/api_pro_s.subdomain.conf ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:~/${{ env.SWAG_NAME }}/nginx/proxy-confs/
       
       - name: Restart Swag
         run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker restart ${{ env.SWAG_NAME }}"'
