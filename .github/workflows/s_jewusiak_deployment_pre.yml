@@ -210,7 +210,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new postgres
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" -v ${{env.VOLUMES_DIR}}/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}/data:/var/lib/postgresql/data ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --restart unless-stopped --name ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"POSTGRES_DB=luncher_core_pre\" -e \"POSTGRES_USER=luncher_core_pre_apiuser\" -e \"POSTGRES_PASSWORD=EHa56TpJXo#qog\" -v ${{env.VOLUMES_DIR}}/${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}/data:/var/lib/postgresql/data ${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for postgres to start
         run: |
@@ -236,7 +236,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run new elasticsearch
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --group-add 1000 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" -v ${{env.VOLUMES_DIR}}/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}/data:/usr/share/elasticsearch/data ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --restart unless-stopped --name ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --group-add 1000 --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" -v ${{env.VOLUMES_DIR}}/${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}/data:/usr/share/elasticsearch/data ${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for elasticsearch to start
         run: |
@@ -262,7 +262,7 @@ jobs:
           ssh-keyscan s.jewusiak.pl >> ~/.ssh/known_hosts
 
       - name: Run Docker application
-        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -v ${{env.VOLUMES_DIR}}/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:/uploaded-assets ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
+        run: 'ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "docker run -d --restart unless-stopped --name ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --net=${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}_net -v ${{env.VOLUMES_DIR}}/${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:/uploaded-assets ${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}:${{ env.VERSION }}"'
 
       - name: Wait for application to start
         run: |
