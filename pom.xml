@@ -34,6 +34,12 @@
       </properties>
     </profile>
     <profile>
+      <id>s_pro</id>
+      <properties>
+        <spring.profiles.active>s_pro</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
       <id>s_pre</id>
       <properties>
         <spring.profiles.active>s_pre</spring.profiles.active>
