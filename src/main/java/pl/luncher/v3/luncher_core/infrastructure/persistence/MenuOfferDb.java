@@ -52,7 +52,7 @@ class MenuOfferDb {
   @OneToMany(mappedBy = "menuOffer", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<LocalDateTimeRangeDb> oneTimeServingRanges;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   private PlaceDb place;
 
 }
