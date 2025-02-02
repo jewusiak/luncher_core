@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.ToString;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 @Entity
+@Table(name = "local_date_time_ranges", schema = "luncher_core")
 @Data
 @ToString(exclude = "menuOffer")
 class LocalDateTimeRangeDb {
