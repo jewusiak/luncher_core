@@ -28,27 +28,15 @@
       </properties>
     </profile>
     <profile>
-      <id>gcp_pre</id>
-      <properties>
-        <spring.profiles.active>gcp_pre</spring.profiles.active>
-      </properties>
-    </profile>
-    <profile>
       <id>s_pro</id>
       <properties>
-        <spring.profiles.active>s_pro</spring.profiles.active>
+        <spring.profiles.active>s_pro,external_config</spring.profiles.active>
       </properties>
     </profile>
     <profile>
       <id>s_pre</id>
       <properties>
-        <spring.profiles.active>s_pre</spring.profiles.active>
-      </properties>
-    </profile>
-    <profile>
-      <id>gcp_test</id>
-      <properties>
-        <spring.profiles.active>gcp_test</spring.profiles.active>
+        <spring.profiles.active>s_pre,external_config</spring.profiles.active>
       </properties>
     </profile>
     <profile>
@@ -74,13 +62,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!--      <dependency>-->
-      <!--        <groupId>com.google.cloud</groupId>-->
-      <!--        <artifactId>spring-cloud-gcp-dependencies</artifactId>-->
-      <!--        <version>5.3.0</version>-->
-      <!--        <type>pom</type>-->
-      <!--        <scope>import</scope>-->
-      <!--      </dependency>-->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>2023.0.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -259,6 +247,10 @@
       <artifactId>timeshape</artifactId>
       <groupId>net.iakovlev</groupId>
       <version>2024a.22</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
     </dependency>
   </dependencies>
 

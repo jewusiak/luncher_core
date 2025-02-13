@@ -112,24 +112,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-        with: 
-          repository: 'jewusiak/luncher_core_config'
-          ref: master
-          token: '${{ secrets.CONFIG_PAT }}'
-  
-      - name: Create dir for the config
-        run: 'mkdir ../cfg'
-          
-      - name: Copy config out of the dir
-        run: 'cp application-s_pre.properties ../cfg/application-s_pre.properties'
+        uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Copy configs
-        run: 'cp ../cfg/application-s_pre.properties src/main/resources/application-s_pre.properties'
-        
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
