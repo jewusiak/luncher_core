@@ -2,8 +2,8 @@ name: Deploy to pre.luncher.pl
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "development" ]
+#  push:
+#    branches: [ "development" ]
 
 env:
   APP_NAME: "luncher-core"
