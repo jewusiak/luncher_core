@@ -61,7 +61,6 @@ jobs:
         run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}'
 
   test_app:
-    #    needs: [ elasticsearch_build, postgres_build ]
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -84,6 +83,7 @@ jobs:
         run: 'mvn clean verify -Plocal_test'
 
   build_app:
+    needs: [ elasticsearch_build, postgres_build ]
     permissions:
       contents: 'read'
       id-token: 'write'
