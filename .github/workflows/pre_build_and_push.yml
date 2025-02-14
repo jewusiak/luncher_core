@@ -21,6 +21,7 @@ env:
 
 jobs:
   elasticsearch_build:
+    needs: [test_app]
     permissions:
       contents: 'read'
 
@@ -91,6 +92,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Authenticate in Docker Hub
+        run: 'docker login -u ${{env.DCKR_HUB_USER}} -p ${{ secrets.DCKR_HUB_PAT }}'
 
       - name: Build docker Image
         id: docker-build
