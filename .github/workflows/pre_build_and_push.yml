@@ -1,0 +1,102 @@
+name: Build and push (PRE)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "development" ]
+
+env:
+  APP_NAME: "luncher-core"
+  POSTGRES_NAME: "postgres-luncher"
+  ELASTICSEARCH_NAME: "elasticsearch-luncher"
+  ENV_SUFFIX: "-pre"
+  BASE_DOMAIN: "api.pre.luncher.pl"
+
+
+  DCKR_HUB_USER: "jewusiak"
+  DCKR_HUB_REPO: "luncher"
+
+  VERSION: 3.0.1
+
+
+jobs:
+  elasticsearch_build:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate in Docker Hub
+        run: 'docker login -u ${{env.DCKR_HUB_USER}} -p ${{ secrets.DCKR_HUB_PAT }}'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --file=Dockerfile-elasticsearch .'
+
+      - name: Push Docker image
+        run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}'
+
+  postgres_build:
+    needs: [test_app]
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate in Docker Hub
+        run: 'docker login -u ${{env.DCKR_HUB_USER}} -p ${{ secrets.DCKR_HUB_PAT }}'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --file=Dockerfile-postgres .'
+
+      - name: Push Docker image
+        run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}'
+
+  test_app:
+    #    needs: [ elasticsearch_build, postgres_build ]
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build test helper services images
+        run: 'bash ./build_images_for_testing.sh'
+
+      - name: Set up java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build & test
+        run: 'mvn clean verify -Plocal_test'
+
+  build_app:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.APP_NAME }}${{ env.ENV_SUFFIX }} --file=Dockerfile-s_pre .'
+
+      - name: Push Docker image
+        run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.APP_NAME }}${{ env.ENV_SUFFIX }}'
+
+
