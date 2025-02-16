@@ -83,7 +83,7 @@ jobs:
         run: 'mvn clean verify -Plocal_test'
 
   build_app:
-#    needs: [ elasticsearch_build, postgres_build ]
+    needs: [ elasticsearch_build, postgres_build ]
     permissions:
       contents: 'read'
       id-token: 'write'
