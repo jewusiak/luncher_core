@@ -3,6 +3,7 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,9 @@ class PlaceTypeJpaPersistenceService implements PlaceTypePersistenceService {
 
   @Override
   public PlaceType getByIdentifier(String identifier) {
-    return placeTypeDbMapper.toDomain(placeTypeRepository.findByIdentifierIgnoreCase(identifier).orElseThrow());
+    return placeTypeDbMapper.toDomain(placeTypeRepository.findByIdentifierIgnoreCase(identifier)
+        .orElseThrow(() -> new NoSuchElementException(
+            "Place type with identifier %s not found!".formatted(identifier))));
   }
 
   @Override

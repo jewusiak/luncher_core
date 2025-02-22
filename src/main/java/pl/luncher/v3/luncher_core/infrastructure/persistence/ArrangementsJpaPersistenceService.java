@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,15 @@ class ArrangementsJpaPersistenceService implements ArrangementsPersistenceServic
 
   @Override
   public PageArrangement getById(UUID id) {
-    return pageArrangementDbMapper.toDomain(pageArrangementsRepository.findById(id).orElseThrow());
+    return pageArrangementDbMapper.toDomain(pageArrangementsRepository.findById(id).orElseThrow(
+        () -> new NoSuchElementException("Page Arrangement with ID %s not found!".formatted(id))));
   }
 
   @Override
   public PageArrangement getPrimaryArrangement() {
     return pageArrangementDbMapper.toDomain(
-        pageArrangementsRepository.findFirstByPrimaryPageIsTrue().orElseThrow());
+        pageArrangementsRepository.findFirstByPrimaryPageIsTrue()
+            .orElseThrow(() -> new NoSuchElementException("No primary page arrangement set.")));
   }
 
   @Override

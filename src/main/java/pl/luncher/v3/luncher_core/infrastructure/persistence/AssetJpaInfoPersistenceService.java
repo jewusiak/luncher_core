@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,9 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
   public Asset save(Asset asset) {
     PlaceDb placeDb = null;
     if (asset.getPlaceId() != null) {
-      placeDb = placeRepository.findById(asset.getPlaceId()).orElseThrow();
+      placeDb = placeRepository.findById(asset.getPlaceId()).orElseThrow(
+          () -> new NoSuchElementException(
+              "Can't find place with id %s".formatted(asset.getPlaceId())));
     }
     var toBeSaved = assetDbMapper.toDbEntity(asset, placeDb);
     toBeSaved.insertPlaceListIndexValue();
@@ -32,13 +35,15 @@ class AssetJpaInfoPersistenceService implements AssetInfoPersistenceService {
 
   @Override
   public Asset getById(UUID id) {
-    AssetDb assetDb = assetRepository.findById(id).orElseThrow();
+    AssetDb assetDb = assetRepository.findById(id)
+        .orElseThrow(() -> new NoSuchElementException("Asset with ID %s not found!".formatted(id)));
     
     return assetDbMapper.toDomain(assetDb);
   }
 
   public void delete(Asset asset) {
-    var assetDb = assetRepository.findById(asset.getId()).orElseThrow();
+    var assetDb = assetRepository.findById(asset.getId()).orElseThrow(
+        () -> new NoSuchElementException("Asset with ID %s not found".formatted(asset.getId())));
     if (assetDb.getSectionElements() != null && !assetDb.getSectionElements().isEmpty()) {
       throw new DeleteReferencedEntityException(
           "Cannot delete this asset! Is still referenced by %s SectionElements of Arrangements %s.".formatted(

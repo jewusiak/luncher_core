@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,12 +25,14 @@ class UserJpaPersistenceService implements UserPersistenceService {
 
   @Override
   public User getById(UUID id) {
-    return userRepository.findUserByUuid(id).map(userDbMapper::toDomain).orElseThrow();
+    return userRepository.findUserByUuid(id).map(userDbMapper::toDomain)
+        .orElseThrow(() -> new NoSuchElementException("User with ID %s not found!".formatted(id)));
   }
 
   @Override
   public User getByEmail(String email) {
-    return userRepository.findUserByEmailIgnoreCase(email).map(userDbMapper::toDomain).orElseThrow();
+    return userRepository.findUserByEmailIgnoreCase(email).map(userDbMapper::toDomain).orElseThrow(
+        () -> new NoSuchElementException("User with email %s not found!".formatted(email)));
   }
 
   @Override

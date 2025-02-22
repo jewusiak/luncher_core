@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,15 @@ class PlaceJpaPersistenceService implements PlacePersistenceService {
   public Place save(Place place) {
 
     PlaceTypeDb placeType = Optional.ofNullable(place.getPlaceType())
-        .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findByIdentifierIgnoreCase(id).orElseThrow())
+        .map(PlaceType::getIdentifier).map(id -> placeTypeRepository.findByIdentifierIgnoreCase(id)
+            .orElseThrow(() -> new NoSuchElementException(
+                "Place type with identifier %s not found!".formatted(id))))
         .orElse(null);
 
     UserDb owner = Optional.ofNullable(place.getOwner()).map(User::getUuid)
-        .map(email -> userRepository.findUserByUuid(email).orElseThrow()).orElse(null);
+        .map(id -> userRepository.findUserByUuid(id).orElseThrow(
+            () -> new NoSuchElementException("User with ID %s not found!".formatted(id))))
+        .orElse(null);
 
     PlaceDb placeDb = placeDbMapper.toDb(place, owner, placeType);
 
@@ -51,7 +56,8 @@ class PlaceJpaPersistenceService implements PlacePersistenceService {
 
   @Override
   public Place getById(UUID uuid) {
-    var placeDb = placeRepository.findById(uuid).orElseThrow();
+    var placeDb = placeRepository.findById(uuid).orElseThrow(
+        () -> new NoSuchElementException("Place with ID %s not found!".formatted(uuid)));
     return placeDbMapper.toDomain(placeDb);
   }
 
