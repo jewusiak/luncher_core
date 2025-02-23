@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.common.mappers.MonetaryAmountMapper;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.MenuOfferDto;
@@ -19,7 +20,7 @@ import pl.luncher.v3.luncher_core.place.model.menus.Option;
 import pl.luncher.v3.luncher_core.place.model.menus.Part;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
-    MonetaryAmountMapper.class})
+    MonetaryAmountMapper.class}, nullValueIterableMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface MenuOfferDtoMapper {
 
   // response dtos
