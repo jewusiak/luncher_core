@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.application.controllers.dtos.place.responses;
 
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -37,4 +38,5 @@ public class PlaceFullResponse implements Serializable {
   private List<AssetBasicResponse> images;
   private List<MenuOfferDto> menuOffers;
   private Boolean enabled;
+  private ZoneId timeZone;
 }

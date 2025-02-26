@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.application.controllers.dtos.place.requests;
 
 import jakarta.validation.constraints.Email;
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -38,4 +39,5 @@ public class PlaceUpdateRequest implements Serializable {
   @Email
   private String ownerEmail;
   private Boolean enabled;
+  private ZoneId timeZone;
 }

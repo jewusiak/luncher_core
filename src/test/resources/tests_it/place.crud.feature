@@ -90,8 +90,8 @@ Feature: CRUD - Place
     Then response code is 200
 
     And GET place with ID -1 is as below:
-      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier |
-      | name | descr       |             | fbid           | 52.21507395584024 | 21.02108986309555  | RESTAURANT           |
+      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier | timeZone      |
+      | name | descr       |             | fbid           | 52.21507395584024 | 21.02108986309555  | RESTAURANT           | Europe/Warsaw |
 
     And Place ID -1 is as below:
       | owner.email           |

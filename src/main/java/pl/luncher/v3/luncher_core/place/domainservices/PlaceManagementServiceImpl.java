@@ -34,6 +34,7 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
   private static void filterPlaceBasedOnUserPermissions(User requestingUser, Place place) {
     if (requestingUser == null || requestingUser.getRole().compareRoleTo(AppRole.REST_MANAGER) < 0) {
       place.setOwner(null);
+      place.setTimeZone(null);
     }
   }
 
