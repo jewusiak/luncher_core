@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
@@ -36,5 +38,7 @@ class OptionDb {
   private MonetaryAmountDb supplement;
 
   @ManyToOne
+  @JoinTable(name = "menu_part_options",
+      schema = "luncher_core", inverseJoinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"), joinColumns = @JoinColumn(name = "option_id", referencedColumnName = "id"))
   private PartDb parentPart;
 }
