@@ -7,6 +7,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,7 +22,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.search.engine.backend.types.ObjectStructure;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.AssociationInverseSide;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 @Entity
 @Table(name = "menu_offers", schema = "luncher_core")
@@ -41,15 +46,20 @@ class MenuOfferDb {
   @Embedded
   private MonetaryAmountDb basePrice;
 
-  @OneToMany(mappedBy = "parentOffer", orphanRemoval = true, cascade = CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  @JoinTable(name = "menu_offer_parts", schema = "luncher_core", joinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"))
   private List<PartDb> parts;
 
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
-  @OneToMany(mappedBy = "menuOffer", orphanRemoval = true, cascade = CascadeType.ALL)
+  @AssociationInverseSide(inversePath = @ObjectPath(@PropertyValue(propertyName = "menuOffer")))
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(name = "menu_offer_recurring_serving_ranges", schema = "luncher_core", joinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "weekdaytimerange_id", referencedColumnName = "id"))
   private List<WeekDayTimeRangeDb> recurringServingRanges;
 
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
-  @OneToMany(mappedBy = "menuOffer", orphanRemoval = true, cascade = CascadeType.ALL)
+  @AssociationInverseSide(inversePath = @ObjectPath(@PropertyValue(propertyName = "menuOffer")))
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(name = "menu_offer_onetime_serving_ranges", schema = "luncher_core", joinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "localdatetimerange_id", referencedColumnName = "id"))
   private List<LocalDateTimeRangeDb> oneTimeServingRanges;
 
   @ManyToOne(fetch = FetchType.LAZY)

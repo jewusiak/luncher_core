@@ -5,6 +5,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
@@ -45,8 +47,11 @@ class WeekDayTimeRangeDb {
   private int endTime;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(name = "place_opening_windows",
+      schema = "luncher_core", inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"), joinColumns = @JoinColumn(name = "weekdaytimerange_id", referencedColumnName = "id"))
   private PlaceDb place;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(name = "menu_offer_recurring_serving_ranges", schema = "luncher_core", inverseJoinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"), joinColumns = @JoinColumn(name = "weekdaytimerange_id", referencedColumnName = "id"))
   private MenuOfferDb menuOffer;
 }

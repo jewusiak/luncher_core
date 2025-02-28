@@ -101,14 +101,14 @@ Feature: CRUD - Place
 
     # description is null so not updated
     When Updates Place with ID -1 with data below:
-      | location.latitude | location.longitude | placeTypeIdentifier |
-      | -10               | -15.666            | BAR                 |
+      | location.latitude | location.longitude | placeTypeIdentifier | timeZone      |
+      | -10               | -15.666            | BAR                 | Europe/Berlin |
 
     Then response code is 200
 
     And GET place with ID -1 is as below:
-      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier |
-      | name | descr       |             | fbid           | -10               | -15.666            | BAR                  |
+      | name | description | phoneNumber | facebookPageId | location.latitude | location.longitude | placeType.identifier | timeZone      |
+      | name | descr       |             | fbid           | -10               | -15.666            | BAR                  | Europe/Berlin |
 
     # description is null so not updated
     When Updates Place with ID -1 with data below:

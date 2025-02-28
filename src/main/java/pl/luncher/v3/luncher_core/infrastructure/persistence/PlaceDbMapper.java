@@ -29,12 +29,6 @@ interface PlaceDbMapper {
     if (placeDb.getImages() != null) {
       placeDb.getImages().forEach(image -> image.setPlace(placeDb));
     }
-    if (placeDb.getOpeningWindows() != null) {
-      placeDb.getOpeningWindows().forEach(window -> window.setPlace(placeDb));
-    }
-    if (placeDb.getMenuOffers() != null) {
-      placeDb.getMenuOffers().forEach(menuOfferDb -> menuOfferDb.setPlace(placeDb));
-    }
   }
 
   @AfterMapping

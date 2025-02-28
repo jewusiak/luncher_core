@@ -10,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -26,11 +28,14 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.search.engine.backend.types.ObjectStructure;
 import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.AssociationInverseSide;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 
 @Entity
@@ -67,9 +72,11 @@ class PlaceDb {
   private AddressDb address;
   private String googleMapsReference;
 
-  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
-  @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
+  @AssociationInverseSide(inversePath = @ObjectPath(@PropertyValue(propertyName = "place")))
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+  @JoinTable(name = "place_opening_windows",
+      schema = "luncher_core", joinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "weekdaytimerange_id", referencedColumnName = "id"))
   private List<WeekDayTimeRangeDb> openingWindows;
 //todo: not mvp
 //  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
@@ -77,7 +84,6 @@ class PlaceDb {
 
   @ManyToOne
   @IndexedEmbedded
-  @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
   private PlaceTypeDb placeType;
 
   @Column(columnDefinition = "geography(Point, 4326)")
@@ -97,8 +103,12 @@ class PlaceDb {
   @OrderBy("placeImageIdx")
   private List<AssetDb> images;
 
-  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "place")
   @IndexedEmbedded(structure = ObjectStructure.NESTED)
+  @AssociationInverseSide(inversePath = @ObjectPath(@PropertyValue(propertyName = "place")))
+  @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @JoinTable(name = "place_menu_offers", schema = "luncher_core",
+      joinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"))
   private List<MenuOfferDb> menuOffers;
 
   private ZoneId timeZone;
