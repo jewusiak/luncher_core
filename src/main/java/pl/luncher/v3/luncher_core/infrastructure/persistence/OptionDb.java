@@ -18,7 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "menu_offer_part_options", schema = "luncher_core")
+@Table(name = "menu_options", schema = "luncher_core")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PACKAGE)

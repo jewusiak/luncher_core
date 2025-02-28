@@ -45,7 +45,7 @@ class PartDb {
   private MenuOfferDb parentOffer;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  @JoinTable(name = "menu_offer_parts_options",
+  @JoinTable(name = "menu_part_options",
       schema = "luncher_core", joinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "option_id", referencedColumnName = "id"))
   private List<OptionDb> options;
 }
