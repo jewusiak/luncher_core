@@ -63,6 +63,9 @@ class MenuOfferDb {
   private List<LocalDateTimeRangeDb> oneTimeServingRanges;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(name = "place_menu_offers", schema = "luncher_core",
+      inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"),
+      joinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"))
   private PlaceDb place;
 
 }
