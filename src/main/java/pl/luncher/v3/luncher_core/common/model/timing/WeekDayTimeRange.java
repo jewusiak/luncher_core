@@ -25,4 +25,21 @@ public class WeekDayTimeRange implements TimeRange {
   public boolean isWithin(LocalDateTime time) {
     return isWithin(WeekDayTime.of(time));
   }
+
+  @Override
+  public LocalDateTime getSoonestOccurrence(LocalDateTime at) {
+    if (isWithin(at)) {
+      return at;
+    }
+    var dayOffset = (startTime.getDay().getValue() - at.getDayOfWeek().getValue()) % 7;
+    if (dayOffset == 0 && !endTime.getTime().isAfter(at.toLocalTime())) {
+      dayOffset = 7;
+    }
+    var offsetData = at.plusDays(dayOffset);
+
+    return LocalDateTime.of(offsetData.getYear(), offsetData.getMonth(), offsetData.getDayOfMonth(),
+        startTime.getTime().getHour(), startTime.getTime().getMinute(),
+        startTime.getTime().getSecond());
+  }
+
 }

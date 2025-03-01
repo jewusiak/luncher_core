@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
@@ -46,6 +47,16 @@ interface PlaceDbMapper {
     if (place.getOpeningWindows() != null) {
       place.getOpeningWindows()
           .sort(Comparator.comparing(WeekDayTimeRange::getStartTime));
+    }
+  }
+
+  @AfterMapping
+  default void sortMenuOffers(@MappingTarget Place place) {
+    if (place.getMenuOffers() != null) {
+      var time = place.getTimeZone() == null ? LocalDateTime.now()
+          : LocalDateTime.now(place.getTimeZone());
+      place.getMenuOffers()
+          .sort(Comparator.comparing((menuOffer -> menuOffer.getSoonestServingTime(time))));
     }
   }
 
