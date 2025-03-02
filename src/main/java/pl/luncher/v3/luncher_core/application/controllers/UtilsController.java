@@ -24,7 +24,7 @@ public class UtilsController {
 
   private final TimeZoneEngine timeZoneEngine;
 
-  @Operation(description = "Returns all timezones")
+  @Operation(summary = "Returns all timezones")
   @PreAuthorize(hasRole.REST_MANAGER)
   @GetMapping("/tz")
   public ResponseEntity<List<String>> getAvailableTimezones() {
@@ -34,7 +34,7 @@ public class UtilsController {
     return ResponseEntity.ok(list);
   }
 
-  @Operation(description = "Returns timezone by lat/lon")
+  @Operation(summary = "Returns timezone by lat/lon")
   @PreAuthorize(hasRole.REST_MANAGER)
   @GetMapping("/tzquery")
   public ResponseEntity<String> getTimezone(@RequestParam Double lat, @RequestParam Double lon) {
