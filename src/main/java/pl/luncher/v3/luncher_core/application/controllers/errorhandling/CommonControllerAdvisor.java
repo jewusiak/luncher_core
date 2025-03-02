@@ -38,7 +38,7 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
   @ExceptionHandler({NoSuchElementException.class, EntityNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   protected ErrorResponse handleNotFound(Exception ex) {
-    return ErrorResponse.builder().message("Not found!").messageLocale("en_US").cause(getCause(ex))
+    return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").cause(getCause(ex))
         .build();
   }
 
