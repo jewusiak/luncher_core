@@ -8,4 +8,5 @@ public interface TimeRange {
 
   LocalDateTime getSoonestOccurrence(LocalDateTime at);
 
+  LocalDateTimeRange getThisOrNextOccurrence(LocalDateTime at);
 }

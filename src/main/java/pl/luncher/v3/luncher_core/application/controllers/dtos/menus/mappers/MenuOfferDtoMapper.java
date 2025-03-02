@@ -10,11 +10,13 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.luncher.v3.luncher_core.application.controllers.dtos.common.LocalDateTimeRangeDto;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.common.mappers.MonetaryAmountMapper;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.MenuOfferDto;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.OptionDto;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.PartDto;
 import pl.luncher.v3.luncher_core.common.interfaces.LocalDateTimeProvider;
+import pl.luncher.v3.luncher_core.common.model.timing.LocalDateTimeRange;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.model.menus.MenuOffer;
 import pl.luncher.v3.luncher_core.place.model.menus.Option;
@@ -25,10 +27,11 @@ import pl.luncher.v3.luncher_core.place.model.menus.Part;
 public abstract class MenuOfferDtoMapper {
 
   @Autowired
-  private LocalDateTimeProvider localDateTimeProvider;
+  protected LocalDateTimeProvider localDateTimeProvider;
 
   // response dtos
   @Mapping(target = "beingServed", ignore = true)
+  @Mapping(target = "thisOrNextServingRange", expression = "java(toTimeRangeDto(menuOffer.getThisOrNextServingRange(localDateTimeProvider.now(place.getTimeZone()))))")
   public abstract MenuOfferDto toDto(MenuOffer menuOffer, @Context Place place);
 
   public abstract OptionDto toDto(Option option);
@@ -40,6 +43,8 @@ public abstract class MenuOfferDtoMapper {
   public abstract Option toDomain(OptionDto option);
 
   public abstract Part toDomain(PartDto part);
+
+  protected abstract LocalDateTimeRangeDto toTimeRangeDto(LocalDateTimeRange localDateTimeRange);
 
   @BeforeMapping
   void stripIds(@MappingTarget MenuOffer menuOffer, MenuOfferDto offer) {

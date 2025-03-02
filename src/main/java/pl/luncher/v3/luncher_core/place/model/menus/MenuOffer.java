@@ -1,6 +1,8 @@
 package pl.luncher.v3.luncher_core.place.model.menus;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.common.interfaces.Validatable;
 import pl.luncher.v3.luncher_core.common.model.MonetaryAmount;
 import pl.luncher.v3.luncher_core.common.model.timing.LocalDateTimeRange;
+import pl.luncher.v3.luncher_core.common.model.timing.TimeRange;
 import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 
 @Data
@@ -45,5 +48,19 @@ public class MenuOffer implements Validatable {
         .filter(Objects::nonNull)
         .min(LocalDateTime::compareTo)
         .orElse(null);
+  }
+
+  public LocalDateTimeRange getThisOrNextServingRange(LocalDateTime at) {
+    return Stream.concat(Stream.ofNullable(oneTimeServingRanges),
+            Stream.ofNullable(recurringServingRanges)).flatMap(List::stream)
+        .map(tr -> new HashMap<>() {{
+          put("e", tr);
+          LocalDateTime soonestOccurrence = tr.getSoonestOccurrence(at);
+          if (soonestOccurrence != null) {
+            put("so", soonestOccurrence);
+          }
+        }}).filter(m -> m.containsKey("so"))
+        .min(Comparator.comparing(m -> (LocalDateTime) m.get("so")))
+        .map(m -> ((TimeRange) m.get("e")).getThisOrNextOccurrence(at)).orElse(null);
   }
 }

@@ -42,4 +42,15 @@ public class WeekDayTimeRange implements TimeRange {
         startTime.getTime().getSecond());
   }
 
+  @Override
+  public LocalDateTimeRange getThisOrNextOccurrence(LocalDateTime at) {
+    if (isWithin(at)) {
+      return new LocalDateTimeRange(startTime.getPreviousOccurrence(at),
+          endTime.getThisOrNextOccurrence(at));
+    }
+    var start = startTime.getThisOrNextOccurrence(at);
+    var end = endTime.getThisOrNextOccurrence(start);
+    return new LocalDateTimeRange(start, end);
+  }
+
 }

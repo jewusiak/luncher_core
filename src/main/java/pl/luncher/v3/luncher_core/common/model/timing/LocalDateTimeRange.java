@@ -22,4 +22,9 @@ public class LocalDateTimeRange implements TimeRange {
     return startTime.isBefore(at) ? (endTime.isAfter(at) ? at : null)
         : startTime;
   }
+
+  @Override
+  public LocalDateTimeRange getThisOrNextOccurrence(LocalDateTime at) {
+    return this;
+  }
 }
