@@ -17,7 +17,6 @@ import pl.luncher.v3.luncher_core.common.model.timing.LocalDateTimeRange;
 import pl.luncher.v3.luncher_core.common.model.timing.TimeRange;
 import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 
-@Slf4j
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,7 +46,6 @@ public class MenuOffer implements Validatable {
             Stream.ofNullable(recurringServingRanges))
         .flatMap(List::stream)
         .map(tr -> tr.getSoonestOccurrence(at))
-        .peek(so->log.info("Soonest occurrence: {}", so))
         .filter(Objects::nonNull)
         .min(LocalDateTime::compareTo)
         .orElse(null);

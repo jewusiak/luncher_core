@@ -43,10 +43,8 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
       var time = localDateTimeProvider.now(place.getTimeZone());
       place.getMenuOffers().removeIf(m -> {
         LocalDateTime soonestServingTime = m.getSoonestServingTime(time);
-        log.info("Time: {}, soonestServingTime: {}", time, soonestServingTime);
         return soonestServingTime == null || soonestServingTime.isBefore(time);
       });
-      log.info("Resulting menu offers: {}", place.getMenuOffers());
     }
   }
 
