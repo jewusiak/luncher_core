@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -51,9 +52,18 @@ abstract class PlaceDbMapper {
       return;
     }
     placeDb.getMenuOffers().forEach(mo -> {
-      for (int i = 0; i < mo.getParts().size(); i++) {
-        mo.getParts().get(i).setListIdx(i);
+      if (mo.getParts() == null) {
+        return;
       }
+      var j = new AtomicInteger(0);
+      mo.getParts().forEach(p -> {
+        p.setListIdx(j.getAndIncrement());
+        if (p.getOptions() == null) {
+          return;
+        }
+        var i = new AtomicInteger(0);
+        p.getOptions().forEach(o -> o.setListIdx(i.getAndIncrement()));
+      });
     });
   }
 
