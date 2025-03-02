@@ -31,7 +31,7 @@ public class WeekDayTimeRange implements TimeRange {
     if (isWithin(at)) {
       return at;
     }
-    var dayOffset = (startTime.getDay().getValue() - at.getDayOfWeek().getValue()) % 7;
+    var dayOffset = Math.floorMod(startTime.getDay().getValue() - at.getDayOfWeek().getValue(), 7);
     if (dayOffset == 0 && !endTime.getTime().isAfter(at.toLocalTime())) {
       dayOffset = 7;
     }

@@ -60,7 +60,8 @@ public class WeekDayTime implements Comparable<WeekDayTime> {
   }
 
   public LocalDateTime getThisOrNextOccurrence(LocalDateTime soonestDate) {
-    var dayOffset = (this.getDay().getValue() - soonestDate.getDayOfWeek().getValue()) % 7;
+    var dayOffset = Math.floorMod(this.getDay().getValue() - soonestDate.getDayOfWeek().getValue(),
+        7);
     if (dayOffset == 0 && this.getTime().isBefore(soonestDate.toLocalTime())) {
       dayOffset = 7;
     }
@@ -72,7 +73,8 @@ public class WeekDayTime implements Comparable<WeekDayTime> {
   }
 
   public LocalDateTime getPreviousOccurrence(LocalDateTime latestDate) {
-    var dayOffset = (latestDate.getDayOfWeek().getValue() - this.getDay().getValue()) % 7;
+    var dayOffset = Math.floorMod(latestDate.getDayOfWeek().getValue() - this.getDay().getValue(),
+        7);
 
     if (dayOffset == 0 && this.getTime().isAfter(latestDate.toLocalTime())) {
       dayOffset = 7;
