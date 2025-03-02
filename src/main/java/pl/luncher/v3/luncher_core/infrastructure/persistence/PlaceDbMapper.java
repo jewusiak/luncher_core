@@ -46,6 +46,18 @@ abstract class PlaceDbMapper {
   }
 
   @AfterMapping
+  void assignMenuOfferPartsIndexes(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getMenuOffers() == null) {
+      return;
+    }
+    placeDb.getMenuOffers().forEach(mo -> {
+      for (int i = 0; i < mo.getParts().size(); i++) {
+        mo.getParts().get(i).setListIdx(i);
+      }
+    });
+  }
+
+  @AfterMapping
   void sortOpeningWindows(@MappingTarget Place place) {
     if (place.getOpeningWindows() != null) {
       place.getOpeningWindows()

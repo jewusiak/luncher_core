@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +47,7 @@ class MenuOfferDb {
   @Embedded
   private MonetaryAmountDb basePrice;
 
+  @OrderBy("listIdx")
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   @JoinTable(name = "menu_offer_parts", schema = "luncher_core", joinColumns = @JoinColumn(name = "menu_offer_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"))
   private List<PartDb> parts;

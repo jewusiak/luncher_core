@@ -34,6 +34,7 @@ class OptionDb {
   private UUID id;
   private String name;
   private String description;
+  private int listIdx;
   @Embedded
   private MonetaryAmountDb supplement;
 
