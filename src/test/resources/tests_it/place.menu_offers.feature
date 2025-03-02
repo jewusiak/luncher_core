@@ -13,6 +13,9 @@ Feature: Menu-offers management in places
       | identifier | iconName   | name                |
       | RESTAURANT | restaurant | Restaurant category |
       | BAR        | bar        | Bar category name   |
+    
+    # Monday
+    And Simulated time is 2025-01-06T00:00:00
 
 
   Scenario: Add, update, delete place menu offer

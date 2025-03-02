@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
+import pl.luncher.v3.luncher_core.common.services.LocalDateTimeProviderMock;
 import pl.luncher.v3.luncher_core.infrastructure.persistence.JpaRepositoriesHelper;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps;
 
@@ -186,5 +187,6 @@ public class TestsItConfig {
     if (shouldDeleteAll) {
       jpaRepositoriesHelper.deleteAll();
     }
+    LocalDateTimeProviderMock.resetMock();
   }
 }

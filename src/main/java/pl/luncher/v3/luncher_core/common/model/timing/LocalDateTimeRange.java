@@ -19,7 +19,7 @@ public class LocalDateTimeRange implements TimeRange {
 
   @Override
   public LocalDateTime getSoonestOccurrence(LocalDateTime at) {
-    return startTime.isBefore(at) ? (endTime.isAfter(at) ? at : endTime.minusSeconds(1))
+    return startTime.isBefore(at) ? (endTime.isAfter(at) ? at : null)
         : startTime;
   }
 }

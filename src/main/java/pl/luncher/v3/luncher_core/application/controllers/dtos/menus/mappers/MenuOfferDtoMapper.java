@@ -1,6 +1,5 @@
 package pl.luncher.v3.luncher_core.application.controllers.dtos.menus.mappers;
 
-import java.time.LocalDateTime;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Context;
@@ -10,10 +9,12 @@ import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.common.mappers.MonetaryAmountMapper;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.MenuOfferDto;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.OptionDto;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.menus.dtos.PartDto;
+import pl.luncher.v3.luncher_core.common.interfaces.LocalDateTimeProvider;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.place.model.menus.MenuOffer;
 import pl.luncher.v3.luncher_core.place.model.menus.Option;
@@ -21,24 +22,27 @@ import pl.luncher.v3.luncher_core.place.model.menus.Part;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
     MonetaryAmountMapper.class}, nullValueIterableMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-public interface MenuOfferDtoMapper {
+public abstract class MenuOfferDtoMapper {
+
+  @Autowired
+  private LocalDateTimeProvider localDateTimeProvider;
 
   // response dtos
   @Mapping(target = "beingServed", ignore = true)
-  MenuOfferDto toDto(MenuOffer menuOffer, @Context Place place);
+  public abstract MenuOfferDto toDto(MenuOffer menuOffer, @Context Place place);
 
-  OptionDto toDto(Option option);
+  public abstract OptionDto toDto(Option option);
 
-  PartDto toDto(Part part);
+  public abstract PartDto toDto(Part part);
 
-  MenuOffer toDomain(MenuOfferDto menuOffer);
+  public abstract MenuOffer toDomain(MenuOfferDto menuOffer);
 
-  Option toDomain(OptionDto option);
+  public abstract Option toDomain(OptionDto option);
 
-  Part toDomain(PartDto part);
+  public abstract Part toDomain(PartDto part);
 
   @BeforeMapping
-  default void stripIds(@MappingTarget MenuOffer menuOffer, MenuOfferDto offer) {
+  void stripIds(@MappingTarget MenuOffer menuOffer, MenuOfferDto offer) {
     if (offer == null) {
       return;
     }
@@ -54,9 +58,8 @@ public interface MenuOfferDtoMapper {
   }
 
   @AfterMapping
-  default void mapBeingServed(@MappingTarget MenuOfferDto dto, MenuOffer menuOffer, @Context Place place) {
-    LocalDateTime now = place.getTimeZone() == null ? LocalDateTime.now() : LocalDateTime.now(place.getTimeZone());
-    dto.setBeingServed(menuOffer.isBeingServed(now));
+  void mapBeingServed(@MappingTarget MenuOfferDto dto, MenuOffer menuOffer, @Context Place place) {
+    dto.setBeingServed(menuOffer.isBeingServed(localDateTimeProvider.now(place.getTimeZone())));
   }
 
 }

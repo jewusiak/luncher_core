@@ -1,8 +1,8 @@
 package pl.luncher.v3.luncher_core.place.model.menus;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import pl.luncher.v3.luncher_core.common.interfaces.Validatable;
 import pl.luncher.v3.luncher_core.common.model.MonetaryAmount;
 import pl.luncher.v3.luncher_core.common.model.timing.LocalDateTimeRange;
-import pl.luncher.v3.luncher_core.common.model.timing.TimeRange;
 import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 
 @Data
@@ -42,7 +41,9 @@ public class MenuOffer implements Validatable {
     return Stream.concat(Stream.ofNullable(oneTimeServingRanges),
             Stream.ofNullable(recurringServingRanges))
         .flatMap(List::stream)
-        .min(Comparator.comparing((TimeRange a) -> a.getSoonestOccurrence(at)))
-        .map(t -> t.getSoonestOccurrence(at)).orElse(null);
+        .map(tr -> tr.getSoonestOccurrence(at))
+        .filter(Objects::nonNull)
+        .min(LocalDateTime::compareTo)
+        .orElse(null);
   }
 }
