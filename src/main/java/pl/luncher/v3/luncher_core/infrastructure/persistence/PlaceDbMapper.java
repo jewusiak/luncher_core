@@ -60,7 +60,7 @@ abstract class PlaceDbMapper {
       place.getMenuOffers()
           .sort(Comparator.comparing((menuOffer -> {
             LocalDateTime soonestServingTime = menuOffer.getSoonestServingTime(time);
-            return soonestServingTime == null ? LocalDateTime.of(1900, 1, 1, 0, 0)
+            return soonestServingTime == null ? LocalDateTime.of(3000, 1, 1, 0, 0)
                 : soonestServingTime;
           })));
     }

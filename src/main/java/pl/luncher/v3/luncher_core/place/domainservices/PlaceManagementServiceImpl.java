@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.place.domainservices;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,7 +39,10 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
       place.setOwner(null);
       place.setTimeZone(null);
       var time = localDateTimeProvider.now(place.getTimeZone());
-      place.getMenuOffers().removeIf(m -> m.getSoonestServingTime(time).isBefore(time));
+      place.getMenuOffers().removeIf(m -> {
+        LocalDateTime soonestServingTime = m.getSoonestServingTime(time);
+        return soonestServingTime == null || soonestServingTime.isBefore(time);
+      });
     }
   }
 
