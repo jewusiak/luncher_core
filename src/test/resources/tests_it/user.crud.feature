@@ -42,11 +42,13 @@ Feature: Users
     Then response code is 204
 
 
-    When GET User with ID -1 is as below:
-      | message    |
-      | Not found! |
+    When Send GET request to /users/[ID:USER:-1] without body
 
     Then response code is 404
+    And HTTP Response is:
+      | message                              |
+      | User with ID [ID:USER:-1] not found! |
+
 
     Examples:
       | sysUserEmail       |
