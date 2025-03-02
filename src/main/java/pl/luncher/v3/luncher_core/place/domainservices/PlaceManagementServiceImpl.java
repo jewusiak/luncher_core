@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.iakovlev.timeshape.TimeZoneEngine;
 import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
@@ -21,7 +20,6 @@ import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistence
 import pl.luncher.v3.luncher_core.user.model.AppRole;
 import pl.luncher.v3.luncher_core.user.model.User;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 class PlaceManagementServiceImpl implements PlaceManagementService {
