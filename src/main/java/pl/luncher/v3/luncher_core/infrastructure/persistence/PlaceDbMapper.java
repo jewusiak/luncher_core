@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -57,7 +58,11 @@ abstract class PlaceDbMapper {
     if (place.getMenuOffers() != null) {
       var time = localDateTimeProvider.now(place.getTimeZone());
       place.getMenuOffers()
-          .sort(Comparator.comparing((menuOffer -> menuOffer.getSoonestServingTime(time))));
+          .sort(Comparator.comparing((menuOffer -> {
+            LocalDateTime soonestServingTime = menuOffer.getSoonestServingTime(time);
+            return soonestServingTime == null ? LocalDateTime.of(1900, 1, 1, 0, 0)
+                : soonestServingTime;
+          })));
     }
   }
 
