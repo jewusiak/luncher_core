@@ -18,7 +18,6 @@ public class PartDto implements Serializable {
 
   private UUID id;
   private String name;
-  private boolean required;
   private MonetaryAmountDto supplement;
   private List<OptionDto> options;
 }
