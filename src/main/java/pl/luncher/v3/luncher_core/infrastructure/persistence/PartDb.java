@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,6 +41,7 @@ class PartDb {
   @Embedded
   private MonetaryAmountDb supplement;
 
+  @Column(columnDefinition = "integer not null default 0")
   private int listIdx;
 
   @ManyToOne

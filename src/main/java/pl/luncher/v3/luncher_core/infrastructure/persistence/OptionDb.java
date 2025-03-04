@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.infrastructure.persistence;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,7 @@ class OptionDb {
   private UUID id;
   private String name;
   private String description;
+  @Column(columnDefinition = "integer not null default 0")
   private int listIdx;
   @Embedded
   private MonetaryAmountDb supplement;
