@@ -43,7 +43,7 @@ class UserHibernateSearchService implements UserSearchService {
   @Override
   public void reindexDb() throws InterruptedException {
     log.debug("Starting PlaceDb reindexing");
-    Search.session(entityManager).scope(PlaceDb.class).massIndexer().threadsToLoadObjects(4).startAndWait();
+    Search.session(entityManager).scope(UserDb.class).massIndexer().threadsToLoadObjects(4).startAndWait();
     log.debug("PlaceDb reindexing finished");
   }
 }
