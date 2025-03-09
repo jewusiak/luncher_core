@@ -16,7 +16,7 @@ import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 import pl.luncher.v3.luncher_core.place.model.Place;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
-    WeekDayTimeRangeMapper.class, PlaceTypeDbMapper.class, AssetDbMapper.class,
+    WeekDayTimeRangeDbMapper.class, PlaceTypeDbMapper.class, AssetDbMapper.class,
     MenuOfferDbMapper.class}, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 abstract class PlaceDbMapper {
 

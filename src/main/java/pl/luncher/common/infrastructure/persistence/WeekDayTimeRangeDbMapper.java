@@ -6,7 +6,7 @@ import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTime;
 import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 
 @Mapper(componentModel = ComponentModel.SPRING)
-interface WeekDayTimeRangeMapper {
+interface WeekDayTimeRangeDbMapper {
 
 
   default WeekDayTimeRangeDb toDbEntity(WeekDayTimeRange weekDayTimeRange) {

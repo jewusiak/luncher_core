@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.luncher.v3.luncher_core.application.configuration.properties.LuncherProperties;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
 
-@Mapper(componentModel = ComponentModel.SPRING, uses = {WeekDayTimeRangeMapper.class})
+@Mapper(componentModel = ComponentModel.SPRING, uses = {WeekDayTimeRangeDbMapper.class})
 abstract class AssetDbMapper {
 
   @Autowired

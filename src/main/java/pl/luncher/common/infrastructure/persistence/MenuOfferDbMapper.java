@@ -10,7 +10,7 @@ import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
 import pl.luncher.v3.luncher_core.place.model.menus.MenuOffer;
 
 @Mapper(componentModel = ComponentModel.SPRING, uses = {MonetaryAmountDbMapper.class, OptionDbMapper.class,
-    WeekDayTimeRangeMapper.class, PartDbMapper.class})
+    WeekDayTimeRangeDbMapper.class, PartDbMapper.class})
 interface MenuOfferDbMapper {
 
   MenuOffer toDomain(MenuOfferDb dbEntity);
