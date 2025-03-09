@@ -19,7 +19,7 @@ import pl.luncher.v3.luncher_core.application.controllers.dtos.place.requests.Pl
 import pl.luncher.v3.luncher_core.application.controllers.dtos.place.requests.PlaceSearchRequest;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.place.requests.PlaceUpdateRequest;
 import pl.luncher.v3.luncher_core.application.controllers.dtos.place.responses.PlaceFullResponse;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.PlaceRepositoryHelper;
+import pl.luncher.common.infrastructure.persistence.PlaceRepositoryHelper;
 import pl.luncher.v3.luncher_core.it.steps.ParentSteps.EntityIdType;
 
 @Slf4j

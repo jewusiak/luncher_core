@@ -4,7 +4,7 @@ import io.cucumber.java.en.Given;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.UserRepositoryHelper;
+import pl.luncher.common.infrastructure.persistence.UserRepositoryHelper;
 
 @RequiredArgsConstructor
 public class UserDataSteps {
