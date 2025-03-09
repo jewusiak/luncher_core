@@ -98,7 +98,7 @@ class PlaceDb {
 
   @GenericField
   private Boolean enabled;
-  
+
   @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "place", fetch = FetchType.EAGER)
   @OrderBy("placeImageIdx")
   private List<AssetDb> images;

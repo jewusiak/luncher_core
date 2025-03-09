@@ -30,6 +30,7 @@ import lombok.ToString;
 @ToString(exclude = {"parentPart"})
 class OptionDb {
 
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;

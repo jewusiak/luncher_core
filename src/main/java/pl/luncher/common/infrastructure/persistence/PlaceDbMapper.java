@@ -67,6 +67,7 @@ abstract class PlaceDbMapper {
     });
   }
 
+
   @AfterMapping
   void sortOpeningWindows(@MappingTarget Place place) {
     if (place.getOpeningWindows() != null) {

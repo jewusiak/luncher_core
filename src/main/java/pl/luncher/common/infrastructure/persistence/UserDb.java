@@ -41,11 +41,9 @@ class UserDb {
 
   @FullTextField(name = "surname")
   private String surname;
-
   private String passwordHash;
 
   //    @GenericField(name = "role")
   private AppRole role;
-
   private boolean enabled = true;
 }
