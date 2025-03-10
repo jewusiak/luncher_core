@@ -42,6 +42,7 @@ class MenuOfferDb {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private String name;
+  private String sourceUrl;
 
   @IndexedEmbedded
   @Embedded

@@ -26,6 +26,7 @@ public class MenuOffer implements Validatable {
   private UUID id;
   private String name;
   private MonetaryAmount basePrice;
+  private String sourceUrl;
   private List<Part> parts;
 
   private List<WeekDayTimeRange> recurringServingRanges;
