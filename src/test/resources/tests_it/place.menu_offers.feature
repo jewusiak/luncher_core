@@ -519,6 +519,7 @@ Feature: Menu-offers management in places
         "amount": 39.99,
         "currencyCode": "PLN"
       },
+      "sourceUrl": "https://bing.com",
       "parts": [
         {
           "name": "First Course",
@@ -618,8 +619,8 @@ Feature: Menu-offers management in places
     And Send GET request to /place/[ID:PLACE:1] without body
     And response code is 200
     And HTTP Response is:
-      | menuOffers[0].name   | menuOffers[0].parts[0].name | menuOffers[0].parts[1].name | menuOffers[0].parts[2].name |
-      | Lunch Monday Special | First Course                | Main Course                 | Dessert                     |
+      | menuOffers[0].name   | menuOffers[0].sourceUrl | menuOffers[0].parts[0].name | menuOffers[0].parts[1].name | menuOffers[0].parts[2].name |
+      | Lunch Monday Special | https://bing.com        | First Course                | Main Course                 | Dessert                     |
     When Send PUT request to /place/[ID:PLACE:1] with body as below:
     """
 {
@@ -630,6 +631,7 @@ Feature: Menu-offers management in places
         "amount": 39.99,
         "currencyCode": "PLN"
       },
+      "sourceUrl": "https://google.com",
       "parts": [
         {
           "name": "First Course",
@@ -729,6 +731,6 @@ Feature: Menu-offers management in places
     And Send GET request to /place/[ID:PLACE:1] without body
     And response code is 200
     And HTTP Response is:
-      | menuOffers[0].name   | menuOffers[0].parts[0].name | menuOffers[0].parts[1].name | menuOffers[0].parts[2].name |
-      | Lunch Monday Special | First Course                | Dessert                     | Main Course                 | 
+      | menuOffers[0].name   | menuOffers[0].sourceUrl | menuOffers[0].parts[0].name | menuOffers[0].parts[1].name | menuOffers[0].parts[2].name |
+      | Lunch Monday Special | https://google.com        | First Course                | Dessert                     | Main Course                 | 
 
