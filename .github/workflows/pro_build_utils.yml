@@ -1,0 +1,56 @@
+name: Build utils (PRO)
+
+on:
+  workflow_dispatch:
+
+env:
+  APP_NAME: "luncher-core"
+  POSTGRES_NAME: "postgres-luncher"
+  ELASTICSEARCH_NAME: "elasticsearch-luncher"
+  ENV_SUFFIX: "-pro"
+
+
+  DCKR_HUB_USER: "jewusiak"
+  DCKR_HUB_REPO: "luncher"
+
+  VERSION: 3.0.1
+
+
+jobs:
+  elasticsearch_build:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate in Docker Hub
+        run: 'docker login -u ${{env.DCKR_HUB_USER}} -p ${{ secrets.DCKR_HUB_PAT }}'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }} --file=Dockerfile-elasticsearch .'
+
+      - name: Push Docker image
+        run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.ELASTICSEARCH_NAME }}${{ env.ENV_SUFFIX }}'
+
+  postgres_build:
+    permissions:
+      contents: 'read'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate in Docker Hub
+        run: 'docker login -u ${{env.DCKR_HUB_USER}} -p ${{ secrets.DCKR_HUB_PAT }}'
+
+      - name: Build docker Image
+        id: docker-build
+        run: 'docker build -t ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }} --file=Dockerfile-postgres .'
+
+      - name: Push Docker image
+        run: 'docker push ${{env.DCKR_HUB_USER}}/${{env.DCKR_HUB_REPO}}:${{ env.POSTGRES_NAME }}${{ env.ENV_SUFFIX }}'
