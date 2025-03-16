@@ -16,4 +16,15 @@ public class LocalDateTimeRange implements TimeRange {
     //          \/ is before or equal
     return !startTime.isAfter(time) && endTime.isAfter(time);
   }
+
+  @Override
+  public LocalDateTime getSoonestOccurrence(LocalDateTime at) {
+    return startTime.isBefore(at) ? (endTime.isAfter(at) ? at : null)
+        : startTime;
+  }
+
+  @Override
+  public LocalDateTimeRange getThisOrNextOccurrence(LocalDateTime at) {
+    return this;
+  }
 }

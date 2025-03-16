@@ -58,4 +58,31 @@ public class WeekDayTime implements Comparable<WeekDayTime> {
   public int compareTo(@NotNull WeekDayTime o) {
     return this.toIntTime() - o.toIntTime();
   }
+
+  public LocalDateTime getThisOrNextOccurrence(LocalDateTime soonestDate) {
+    var dayOffset = Math.floorMod(this.getDay().getValue() - soonestDate.getDayOfWeek().getValue(),
+        7);
+    if (dayOffset == 0 && this.getTime().isBefore(soonestDate.toLocalTime())) {
+      dayOffset = 7;
+    }
+    var offsetData = soonestDate.plusDays(dayOffset);
+
+    return LocalDateTime.of(offsetData.getYear(), offsetData.getMonth(), offsetData.getDayOfMonth(),
+        this.getTime().getHour(), this.getTime().getMinute(),
+        this.getTime().getSecond());
+  }
+
+  public LocalDateTime getPreviousOccurrence(LocalDateTime latestDate) {
+    var dayOffset = Math.floorMod(latestDate.getDayOfWeek().getValue() - this.getDay().getValue(),
+        7);
+
+    if (dayOffset == 0 && this.getTime().isAfter(latestDate.toLocalTime())) {
+      dayOffset = 7;
+    }
+    var offsetData = latestDate.minusDays(dayOffset);
+
+    return LocalDateTime.of(offsetData.getYear(), offsetData.getMonth(), offsetData.getDayOfMonth(),
+        this.getTime().getHour(), this.getTime().getMinute(),
+        this.getTime().getSecond());
+  }
 }

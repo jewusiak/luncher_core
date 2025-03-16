@@ -1,6 +1,7 @@
 package pl.luncher.v3.luncher_core.user.model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class ForgottenPasswordIntent {
 
 
   public boolean isValid() {
-    return LocalDateTime.now().isBefore(getValidityDate())
+    return LocalDateTime.now(ZoneOffset.UTC).isBefore(getValidityDate())
         && !isUsed();
   }
 

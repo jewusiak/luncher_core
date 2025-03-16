@@ -2,6 +2,7 @@ package pl.luncher.v3.luncher_core.user.domainservices;
 
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.luncher.v3.luncher_core.user.domainservices.providers.BaseApiUrlGetter;
@@ -23,7 +24,7 @@ class ForgottenPasswordIntentFactory {
   }
 
   private LocalDateTime generateValidityDate() {
-    return LocalDateTime.now()
+    return LocalDateTime.now(ZoneOffset.UTC)
         .plusSeconds(
             passwordRequestIntentValiditySecondsGetter.getPasswordRequestIntentValiditySeconds());
   }

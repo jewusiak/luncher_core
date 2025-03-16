@@ -1,0 +1,93 @@
+package pl.luncher.common.infrastructure.persistence;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.luncher.v3.luncher_core.common.interfaces.LocalDateTimeProvider;
+import pl.luncher.v3.luncher_core.common.model.timing.WeekDayTimeRange;
+import pl.luncher.v3.luncher_core.place.model.Place;
+
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING, uses = {
+    WeekDayTimeRangeDbMapper.class, PlaceTypeDbMapper.class, AssetDbMapper.class,
+    MenuOfferDbMapper.class}, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+abstract class PlaceDbMapper {
+
+  @Autowired
+  private LocalDateTimeProvider localDateTimeProvider;
+
+  @Mapping(target = "name", source = "place.name")
+  @Mapping(target = "owner", source = "owner")
+  @Mapping(target = "placeType", source = "placeType")
+  @Mapping(target = "enabled", source = "place.enabled")
+  abstract PlaceDb toDb(Place place, UserDb owner, PlaceTypeDb placeType);
+
+  @AfterMapping
+  void linkChildEntities(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getImages() != null) {
+      placeDb.getImages().forEach(image -> image.setPlace(placeDb));
+    }
+  }
+
+  @AfterMapping
+  void assignAssetsIndexes(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getImages() == null) {
+      return;
+    }
+    for (int i = 0; i < placeDb.getImages().size(); i++) {
+      placeDb.getImages().get(i).setPlaceImageIdx(i);
+    }
+  }
+
+  @AfterMapping
+  void assignMenuOfferPartsIndexes(@MappingTarget PlaceDb placeDb) {
+    if (placeDb.getMenuOffers() == null) {
+      return;
+    }
+    placeDb.getMenuOffers().forEach(mo -> {
+      if (mo.getParts() == null) {
+        return;
+      }
+      var j = new AtomicInteger(0);
+      mo.getParts().forEach(p -> {
+        p.setListIdx(j.getAndIncrement());
+        if (p.getOptions() == null) {
+          return;
+        }
+        var i = new AtomicInteger(0);
+        p.getOptions().forEach(o -> o.setListIdx(i.getAndIncrement()));
+      });
+    });
+  }
+
+
+  @AfterMapping
+  void sortOpeningWindows(@MappingTarget Place place) {
+    if (place.getOpeningWindows() != null) {
+      place.getOpeningWindows()
+          .sort(Comparator.comparing(WeekDayTimeRange::getStartTime));
+    }
+  }
+
+  @AfterMapping
+  void sortMenuOffers(@MappingTarget Place place) {
+    if (place.getMenuOffers() != null) {
+      var time = localDateTimeProvider.now(place.getTimeZone());
+      place.getMenuOffers()
+          .sort(Comparator.comparing((menuOffer -> {
+            LocalDateTime soonestServingTime = menuOffer.getSoonestServingTime(time);
+            return soonestServingTime == null ? LocalDateTime.of(3000, 1, 1, 0, 0)
+                : soonestServingTime;
+          })));
+    }
+  }
+
+  abstract Place toDomain(PlaceDb placeDb);
+}

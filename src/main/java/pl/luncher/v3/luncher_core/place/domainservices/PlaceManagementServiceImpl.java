@@ -1,5 +1,6 @@
 package pl.luncher.v3.luncher_core.place.domainservices;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetInfoPersistenceService;
 import pl.luncher.v3.luncher_core.assets.domainservices.AssetManagementService;
 import pl.luncher.v3.luncher_core.assets.model.Asset;
+import pl.luncher.v3.luncher_core.common.interfaces.LocalDateTimeProvider;
 import pl.luncher.v3.luncher_core.place.model.Place;
 import pl.luncher.v3.luncher_core.user.domainservices.interfaces.UserPersistenceService;
 import pl.luncher.v3.luncher_core.user.model.AppRole;
@@ -30,11 +32,17 @@ class PlaceManagementServiceImpl implements PlaceManagementService {
   private final PlaceSearchService placeSearchService;
   private final TimeZoneEngine timeZoneEngine;
   private final PlaceUpdateMapper placeUpdateMapper;
+  private final LocalDateTimeProvider localDateTimeProvider;
 
-  private static void filterPlaceBasedOnUserPermissions(User requestingUser, Place place) {
+  private void filterPlaceBasedOnUserPermissions(User requestingUser, Place place) {
     if (requestingUser == null || requestingUser.getRole().compareRoleTo(AppRole.REST_MANAGER) < 0) {
       place.setOwner(null);
       place.setTimeZone(null);
+      var time = localDateTimeProvider.now(place.getTimeZone());
+      place.getMenuOffers().removeIf(m -> {
+        LocalDateTime soonestServingTime = m.getSoonestServingTime(time);
+        return soonestServingTime == null || soonestServingTime.isBefore(time);
+      });
     }
   }
 

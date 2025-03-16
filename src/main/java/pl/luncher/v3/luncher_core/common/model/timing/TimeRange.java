@@ -5,4 +5,8 @@ import java.time.LocalDateTime;
 public interface TimeRange {
 
   boolean isWithin(LocalDateTime time);
+
+  LocalDateTime getSoonestOccurrence(LocalDateTime at);
+
+  LocalDateTimeRange getThisOrNextOccurrence(LocalDateTime at);
 }

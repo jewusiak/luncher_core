@@ -17,8 +17,8 @@ import pl.luncher.v3.luncher_core.application.controllers.errorhandling.model.Er
 import pl.luncher.v3.luncher_core.assets.domainservices.exceptions.CannotEstablishFileTypeException;
 import pl.luncher.v3.luncher_core.common.permissions.MissingPermissionException;
 import pl.luncher.v3.luncher_core.contentmanagement.domainservices.exceptions.PrimaryArrangementDeletionProhibitedException;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
-import pl.luncher.v3.luncher_core.infrastructure.persistence.exceptions.DuplicateEntityException;
+import pl.luncher.common.infrastructure.persistence.exceptions.DeleteReferencedEntityException;
+import pl.luncher.common.infrastructure.persistence.exceptions.DuplicateEntityException;
 import pl.luncher.v3.luncher_core.user.model.ForgottenPasswordIntentInvalidException;
 
 @RestControllerAdvice(basePackages = "pl.luncher.v3.luncher_core.application.controllers")
@@ -38,7 +38,7 @@ public class CommonControllerAdvisor extends ResponseEntityExceptionHandler {
   @ExceptionHandler({NoSuchElementException.class, EntityNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   protected ErrorResponse handleNotFound(Exception ex) {
-    return ErrorResponse.builder().message("Not found!").messageLocale("en_US").cause(getCause(ex))
+    return ErrorResponse.builder().message(ex.getMessage()).messageLocale("en_US").cause(getCause(ex))
         .build();
   }
 

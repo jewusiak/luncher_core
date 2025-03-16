@@ -15,7 +15,6 @@ public class Part implements Validatable {
 
   private UUID id;
   private String name;
-  private boolean required;
   private MonetaryAmount supplement;
 
   private List<Option> options;
