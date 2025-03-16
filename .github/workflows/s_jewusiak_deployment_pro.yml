@@ -2,8 +2,8 @@ name: Deploy to luncher.pl (PRO)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "master" ]
+#  push:
+#    branches: [ "master" ]
 
 env:
   APP_NAME: "luncher-core"
