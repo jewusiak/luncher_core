@@ -1,6 +1,7 @@
 package pl.luncher.common.infrastructure.persistence;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,7 +42,10 @@ class MenuOfferDb {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+  
+  @Column(length = 500)
   private String name;
+  @Column(length = 1000)
   private String sourceUrl;
 
   @IndexedEmbedded

@@ -34,7 +34,9 @@ class OptionDb {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+  @Column(length = 500)
   private String name;
+  @Column(length = 1500)
   private String description;
   @Column(columnDefinition = "integer not null default 0")
   private int listIdx;
