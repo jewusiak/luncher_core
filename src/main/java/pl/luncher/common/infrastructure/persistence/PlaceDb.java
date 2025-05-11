@@ -53,16 +53,22 @@ class PlaceDb {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   @FullTextField(analyzer = "names_analyzer")
+  @Column(length = 500)
   private String name;
   @FullTextField(analyzer = "morfologik_polish")
+  @Column(length = 500)
   private String longName;
   @FullTextField(analyzer = "morfologik_polish")
+  @Column(length = 1500)
   private String description;
 
+  @Column(length = 1500)
   private String facebookPageId;
 
+  @Column(length = 1500)
   private String instagramHandle;
 
+  @Column(length = 1500)
   private String webpageUrl;
 
   private String phoneNumber;

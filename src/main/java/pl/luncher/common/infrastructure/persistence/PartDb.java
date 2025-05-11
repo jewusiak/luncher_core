@@ -37,6 +37,7 @@ class PartDb {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+  @Column(length = 500)
   private String name;
   @Column(columnDefinition = "integer not null default 0")
   private int listIdx;
